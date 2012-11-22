@@ -8,10 +8,10 @@ return array(
         'supported' => array('en', 'it', 'fr'),
         'fallback'  => '',
         'handlers' => array(
-            __NAMESPACE__.'\Detector\Query',
-            __NAMESPACE__.'\Detector\Route',
-            __NAMESPACE__.'\Detector\Session',
-            __NAMESPACE__.'\Detector\Headers',
+            'MyI18n\Detector\Query',
+            'MyI18n\Detector\Route',
+            'MyI18n\Detector\Session',
+            'MyI18n\Detector\Headers',
         )
     ),
     'router' => array(

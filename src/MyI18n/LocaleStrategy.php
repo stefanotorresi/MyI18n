@@ -15,7 +15,7 @@ use Zend\Navigation\Navigation;
 use Zend\Navigation\Page\Mvc as MvcPage;
 use Zend\View\Model\ViewModel;
 
-class DetectStrategy implements ListenerAggregateInterface
+class LocaleStrategy implements ListenerAggregateInterface
 {   
     const DEFAULT_LOCALE    = 'en';
     const DEFAULT_KEY_NAME  = 'lang';

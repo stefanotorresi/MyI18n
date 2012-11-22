@@ -6,16 +6,16 @@ use Zend\Session\Container as Session;
 return array(    
     'factories' => array(
         'MyI18n\Translator' => 'Zend\I18n\Translator\TranslatorServiceFactory',
-        'MyI18n\DetectStrategy' => function($services) {
+        'MyI18n\LocaleStrategy' => function($services) {
             $config = $services->get('config');
-            $instance = new DetectStrategy($config[__NAMESPACE__]);
+            $instance = new LocaleStrategy($config[__NAMESPACE__]);
             return $instance;
         },
     ),
     'initializers' => array(
         function($instance, $services) {
             if ($instance instanceof Detector\AbstractDetector) {
-                $config = $services->get('MyI18n\DetectStrategy')->getConfig();
+                $config = $services->get('MyI18n\LocaleStrategy')->getConfig();
                 $instance->setConfig($config);
             }
         }
