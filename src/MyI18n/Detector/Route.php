@@ -16,11 +16,12 @@ class Route extends AbstractDetector
         $routeMatch = $e->getRouteMatch();
         
         if ($routeMatch) {
+            
             $query = $routeMatch->getParam($this->config['key_name']);
-        }
         
-        if ($query) {
-            return $this->lookup($query);
+            if ($query) {
+                return $this->lookup($query);
+            }
         }
     }
 }

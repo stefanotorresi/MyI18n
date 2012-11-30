@@ -5,7 +5,7 @@ namespace MyI18n;
 return array(
     __NAMESPACE__ => array(
         'default'   => 'en',
-        'supported' => array('en', 'it', 'fr'),
+        'supported' => array(),
         'fallback'  => '',
         'handlers' => array(
             'MyI18n\Detector\Query',
@@ -30,6 +30,11 @@ return array(
                 ),
                 'may_terminate' => true,
             ),
+        ),
+    ),
+    'view_helpers' => array(
+        'invokables' => array(
+            'datePatternFormat' => 'My\View\Helper\DatePatternFormat',
         ),
     ),
 );

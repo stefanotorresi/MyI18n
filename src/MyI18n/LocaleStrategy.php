@@ -13,7 +13,7 @@ use Zend\EventManager\ListenerAggregateInterface;
 use Zend\Mvc\MvcEvent;
 use Zend\Navigation\Navigation;
 use Zend\Navigation\Page\Mvc as MvcPage;
-use Zend\View\Model\ViewModel;
+use Zend\View\Model\JsonModel;
 
 class LocaleStrategy implements ListenerAggregateInterface
 {   
@@ -71,9 +71,13 @@ class LocaleStrategy implements ListenerAggregateInterface
      * @param EventManagerInterface $events
      */
     public function attach(EventManagerInterface $events)
-    {        
+    {
+        
         $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, 
-                array($this, 'detectLocale'), -1);
+                array($this, 'detectLocale'), -1);        
+                
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH_ERROR, 
+                array($this, 'detectLocale'), 100);
         
         $this->listeners[] = $events->attach(MvcEvent::EVENT_RENDER, 
                 array($this, 'updateViewModel'), 1);
@@ -104,6 +108,10 @@ class LocaleStrategy implements ListenerAggregateInterface
      */
     public function detectLocale(MvcEvent $e)
     {
+        if ($this->locale) {
+            return;
+        }
+        
         $app        = $e->getApplication();
         $services   = $app->getServiceManager();
         $translator = $services->get('MyI18n\Translator');
@@ -153,7 +161,7 @@ class LocaleStrategy implements ListenerAggregateInterface
     public function updateViewModel(MvcEvent $e)
     {
         $model = $e->getViewModel();
-        if ($model instanceof ViewModel) {
+        if (!$model instanceof JsonModel) {
             $model->setVariable($this->config['key_name'], $this->locale);
         }
     }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * @author Stefano Torresi <webdeveloper@stefanotorresi.it>
@@ -23,15 +24,15 @@ class Module
         $strategy->attach($events);
         
     }
-    
-    public function getConfig()
-    {
-        return include __DIR__ . '/config/module.config.php';
-    }
 
     public function getAutoloaderConfig()
     {
         return include __DIR__ . '/config/autoloader.config.php';
+    }
+    
+    public function getConfig()
+    {
+        return include __DIR__ . '/config/module.config.php';
     }
     
     public function getServiceConfig()
