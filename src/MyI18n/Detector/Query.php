@@ -6,7 +6,7 @@ use Zend\Mvc\MvcEvent;
 
 class Query extends AbstractDetector
 {
-   /**
+    /**
      * 
      * @param MvcEvent $e
      * @return string
