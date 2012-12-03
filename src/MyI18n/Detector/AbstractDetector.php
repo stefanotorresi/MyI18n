@@ -16,15 +16,15 @@ abstract class AbstractDetector implements DetectorInterface
      * @var array
      */
     protected $config;
-    
+
     public function setConfig(array $config)
     {
         $this->config = $config;
     }
-    
+
     /**
-     * 
-     * @param string $locale
+     *
+     * @param  string $locale
      * @return string
      */
     public function lookup($locale)

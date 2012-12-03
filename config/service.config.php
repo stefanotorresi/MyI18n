@@ -3,12 +3,13 @@
 namespace MyI18n;
 use Zend\Session\Container as Session;
 
-return array(    
+return array(
     'factories' => array(
         'MyI18n\Translator' => 'Zend\I18n\Translator\TranslatorServiceFactory',
         'MyI18n\LocaleStrategy' => function($services) {
             $config = $services->get('config');
             $instance = new LocaleStrategy($config[__NAMESPACE__]);
+
             return $instance;
         },
     ),
