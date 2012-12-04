@@ -1,5 +1,5 @@
 {
-    "name": "stefanotorresi/MyI18n",
+    "name": "stefanotorresi/my-i18n",
     "description": "A ZF2 locale detection module based on Matt Cockayne's ZucchiLocale",
     "type": "library",
     "keywords": [
