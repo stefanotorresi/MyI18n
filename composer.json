@@ -1,0 +1,32 @@
+{
+    "name": "stefanotorresi/MyI18n",
+    "description": "A ZF2 locale detection module based on Matt Cockayne's ZucchiLocale",
+    "type": "library",
+    "keywords": [
+        "zf2",
+        "zend",
+        "module",
+        "i18n",
+        "locale"
+    ],
+    "homepage": "https://github.com/stefanotorresi/MyI18n",
+    "authors": [
+        {
+            "name": "Stefano Torresi",
+            "email": "webdev@stefanotorresi.it",
+            "homepage": "http://stefanotorresi.it"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "zendframework/zendframework": "2.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "MyI18n": "src/"
+        },
+        "classmap": [
+            "./"
+        ]
+    }
+}
