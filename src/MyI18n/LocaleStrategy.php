@@ -11,15 +11,10 @@ use Locale;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\Mvc\MvcEvent;
-use Zend\Navigation\Navigation;
-use Zend\Navigation\Page\Mvc as MvcPage;
 use Zend\View\Model\JsonModel;
 
 class LocaleStrategy implements ListenerAggregateInterface
 {
-    const DEFAULT_LOCALE    = 'en';
-    const DEFAULT_KEY_NAME  = 'lang';
-
     /**
      *
      * @var array
@@ -44,25 +39,6 @@ class LocaleStrategy implements ListenerAggregateInterface
      */
     public function __construct(array $config)
     {
-        // a bit of config validation
-
-        if (!isset($config['supported']) || !is_array($config['supported'])) {
-            $config['supported'] = array();
-        }
-
-        if (!isset($config['default']) || empty($config['default'])
-                || !in_array($config['default'], $config['supported'])) {
-            $config['default'] = self::DEFAULT_LOCALE;
-        }
-
-        if (!isset($config['key_name']) || empty($config['key_name'])) {
-            $config['key_name'] = self::DEFAULT_KEY_NAME;
-        }
-
-        if (!isset($config['handlers']) || !is_array($config['handlers'])) {
-            $config['handlers'] = array();
-        }
-
         $this->config = $config;
     }
 
@@ -81,9 +57,6 @@ class LocaleStrategy implements ListenerAggregateInterface
 
         $this->listeners[] = $events->attach(MvcEvent::EVENT_RENDER,
                 array($this, 'updateViewModel'), 1);
-
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_RENDER,
-                array($this, 'createNavigation'), 1);
 
         $this->listeners[] = $events->attach(MvcEvent::EVENT_FINISH,
                 array($this, 'persistLocale'), -1);
@@ -163,46 +136,6 @@ class LocaleStrategy implements ListenerAggregateInterface
         $model = $e->getViewModel();
         if (!$model instanceof JsonModel) {
             $model->setVariable($this->config['key_name'], $this->locale);
-        }
-    }
-
-    /**
-     *
-     * @param MvcEvent $e
-     */
-    public function createNavigation(MvcEvent $e)
-    {
-        $router     = $e->getRouter();
-        $match      = $e->getRouteMatch();
-        $services   = $e->getApplication()->getServiceManager();
-
-        $pages = array();
-
-        foreach ($this->config['supported'] as $locale) {
-            $page = new MvcPage(array(
-                'label'     => ucfirst(Locale::getDisplayLanguage($locale, $this->locale)),
-                'params'    => array( $this->config['key_name'] => $locale ),
-                'type'      => 'mvc',
-                'route'     => 'lang-switch',
-                'rel'       => array('alternate' => 'alternate'),
-            ));
-
-            $page->setDefaultRouter($router);
-
-            if ($match) {
-                $page->setRouteMatch($match);
-            }
-
-            if ($locale == $this->locale) {
-                $page->setActive(true);
-                $page->setOrder(-1);
-            }
-
-            $pages[] = $page;
-        }
-
-        if (!empty($pages)) {
-            $services->setService('MyI18n\Navigation', new Navigation($pages));
         }
     }
 

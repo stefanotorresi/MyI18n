@@ -12,6 +12,7 @@ return array(
 
             return $instance;
         },
+        'MyI18n\Navigation' => 'MyI18n\NavigationFactory',
     ),
     'initializers' => array(
         function($instance, $services) {

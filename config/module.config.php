@@ -12,7 +12,8 @@ return array(
             'MyI18n\Detector\Route',
             'MyI18n\Detector\Session',
             'MyI18n\Detector\Headers',
-        )
+        ),
+        'key_name'  => 'lang',
     ),
     'router' => array(
         'routes' => array(
