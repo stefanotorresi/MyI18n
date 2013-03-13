@@ -33,9 +33,4 @@ return array(
             ),
         ),
     ),
-    'view_helpers' => array(
-        'invokables' => array(
-            'datePatternFormat' => 'My\View\Helper\DatePatternFormat',
-        ),
-    ),
 );
