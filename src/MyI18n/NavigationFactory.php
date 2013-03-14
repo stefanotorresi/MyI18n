@@ -18,24 +18,25 @@ class NavigationFactory implements FactoryInterface
 {
     public function createService(ServiceLocatorInterface $services)
     {
-        
+
         $router = $services->get('router');
-        
+
         $globalConfig  = $services->get('config');
         if ($globalConfig instanceof Traversable) {
             $globalConfig = ArrayUtils::iteratorToArray($globalConfig);
         }
-        
+
         $config = $globalConfig[__NAMESPACE__];
         $currentLocale = Locale::getDefault();
-        
+
         $pages = array();
-        
+
         foreach ($config['supported'] as $localeEntry) {
             $page = new MvcPage(array(
                 'params'    => array( $config['key_name'] => $localeEntry ),
                 'type'      => 'mvc',
                 'route'     => 'lang-switch',
+                'class'     => 'lang-'.$localeEntry,
                 'rel'       => array('alternate' => 'alternate'),
             ));
 
@@ -48,14 +49,14 @@ class NavigationFactory implements FactoryInterface
             } else {
                 $label = strtoupper(Locale::getPrimaryLanguage($localeEntry));
             }
-            
+
             $page->setLabel($label);
 
             $pages[] = $page;
         }
-        
+
         $navigation = new Navigation($pages);
-        
+
         return $navigation;
     }
 
