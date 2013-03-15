@@ -32,11 +32,15 @@ class NavigationFactory implements FactoryInterface
         $pages = array();
 
         foreach ($config['supported'] as $localeEntry) {
+
+            $fullLangName = ucfirst(Locale::getDisplayLanguage($localeEntry, $localeEntry));
+
             $page = new MvcPage(array(
                 'params'    => array( $config['key_name'] => $localeEntry ),
                 'type'      => 'mvc',
                 'route'     => 'lang-switch',
                 'class'     => 'lang-'.$localeEntry,
+                'title'     => $fullLangName,
                 'rel'       => array('alternate' => 'alternate'),
             ));
 
@@ -45,7 +49,7 @@ class NavigationFactory implements FactoryInterface
             if ($localeEntry == $currentLocale) {
                 $page->setActive(true);
                 $page->setOrder(-1);
-                $label = ucfirst(Locale::getDisplayLanguage($localeEntry, $currentLocale));
+                $label = $fullLangName;
             } else {
                 $label = strtoupper(Locale::getPrimaryLanguage($localeEntry));
             }
