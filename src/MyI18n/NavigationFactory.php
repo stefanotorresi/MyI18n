@@ -9,6 +9,9 @@ namespace MyI18n;
 
 use Locale;
 use Traversable;
+use Zend\Http\PhpEnvironment\Request;
+use Zend\Mvc\Router\RouteMatch;
+use Zend\Mvc\Router\Http\TreeRouteStack;
 use Zend\Navigation\Navigation;
 use Zend\Navigation\Page\Mvc as MvcPage;
 use Zend\ServiceManager\FactoryInterface;
@@ -18,8 +21,14 @@ class NavigationFactory implements FactoryInterface
 {
     public function createService(ServiceLocatorInterface $services)
     {
-
+        /* @var $router TreeRouteStack  */
         $router = $services->get('router');
+
+        /* @var $request Request */
+        $request = $services->get('request');
+
+        /* @var $routeMatch RouteMatch */
+        $routeMatch = $router->match($request);
 
         $globalConfig  = $services->get('config');
         if ($globalConfig instanceof Traversable) {
@@ -43,6 +52,12 @@ class NavigationFactory implements FactoryInterface
                 'title'     => $fullLangName,
                 'rel'       => array('alternate' => 'alternate'),
             ));
+
+            // set parameters from the currently matched route
+            if ($routeMatch) {
+                $page->setController($routeMatch->getParam('controller'));
+                $page->setAction($routeMatch->getParam('action'));
+            }
 
             $page->setDefaultRouter($router);
 
