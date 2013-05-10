@@ -31,4 +31,7 @@ return array(
     'services' => array(
         'MyI18n\Session' => new Session(__NAMESPACE__),
     ),
+    'aliases' => array(
+        'nav-lang' => 'MyI18n\Navigation',
+    ),
 );
