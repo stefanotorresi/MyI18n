@@ -14,6 +14,10 @@ return array(
             'MyI18n\Detector\Headers',
         ),
         'key_name'  => 'lang',
+        'navigation' => array(
+            // either shows full language name as navigation labels or the shortcode (i.e. English if true, EN if false)
+            'full_lang_as_label' => true
+        )
     ),
     'router' => array(
         'routes' => array(

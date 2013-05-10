@@ -64,6 +64,9 @@ class NavigationFactory implements FactoryInterface
             if ($localeEntry == $currentLocale) {
                 $page->setActive(true);
                 $page->setOrder(-1);
+            }
+
+            if ($config['navigation']['full_lang_as_label']) {
                 $label = $fullLangName;
             } else {
                 $label = strtoupper(Locale::getPrimaryLanguage($localeEntry));
