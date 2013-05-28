@@ -5,7 +5,7 @@ use Zend\Session\Container as Session;
 
 return array(
     'factories' => array(
-        'MyI18n\Translator' => 'Zend\I18n\Translator\TranslatorServiceFactory',
+        'MyI18n\Translator' => 'Zend\Mvc\Service\TranslatorServiceFactory', 
         'MyI18n\LocaleStrategy' => function($services) {
             $config = $services->get('config');
             $instance = new LocaleStrategy($config[__NAMESPACE__]);
@@ -30,6 +30,7 @@ return array(
     ),
     'services' => array(
         'MyI18n\Session' => new Session(__NAMESPACE__),
+        'translator' => 'MyI18n\Translator',
     ),
     'aliases' => array(
         'nav-lang' => 'MyI18n\Navigation',
