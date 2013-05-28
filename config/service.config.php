@@ -30,9 +30,9 @@ return array(
     ),
     'services' => array(
         'MyI18n\Session' => new Session(__NAMESPACE__),
-        'translator' => 'MyI18n\Translator',
     ),
     'aliases' => array(
         'nav-lang' => 'MyI18n\Navigation',
+        'translator' => 'MyI18n\Translator',
     ),
 );
