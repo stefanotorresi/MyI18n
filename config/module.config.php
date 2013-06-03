@@ -15,7 +15,7 @@ return array(
         ),
         'key_name'  => 'lang',
         'navigation' => array(
-            // either shows full language name as navigation labels or the shortcode (i.e. English if true, EN if false)
+            // possible values: true, false, 'only_active'
             'full_lang_as_label' => true
         )
     ),
