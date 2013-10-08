@@ -16,7 +16,8 @@ return array(
         'key_name'  => 'lang',
         'navigation' => array(
             // possible values: true, false, 'only_active'
-            'full_lang_as_label' => true
+            'full_lang_as_label' => true,
+            'query_uri' => false,
         )
     ),
     'router' => array(

@@ -13,9 +13,10 @@ use Zend\Http\PhpEnvironment\Request;
 use Zend\Mvc\Router\RouteMatch;
 use Zend\Mvc\Router\Http\TreeRouteStack;
 use Zend\Navigation\Navigation;
-use Zend\Navigation\Page\Mvc as MvcPage;
+use Zend\Navigation\Page\AbstractPage;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\Stdlib\ArrayUtils;
 
 class NavigationFactory implements FactoryInterface
 {
@@ -43,23 +44,24 @@ class NavigationFactory implements FactoryInterface
         foreach ($config['supported'] as $localeEntry) {
 
             $fullLangName = ucfirst(Locale::getDisplayLanguage($localeEntry, $localeEntry));
+            $pageConfig = $config['navigation']['query_uri'] ?
+                array(
+                    'type'  => 'uri',
+                    'uri'   => '?'.$config['key_name'].'='.$localeEntry
+                ) :
+                array(
+                    'params'        => array( $config['key_name'] => $localeEntry ),
+                    'type'          => 'mvc',
+                    'route'         => 'lang-switch',
+                    'router'        => $router,
+                    'route_match'   => $routeMatch
+                );
 
-            $page = new MvcPage(array(
-                'params'    => array( $config['key_name'] => $localeEntry ),
-                'type'      => 'mvc',
-                'route'     => 'lang-switch',
-                'class'     => 'lang-'.$localeEntry,
-                'title'     => $fullLangName,
-                'rel'       => array('alternate' => 'alternate'),
-            ));
-
-            // set parameters from the currently matched route
-            if ($routeMatch) {
-                $page->setController($routeMatch->getParam('controller'));
-                $page->setAction($routeMatch->getParam('action'));
-            }
-
-            $page->setDefaultRouter($router);
+            $page = AbstractPage::factory(ArrayUtils::merge($pageConfig, array(
+                'class' => 'lang-'.$localeEntry,
+                'title' => $fullLangName,
+                'rel'   => array('alternate' => 'alternate'),
+            )));
 
             if ($localeEntry == $currentLocale) {
                 $page->setActive(true);
