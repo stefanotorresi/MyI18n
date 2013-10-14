@@ -24,6 +24,12 @@ class Translation extends Entity
 
     /**
      * @var string
+     * @ORM\Column(type="string")
+     */
+    protected $domain;
+
+    /**
+     * @var string
      * @ORM\Column(type="text")
      */
     protected $msgid;
@@ -33,6 +39,14 @@ class Translation extends Entity
      * @ORM\Column(type="text")
      */
     protected $msgstr;
+
+    /**
+     * @return string
+     */
+    public function getLocale()
+    {
+        return $this->locale;
+    }
 
     /**
      * @param string $locale
@@ -48,9 +62,28 @@ class Translation extends Entity
     /**
      * @return string
      */
-    public function getLocale()
+    public function getDomain()
     {
-        return $this->locale;
+        return $this->domain;
+    }
+
+    /**
+     * @param string $domain
+     * @return $this
+     */
+    public function setDomain($domain)
+    {
+        $this->domain = $domain;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMsgid()
+    {
+        return $this->msgid;
     }
 
     /**
@@ -67,9 +100,9 @@ class Translation extends Entity
     /**
      * @return string
      */
-    public function getMsgid()
+    public function getMsgstr()
     {
-        return $this->msgid;
+        return $this->msgstr;
     }
 
     /**
@@ -81,13 +114,5 @@ class Translation extends Entity
         $this->msgstr = $msgstr;
 
         return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMsgstr()
-    {
-        return $this->msgstr;
     }
 }

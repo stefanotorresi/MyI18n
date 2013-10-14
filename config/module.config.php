@@ -28,7 +28,7 @@ return [
 
     'service_manager' => [
         'factories' => [
-            'MyI18n\Translator' => 'Zend\Mvc\Service\TranslatorServiceFactory',
+            'MyI18n\Translator' => 'MyI18n\Service\Factory\TranslatorFactory',
             'MyI18n\Navigation' => 'MyI18n\NavigationFactory',
         ],
         'invokables' => [
