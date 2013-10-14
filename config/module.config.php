@@ -24,10 +24,13 @@ return [
             'full_lang_as_label' => true,
             'query_uri' => false,
         ],
+        'enable_backend' => false,
+        'enable_missing_translation_listener' => false
     ],
 
     'service_manager' => [
         'factories' => [
+            'MyI18n\Service\TranslationService' => 'MyI18n\Service\Factory\TranslationServiceFactory',
             'MyI18n\Translator' => 'MyI18n\Service\Factory\TranslatorFactory',
             'MyI18n\Navigation' => 'MyI18n\NavigationFactory',
         ],

@@ -12,38 +12,32 @@ use Doctrine\ORM\Tools\SchemaTool;
 use MyI18n\Entity\Translation;
 use MyI18n\Service\TranslationService;
 use MyI18nTest\Bootstrap;
+use MyI18nTest\TestAsset\Translations;
 use PHPUnit_Framework_TestCase as TestCase;
+use Zend\EventManager\Event;
 
-class TranslationServiceFunctionalTest extends TestCase
+class TranslationServiceTest extends TestCase
 {
     /**
      * @var TranslationService;
      */
     protected $translationService;
 
-    /**
-     * @var array
-     */
-    protected $translations;
-
     public function setUp()
     {
+        $this->translationService = Bootstrap::getServiceManager()->get('MyI18n\Service\TranslationService');
+
         /** @var EntityManager $entityManager */
         $entityManager = Bootstrap::getServiceManager()->get('Doctrine\ORM\EntityManager');
-
         $classes    = $entityManager->getMetadataFactory()->getAllMetadata();
-
         $schemaTool = new SchemaTool($entityManager);
         $schemaTool->dropDatabase();
         $schemaTool->createSchema($classes);
-
-        $this->translationService = new TranslationService($entityManager);
+        Translations::populateService($this->translationService);
     }
 
     public function testGetAllDomains()
     {
-        $this->populateService();
-
         $domains = $this->translationService->getAllDomains();
 
         $this->assertContains('test', $domains);
@@ -53,8 +47,6 @@ class TranslationServiceFunctionalTest extends TestCase
 
     public function testLoad()
     {
-        $this->populateService();
-
         $testDomain = $this->translationService->load('it', 'test');
 
         $this->assertInstanceOf('Zend\I18n\Translator\TextDomain', $testDomain);
@@ -68,38 +60,37 @@ class TranslationServiceFunctionalTest extends TestCase
 
         $i = 0;
         foreach ($translations as $msgid => $msgstr) {
-            $this->assertEquals($this->getTranslations()[$i]->getMsgstr(), $msgstr);
-            $this->assertEquals($this->getTranslations()[$i]->getMsgid(), $msgid);
+            $this->assertEquals(Translations::getTranslations()[$i]->getMsgstr(), $msgstr);
+            $this->assertEquals(Translations::getTranslations()[$i]->getMsgid(), $msgid);
             $i++;
         }
     }
 
-    protected function getTranslations()
+    public function testMissingTranslationListener()
     {
-        if (! $this->translations) {
-            $translation = new Translation();
-            $translation->setDomain('test')->setLocale('it')->setMsgid('foo')->setMsgstr('bar');
+        $event = new Event;
+        $event->setParam('message', 'foo');
+        $event->setParam('locale', 'locale');
+        $event->setParam('text_domain', 'bar');
 
-            $translation1 = new Translation();
-            $translation1->setDomain('test')->setLocale('it')->setMsgid('hello')->setMsgstr('ciao');
+        $this->translationService->missingTranslationListener($event);
 
-            $translation2 = new Translation();
-            $translation2->setDomain('test-2')->setLocale('it')->setMsgid('bye')->setMsgstr('derci');
+        $translation = $this->translationService->findTranslation('foo', 'locale', 'bar');
 
-            $this->translations = [
-                $translation,
-                $translation1,
-                $translation2,
-            ];
-        }
-
-        return $this->translations;
+        $this->assertInstanceOf('MyI18n\Entity\Translation', $translation);
     }
 
-    protected function populateService()
+    public function testFindTranslation()
     {
-        foreach ($this->getTranslations() as $t) {
-            $this->translationService->save($t);
+        foreach(Translations::getTranslations() as $translation) {/** @var Translation $translation */
+            $this->assertEquals(
+                $translation,
+                $this->translationService->findTranslation(
+                    $translation->getMsgid(),
+                    $translation->getLocale(),
+                    $translation->getDomain()
+                )
+            );
         }
     }
 }

@@ -9,6 +9,7 @@ namespace MyI18n\Service;
 
 use MyBase\Service\AbstractEntityService;
 use MyI18n\Entity\Translation;
+use Zend\EventManager\Event;
 use Zend\I18n\Translator\Loader\RemoteLoaderInterface;
 use Zend\I18n\Translator\TextDomain;
 
@@ -52,5 +53,33 @@ class TranslationService extends AbstractEntityService implements RemoteLoaderIn
         }
 
         return $domains;
+    }
+
+    public function findTranslation($msgid, $locale, $domain)
+    {
+        $criteria = [
+            'msgid' => $msgid,
+            'locale' => $locale,
+            'domain' => $domain,
+        ];
+
+        $result = $this->getEntityManager()->getRepository(Translation::fqcn())->findOneBy($criteria);
+
+        return $result;
+    }
+
+    public function missingTranslationListener(Event $e)
+    {
+        $message = $e->getParam('message');
+        $locale = $e->getParam('locale');
+        $domain = $e->getParam('text_domain');
+
+        if (! $this->findTranslation($message, $locale, $domain)) {
+            $translation = new Translation();
+            $translation->setMsgid($message);
+            $translation->setLocale($locale);
+            $translation->setDomain($domain);
+            $this->save($translation);
+        }
     }
 }
