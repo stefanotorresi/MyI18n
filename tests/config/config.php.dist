@@ -1,0 +1,18 @@
+<?php
+
+return array(
+    'modules' => array(
+        'DoctrineModule',
+        'DoctrineORMModule',
+        'MyI18n',
+    ),
+    'module_listener_options' => array(
+        'config_glob_paths'    => array(
+            __DIR__ . '/autoload/{,*.}{global,local}.php',
+        ),
+        'module_paths' => array(
+            './modules',
+            './vendor',
+        ),
+    ),
+);

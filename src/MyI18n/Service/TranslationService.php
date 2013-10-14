@@ -10,6 +10,7 @@ namespace MyI18n\Service;
 use MyBase\Service\AbstractEntityService;
 use MyI18n\Entity\Translation;
 use Zend\I18n\Translator\Loader\RemoteLoaderInterface;
+use Zend\I18n\Translator\TextDomain;
 
 class TranslationService extends AbstractEntityService implements RemoteLoaderInterface
 {
@@ -21,14 +22,18 @@ class TranslationService extends AbstractEntityService implements RemoteLoaderIn
         $queryBuilder = $this->getEntityManager()->createQueryBuilder();
         $expr = $queryBuilder->expr();
 
-        $queryBuilder->select('translation.msgid, translation.msgstr')
-            ->from(Translation::fqcn(), 'translation')
-            ->where($expr->eq('locale', $expr->literal($locale)))
-            ->andWhere($expr->eq('domain', $expr->literal($textDomain)));
+        $queryBuilder->select('translation')->from(Translation::fqcn(), 'translation')
+            ->where($expr->eq('translation.locale', $expr->literal($locale)))
+            ->andWhere($expr->eq('translation.domain', $expr->literal($textDomain)));
 
-        $translations = $queryBuilder->getQuery()->getArrayResult();
+        $translations = $queryBuilder->getQuery()->getResult();
 
-        return $translations;
+        $result = array();
+        foreach ($translations as $translation) { /** @var $translation Translation */
+            $result[$translation->getMsgid()] = $translation->getMsgstr();
+        }
+
+        return new TextDomain($result);
     }
 
     /**

@@ -13,7 +13,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 class TranslatorFactory extends TranslatorServiceFactory implements FactoryInterface
 {
-
     /**
      * {@inheritdoc}
      */
