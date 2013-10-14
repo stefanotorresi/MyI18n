@@ -82,7 +82,7 @@ class TranslationServiceTest extends TestCase
 
     public function testFindTranslation()
     {
-        foreach(Translations::getTranslations() as $translation) {/** @var Translation $translation */
+        foreach (Translations::getTranslations() as $translation) {/** @var Translation $translation */
             $this->assertEquals(
                 $translation,
                 $this->translationService->findTranslation(
