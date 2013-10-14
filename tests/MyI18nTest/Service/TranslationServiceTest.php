@@ -70,12 +70,11 @@ class TranslationServiceTest extends TestCase
     {
         $event = new Event;
         $event->setParam('message', 'foo');
-        $event->setParam('locale', 'locale');
         $event->setParam('text_domain', 'bar');
 
         $this->translationService->missingTranslationListener($event);
 
-        $translation = $this->translationService->findTranslation('foo', 'locale', 'bar');
+        $translation = $this->translationService->findTranslation('foo', 'bar');
 
         $this->assertInstanceOf('MyI18n\Entity\Translation', $translation);
     }
@@ -87,7 +86,6 @@ class TranslationServiceTest extends TestCase
                 $translation,
                 $this->translationService->findTranslation(
                     $translation->getMsgid(),
-                    $translation->getLocale(),
                     $translation->getDomain()
                 )
             );

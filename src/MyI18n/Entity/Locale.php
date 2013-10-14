@@ -8,27 +8,46 @@
 namespace MyI18n\Entity;
 
 use MyBase\Entity\Entity;
+use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="m18n_locales")
+ */
 class Locale extends Entity
 {
-    protected $locale;
+    /**
+     * @var string
+     * @ORM\Column(type="string", unique=true)
+     */
+    protected $code;
+
+    public function __construct($code)
+    {
+        $this->code = $code;
+    }
 
     /**
      * @return mixed
      */
-    public function getLocale()
+    public function getCode()
     {
-        return $this->locale;
+        return $this->code;
     }
 
     /**
      * @param mixed $locale
      * @return $this
      */
-    public function setLocale($locale)
+    public function setCode($locale)
     {
-        $this->locale = $locale;
+        $this->code = $locale;
 
         return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->code;
     }
 }

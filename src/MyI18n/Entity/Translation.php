@@ -17,8 +17,8 @@ use Doctrine\ORM\Mapping as ORM;
 class Translation extends Entity
 {
     /**
-     * @var string
-     * @ORM\Column(type="string")
+     * @var Locale
+     * @ORM\ManyToOne(targetEntity="Locale", cascade={"persist"})
      */
     protected $locale;
 
@@ -41,7 +41,7 @@ class Translation extends Entity
     protected $msgstr;
 
     /**
-     * @return string
+     * @return Locale
      */
     public function getLocale()
     {
@@ -49,10 +49,10 @@ class Translation extends Entity
     }
 
     /**
-     * @param string $locale
+     * @param Locale $locale
      * @return $this
      */
-    public function setLocale($locale)
+    public function setLocale(Locale $locale)
     {
         $this->locale = $locale;
 

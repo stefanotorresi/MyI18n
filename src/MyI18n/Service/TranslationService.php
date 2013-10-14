@@ -24,8 +24,8 @@ class TranslationService extends AbstractEntityService implements RemoteLoaderIn
         $expr = $queryBuilder->expr();
 
         $queryBuilder->select('translation')->from(Translation::fqcn(), 'translation')
-            ->where($expr->eq('translation.locale', $expr->literal($locale)))
-            ->andWhere($expr->eq('translation.domain', $expr->literal($textDomain)));
+            ->innerJoin('translation.locale', 'locale', $expr->eq('code', $expr->literal($locale)))
+            ->where($expr->eq('translation.domain', $expr->literal($textDomain)));
 
         $translations = $queryBuilder->getQuery()->getResult();
 
@@ -55,11 +55,10 @@ class TranslationService extends AbstractEntityService implements RemoteLoaderIn
         return $domains;
     }
 
-    public function findTranslation($msgid, $locale, $domain)
+    public function findTranslation($msgid, $domain)
     {
         $criteria = [
             'msgid' => $msgid,
-            'locale' => $locale,
             'domain' => $domain,
         ];
 
@@ -71,13 +70,11 @@ class TranslationService extends AbstractEntityService implements RemoteLoaderIn
     public function missingTranslationListener(Event $e)
     {
         $message = $e->getParam('message');
-        $locale = $e->getParam('locale');
         $domain = $e->getParam('text_domain');
 
-        if (! $this->findTranslation($message, $locale, $domain)) {
+        if (! $this->findTranslation($message, $domain)) {
             $translation = new Translation();
             $translation->setMsgid($message);
-            $translation->setLocale($locale);
             $translation->setDomain($domain);
             $this->save($translation);
         }
