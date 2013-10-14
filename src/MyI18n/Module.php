@@ -9,6 +9,7 @@ namespace MyI18n;
 
 use Zend\Mvc\MvcEvent;
 use Zend\ModuleManager\Feature;
+use Zend\Stdlib\ArrayUtils;
 
 class Module implements
     Feature\AutoloaderProviderInterface,
@@ -48,7 +49,19 @@ class Module implements
 
     public function getConfig()
     {
-        return include $this->getDir() . '/config/module.config.php';
+        $config = include $this->getDir() . '/config/module.config.php';
+
+        $configFiles = array(
+            'router.config.php',
+            'doctrine.config.php',
+        );
+
+        foreach ($configFiles as $configFile) {
+            $configFilePath = $this->getDir() . '/config/' . $configFile;
+            $config = ArrayUtils::merge($config, include $configFilePath);
+        }
+
+        return $config;
     }
 
     public function getServiceConfig()
