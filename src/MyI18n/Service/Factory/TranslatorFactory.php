@@ -7,7 +7,7 @@
 
 namespace MyI18n\Service\Factory;
 
-use Zend\I18n\Translator\TranslatorServiceFactory;
+use Zend\Mvc\Service\TranslatorServiceFactory;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 class TranslatorFactory extends TranslatorServiceFactory

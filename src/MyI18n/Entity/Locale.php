@@ -22,7 +22,7 @@ class Locale extends Entity
      */
     protected $code;
 
-    public function __construct($code)
+    public function __construct($code = null)
     {
         $this->code = $code;
     }

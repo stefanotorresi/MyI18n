@@ -14,7 +14,8 @@ use Zend\Stdlib\ArrayUtils;
 class Module implements
     Feature\AutoloaderProviderInterface,
     Feature\ConfigProviderInterface,
-    Feature\ServiceProviderInterface
+    Feature\ServiceProviderInterface,
+    Feature\FormElementProviderInterface
 {
     public function onBootstrap(MvcEvent $e)
     {
@@ -33,6 +34,9 @@ class Module implements
         return __DIR__ . '/../..';
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getAutoloaderConfig()
     {
         return [
@@ -47,6 +51,9 @@ class Module implements
         ];
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getConfig()
     {
         $config = include $this->getDir() . '/config/module.config.php';
@@ -64,8 +71,19 @@ class Module implements
         return $config;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getServiceConfig()
     {
         return include $this->getDir() . '/config/services.config.php';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFormElementConfig()
+    {
+        return include $this->getDir() . '/config/form-elements.config.php';
     }
 }

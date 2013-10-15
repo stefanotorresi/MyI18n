@@ -89,7 +89,7 @@ return array(
                                 'options' => array(
                                     'route' => '/translations',
                                     'defaults' => array(
-                                        'controller' => 'MyBlog\Controller\Translation',
+                                        'controller' => 'MyI18n\Controller\Translation',
                                     ),
                                 ),
                                 'child_routes' => ArrayUtils::merge($crud, $paged)
@@ -99,7 +99,7 @@ return array(
                                 'options' => array(
                                     'route' => '/locales',
                                     'defaults' => array(
-                                        'controller' => 'MyBlog\Controller\Locale',
+                                        'controller' => 'MyI18n\Controller\Locale',
                                         'action' => 'index',
                                     ),
                                 ),

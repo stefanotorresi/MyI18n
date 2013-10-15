@@ -1,0 +1,66 @@
+<?php
+/**
+ * @var \Zend\View\Renderer\PhpRenderer $this
+ *
+ * @author Stefano Torresi (http://stefanotorresi.it)
+ * @license See the file LICENSE.txt for copying permission.
+ * ************************************************
+ */
+
+$form = $this->translationForm;
+$form->prepare();
+$translationFieldset = $form->get('translation');
+$localeFieldset = $translationFieldset->get('locale');
+
+$bootstrappify = function (\Zend\Form\FieldsetInterface $fieldset) use (&$bootstrappify, $form) {
+    foreach ($fieldset as $element) { /** @var \Zend\Form\Element $element  */
+        if ($element instanceof \Zend\Form\Element\Hidden) {
+            continue;
+        }
+        if ($element instanceof \Zend\Form\Fieldset) {
+            $bootstrappify($element);
+        }
+        $element->setLabelAttributes(array('class' => 'control-label'));
+        $element->setAttribute('id', $form->getName().'-'.$element->getName());
+        $element->setAttribute('class', 'input-block-level');
+    }
+};
+
+$bootstrappify($form);
+
+$this->formElementErrors()->setAttributes(array('class' => 'form-errors'));
+
+echo $this->form()->openTag($form);
+?>
+<div class="row-fluid">
+    <div class="control-group span5">
+        <?= $this->formLabel($translationFieldset->get('msgid')); ?>
+        <div class="controls">
+            <?= $this->formTextarea($translationFieldset->get('msgid')); ?>
+            <?= $this->formElementErrors($translationFieldset->get('msgid')); ?>
+        </div>
+    </div>
+    <div class="control-group span5">
+        <?= $this->formLabel($translationFieldset->get('msgstr')); ?>
+        <div class="controls">
+            <?= $this->formTextarea($translationFieldset->get('msgstr')); ?>
+            <?= $this->formElementErrors($translationFieldset->get('msgstr')); ?>
+        </div>
+    </div>
+    <div class="control-group span2">
+        <?= $this->formLabel($translationFieldset->get('domain')); ?>
+        <div class="controls">
+            <?= $this->formText($translationFieldset->get('domain')); ?>
+            <?= $this->formElementErrors($translationFieldset->get('domain')); ?>
+        </div>
+
+        <?= $this->formLabel($localeFieldset->get('id')); ?>
+        <div class="controls">
+            <?= $this->formSelect($localeFieldset->get('id')); ?>
+            <?= $this->formElementErrors($localeFieldset->get('id')); ?>
+        </div>
+    </div>
+</div>
+<?php
+
+echo $this->form()->closeTag();

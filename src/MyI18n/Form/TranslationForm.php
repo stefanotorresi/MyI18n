@@ -9,30 +9,24 @@ namespace MyI18n\Form;
 
 use Zend\Form\Form;
 
-class TranslationList extends Form
+class TranslationForm extends Form
 {
     public function __construct($name = 'form-translations', $options = array())
     {
         parent::__construct($name, $options);
+    }
 
-        $this->add([
-            'name' => 'translations',
-            'type' => 'collection',
-            'options' => array(
-                'label' => 'Translations',
-                'allow_add' => true,
-                'allow_remove' => false,
-                'create_new_objects' => true,
-                'target_element' => array(
-                    'type' => 'TranslationFieldset'
-                ),
-            ),
-        ]);
-
+    public function init()
+    {
         $this->add(array(
             'name' => 'formTranslationsCSRF',
             'type' => 'csrf',
         ));
+
+        $this->add([
+            'name' => 'translation',
+            'type' => __NAMESPACE__ . '\Fieldset\Translation'
+        ]);
 
         $this->add(array(
             'name' => 'submit',
@@ -41,5 +35,7 @@ class TranslationList extends Form
                 'label' => 'Submit',
             ),
         ));
+
+        $this->setBaseFieldset($this->get('translation'));
     }
 }
