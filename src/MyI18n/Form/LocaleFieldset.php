@@ -7,7 +7,8 @@
 
 namespace MyI18n\Form;
 
-use MyI18n\Entity\Locale;
+use Locale;
+use MyI18n\Entity\Locale as LocaleEntity;
 use Zend\Form\Fieldset;
 use Doctrine\Common\Persistence\ObjectManager;
 
@@ -34,7 +35,7 @@ class LocaleFieldset extends Fieldset
                 'options' => array(
                     'empty_option' => '',
                     'object_manager' => $this->objectManager,
-                    'target_class'   => Locale::fqcn(),
+                    'target_class'   => LocaleEntity::fqcn(),
                     'property'       => 'code',
                     'find_method'    => array(
                         'name'   => 'findBy',
@@ -44,6 +45,9 @@ class LocaleFieldset extends Fieldset
                         ),
                     ),
                     'label' => 'Language',
+                    'label_generator' => function(LocaleEntity $targetEntity) {
+                        return ucfirst(Locale::getDisplayLanguage($targetEntity->getCode()));
+                    },
                 ),
                 'attributes' => array(
                     'required' => true,

@@ -7,11 +7,13 @@
 
 namespace MyI18n\Service;
 
+use Doctrine\Common\Collections\Criteria;
 use MyBase\Service\AbstractEntityService;
 use MyI18n\Entity\Translation;
 use Zend\EventManager\Event;
 use Zend\I18n\Translator\Loader\RemoteLoaderInterface;
 use Zend\I18n\Translator\TextDomain;
+use Zend\Paginator\Paginator;
 
 class TranslationService extends AbstractEntityService implements RemoteLoaderInterface
 {
@@ -35,6 +37,19 @@ class TranslationService extends AbstractEntityService implements RemoteLoaderIn
         }
 
         return new TextDomain($result);
+    }
+
+    /**
+     * @param  int       $page
+     * @param  int       $itemCountPerPage
+     * @return Paginator
+     */
+    public function getPagedTranslations($page, $itemCountPerPage = 10)
+    {
+        $repository = $this->getEntityManager()->getRepository(Translation::fqcn());
+        $query = $repository->createQueryBuilder('translation');
+
+        return $this->getPagedQuery($query, $page, $itemCountPerPage);
     }
 
     /**

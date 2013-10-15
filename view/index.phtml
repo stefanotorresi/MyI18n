@@ -7,4 +7,65 @@
  * ************************************************
  */
 
-echo $this->render('my-i18n/translation-form');
+/* @var $translations \Zend\Paginator\Paginator */
+$translations = $this->translations;
+
+$pages = count($translations);
+
+$paginator = $pages > 1 ?
+    $this->paginationControl(
+        $translations,
+        'Elastic',
+        'my-backend/partial/paginator',
+        array('route' => 'admin/i18n/translations/paged')
+    ) : '';
+
+?>
+<h3 class="section-title">
+    <a class="btn btn-small btn-primary" href="<?= $this->url('admin/i18n/translations/create') ?>"><?= $this->translate("Add translation") ?></a>
+    <div class="pull-left margin-right-20">
+        <?= $this->translate('Translations management') ?>
+    </div>
+</h3>
+
+<div class="translation-list">
+    <?php if ($pages): ?>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th><?= $this->translate("Message") ?></th>
+                <th><?= $this->translate("Translation") ?></th>
+                <th><?= $this->translate("Language") ?></th>
+                <th><?= $this->translate("Domain") ?></th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach($translations as $i => $translation) :
+                /* @var $translation \MyI18n\Entity\Translation */ ?>
+                <tr data-id="<?=$translation->getId()?>">
+                    <td class="span1"><?= $i+1 ?></td>
+                    <td class="span5"><?= $this->escapeHtml($translation->getMsgid()) ?></td>
+                    <td class="span2"><?= $this->escapeHtml($translation->getMsgstr()) ?></td>
+                    <td class="span2"><?= $this->escapeHtml($translation->getDomain()) ?></td>
+                    <td class="span2"><?= ucfirst(Locale::getDisplayLanguage($translation->getLocale()->getCode())) ?></td>
+                    <td class="span2 text-right">
+                        <div class="btn-group">
+                            <a class="btn btn-small btn-modifica"
+                               href="<?= $this->url('admin/i18n/translations/update', ['id' => $translation->getId()])?>"
+                               title="<?= $this->translate("Edit") ?>"><i class="icon-pencil"></i></a>
+                            <a class="btn btn-small btn-danger btn-elimina"
+                               href="<?= $this->url('admin/i18n/translations/delete', ['id' => $translation->getId()])?>"
+                               title="<?= $this->translate("Delete") ?>"><i class="icon-trash icon-white"></i></a>
+                        </div>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php else: ?>
+        <p><?= $this->translate("There are no translations at the moment") ?></p>
+    <?php endif; ?>
+
+    <?= $paginator ?>
+</div>

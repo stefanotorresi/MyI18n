@@ -30,20 +30,35 @@ $bootstrappify($form);
 
 $this->formElementErrors()->setAttributes(array('class' => 'form-errors'));
 
-echo $this->form()->openTag($form);
+$CKEditorOptions = [
+    'script_options' => [
+        'toolbar' => [
+            ['Bold','Italic','Underline','StrikeThrough','-','Undo','Redo','-','Cut','Copy','Paste','Find','Replace','-','Outdent','Indent','-','Print'],
+            ['Styles','Format','Font','FontSize'],
+            '/',
+            ['NumberedList','BulletedList','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
+            ['Image','Table','-','Link','Smiley','TextColor','BGColor','Source']
+        ],
+    ],
+];
+
 ?>
+
+<h3 class="section-title"><?= $this->translate( ($form->isUpdating()?'Edit':'New') . ' translation' ) ?></h3>
+
+<?= $this->form()->openTag($form); ?>
 <div class="row-fluid">
     <div class="control-group span5">
         <?= $this->formLabel($translationFieldset->get('msgid')); ?>
         <div class="controls">
-            <?= $this->formTextarea($translationFieldset->get('msgid')); ?>
+            <?= $this->CKEditor($translationFieldset->get('msgid'), $CKEditorOptions); ?>
             <?= $this->formElementErrors($translationFieldset->get('msgid')); ?>
         </div>
     </div>
     <div class="control-group span5">
         <?= $this->formLabel($translationFieldset->get('msgstr')); ?>
         <div class="controls">
-            <?= $this->formTextarea($translationFieldset->get('msgstr')); ?>
+            <?= $this->CKEditor($translationFieldset->get('msgstr'), $CKEditorOptions); ?>
             <?= $this->formElementErrors($translationFieldset->get('msgstr')); ?>
         </div>
     </div>
@@ -59,8 +74,15 @@ echo $this->form()->openTag($form);
             <?= $this->formSelect($localeFieldset->get('id')); ?>
             <?= $this->formElementErrors($localeFieldset->get('id')); ?>
         </div>
+
+        <div class="controls text-center margin-top-20">
+            <?= $this->formButton()->openTag($form->get('submit')->setAttribute('class',
+                'btn btn-primary btn-large btn-aggiungi')) ?>
+            <i class="icon-plus-sign icon-white"></i>
+            <?= $this->escapeHtml($this->translate($form->get('submit')->getLabel())) ?>
+            <?= $this->formButton()->closeTag() ?>
+            <?= $this->formRow($form->get('translationFormCSRF')) ?>
+        </div>
     </div>
 </div>
-<?php
-
-echo $this->form()->closeTag();
+<?= $this->form()->closeTag(); ?>
