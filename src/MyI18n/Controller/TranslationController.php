@@ -133,7 +133,7 @@ class TranslationController extends AbstractActionController
 
     public function deleteAction()
     {
-        $translation = $this->getTranslationService()->findArticle($this->params('id'));
+        $translation = $this->getTranslationService()->findTranslation($this->params('id'));
 
         if (!$translation) {
             return $this->notFoundAction();

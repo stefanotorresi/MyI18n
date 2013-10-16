@@ -4,8 +4,11 @@ namespace MyI18n;
 
 return [
     __NAMESPACE__ => [
-        'enable_backend' => true,
-        'enable_missing_translation_listener' => true,
+        'missing_translation_listener' => [
+            'enabled' => true,
+            'ignore_domains' => ['ignored_domain'],
+            'only_domains' => ['this_domain_only'],
+        ],
     ],
 
     'doctrine' => array(

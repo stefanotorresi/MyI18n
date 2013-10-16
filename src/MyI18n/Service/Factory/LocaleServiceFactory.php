@@ -9,28 +9,24 @@ namespace MyI18n\Service\Factory;
 
 use Doctrine\ORM\EntityManager;
 use MyI18n\Service\LocaleService;
-use MyI18n\Service\TranslationService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class TranslationServiceFactory implements FactoryInterface
+class LocaleServiceFactory implements FactoryInterface
 {
     /**
      * Create service
      *
      * @param  ServiceLocatorInterface $serviceLocator
-     * @return TranslationService
+     * @return LocaleService
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         /** @var EntityManager $entityManager */
         $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');
 
-        /** @var LocaleService $localeService */
-        $localeService = $serviceLocator->get('MyI18n\Service\LocaleService');
+        $localeService = new LocaleService($entityManager);
 
-        $translationService = new TranslationService($entityManager, $localeService);
-
-        return $translationService;
+        return $localeService;
     }
 }

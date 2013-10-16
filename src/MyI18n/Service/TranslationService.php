@@ -8,7 +8,9 @@
 namespace MyI18n\Service;
 
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\EntityManager;
 use MyBase\Service\AbstractEntityService;
+use MyI18n\Entity\Locale;
 use MyI18n\Entity\Translation;
 use Zend\EventManager\Event;
 use Zend\I18n\Translator\Loader\RemoteLoaderInterface;
@@ -17,6 +19,18 @@ use Zend\Paginator\Paginator;
 
 class TranslationService extends AbstractEntityService implements RemoteLoaderInterface
 {
+    /**
+     * @var LocaleService
+     */
+    protected $localeService;
+
+    public function __construct(EntityManager $entityManager, LocaleService $localeService)
+    {
+        parent::__construct($entityManager);
+
+        $this->localeService = $localeService;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -87,13 +101,38 @@ class TranslationService extends AbstractEntityService implements RemoteLoaderIn
     public function missingTranslationListener(Event $e)
     {
         $message = $e->getParam('message');
+        $locale = $e->getParam('locale');
         $domain = $e->getParam('text_domain');
 
         if (! $this->findTranslation($message, $domain)) {
             $translation = new Translation();
             $translation->setMsgid($message);
             $translation->setDomain($domain);
+            if (! $locale = $this->getLocaleService()->findOneByCode($locale)) {
+                $locale = new Locale($locale);
+            }
+            $translation->setLocale($locale);
+
             $this->save($translation);
         }
+    }
+
+    /**
+     * @return LocaleService
+     */
+    public function getLocaleService()
+    {
+        return $this->localeService;
+    }
+
+    /**
+     * @param LocaleService $localeService
+     * @return $this
+     */
+    public function setLocaleService(LocaleService $localeService)
+    {
+        $this->localeService = $localeService;
+
+        return $this;
     }
 }

@@ -29,7 +29,7 @@ class TranslatorFactory extends TranslatorServiceFactory
             $translator->addRemoteTranslations('MyI18n\Service\TranslationService', $domain);
         }
 
-        if ($config['enable_missing_translation_listener']) {
+        if ($config['missing_translation_listener']['enabled']) {
             $translator->enableEventManager();
             $translator->getEventManager()->attach('missingTranslation', array($translationService, 'missingTranslationListener'));
         }
