@@ -24,7 +24,6 @@ return [
             'full_lang_as_label' => true,
             'query_uri' => false,
         ],
-        'enable_backend' => false,
         'enable_missing_translation_listener' => false
     ],
 
@@ -54,7 +53,7 @@ return [
         'factories' => [
             'MyI18n\Service\TranslationService' => 'MyI18n\Service\Factory\TranslationServiceFactory',
             'MyI18n\Form\TranslationForm' => 'MyI18n\Service\Factory\TranslationFormFactory',
-            'MyI18n\Translator' => 'MyI18n\Service\Factory\TranslatorFactory',
+            'MvcTranslator' => 'MyI18n\Service\Factory\TranslatorFactory',
             'MyI18n\Navigation' => 'MyI18n\NavigationFactory',
         ],
         'invokables' => [
@@ -65,26 +64,8 @@ return [
         ],
         'aliases' => [
             'nav-lang' => 'MyI18n\Navigation',
-            'translator' => 'MyI18n\Translator',
-        ],
-    ],
-
-    'router' => [
-        'routes' => [
-            'lang-switch' => [
-                'type'    => 'segment',
-                'options' => [
-                    'route'    => '/:lang',
-                    'defaults' => [
-                        'controller' => 'index',
-                        'action'     => 'index'
-                    ],
-                    'constraints' => [
-                        'lang' => '[a-z]{2}',
-                    ],
-                ],
-                'may_terminate' => true,
-            ],
+            'MyI18n\Translator' => 'MvcTranslator',
+            'translator' => 'MvcTranslator',
         ],
     ],
 

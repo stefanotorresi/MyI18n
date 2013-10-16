@@ -7,6 +7,7 @@
 
 namespace MyI18n\Service\Factory;
 
+use MyI18n\Service\TranslationService;
 use Zend\Mvc\Service\TranslatorServiceFactory;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -20,10 +21,7 @@ class TranslatorFactory extends TranslatorServiceFactory
         $translator = parent::createService($serviceLocator);
         $config = $serviceLocator->get('config')['MyI18n'];
 
-        if (! $config['enable_backend']) {
-            return $translator;
-        }
-
+        /** @var TranslationService $translationService */
         $translationService = $serviceLocator->get('MyI18n\Service\TranslationService');
         $translator->getPluginManager()->setService('MyI18n\Service\TranslationService', $translationService);
 

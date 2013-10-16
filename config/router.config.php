@@ -71,6 +71,22 @@ $paged = array(
 return array(
     'router' => array(
         'routes' => array(
+
+            'lang-switch' => [
+                'type'    => 'segment',
+                'options' => [
+                    'route'    => '/:lang',
+                    'defaults' => [
+                        'controller' => 'index',
+                        'action'     => 'index'
+                    ],
+                    'constraints' => [
+                        'lang' => '[a-z]{2}',
+                    ],
+                ],
+                'may_terminate' => true,
+            ],
+
             'admin' => array(
                 'child_routes' => array(
                     'i18n' => array(

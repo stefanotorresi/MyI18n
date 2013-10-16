@@ -39,7 +39,7 @@ class TranslatorFactoryTest extends TestCase
         $translator = Bootstrap::getServiceManager()->get('translator');
 
         foreach (Translations::getTranslations() as $translation) { /** @var Translation $translation */
-            $translator->setLocale($translation->getLocale());
+            $translator->setLocale($translation->getLocale()->getCode());
             $this->assertEquals(
                 $translation->getMsgstr(),
                 $translator->translate($translation->getMsgid(), $translation->getDomain())
