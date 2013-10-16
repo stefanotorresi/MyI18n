@@ -20,6 +20,8 @@ $paginator = $pages > 1 ?
         array('route' => 'admin/i18n/translations/paged')
     ) : '';
 
+$ellipsis = new \MyBase\Filter\Ellipsis(100);
+
 ?>
 <h3 class="section-title">
     <a class="btn btn-small btn-primary" href="<?= $this->url('admin/i18n/translations/create') ?>"><?= $this->translate("Add translation") ?></a>
@@ -45,10 +47,10 @@ $paginator = $pages > 1 ?
                 /* @var $translation \MyI18n\Entity\Translation */ ?>
                 <tr data-id="<?=$translation->getId()?>">
                     <td class="span1"><?= $i+1 ?></td>
-                    <td class="span5"><?= $this->escapeHtml($translation->getMsgid()) ?></td>
-                    <td class="span2"><?= $this->escapeHtml($translation->getMsgstr()) ?></td>
-                    <td class="span2"><?= $this->escapeHtml($translation->getDomain()) ?></td>
+                    <td class="span4"><?= $ellipsis($this->escapeHtml($translation->getMsgid())) ?></td>
+                    <td class="span4"><?= $ellipsis($this->escapeHtml($translation->getMsgstr())) ?></td>
                     <td class="span2"><?= ucfirst(Locale::getDisplayLanguage($translation->getLocale()->getCode())) ?></td>
+                    <td class="span1"><?= $this->escapeHtml($translation->getDomain()) ?></td>
                     <td class="span2 text-right">
                         <div class="btn-group">
                             <a class="btn btn-small btn-modifica"
