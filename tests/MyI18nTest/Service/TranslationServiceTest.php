@@ -91,4 +91,16 @@ class TranslationServiceTest extends TestCase
             );
         }
     }
+
+    public function testFindTranslationByIdOnly()
+    {
+        foreach (Translations::getTranslations() as $translation) {/** @var Translation $translation */
+            $this->assertEquals(
+                $translation,
+                $this->translationService->findTranslation(
+                    $translation->getId()
+                )
+            );
+        }
+    }
 }

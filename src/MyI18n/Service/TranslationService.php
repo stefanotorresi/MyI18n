@@ -70,12 +70,14 @@ class TranslationService extends AbstractEntityService implements RemoteLoaderIn
         return $domains;
     }
 
-    public function findTranslation($msgid, $domain)
+    public function findTranslation($idOrMsgid, $domain = null)
     {
-        $criteria = [
-            'msgid' => $msgid,
-            'domain' => $domain,
-        ];
+        $criteria = $domain === null ?
+            [ 'id' => $idOrMsgid ]
+            : [
+                'msgid' => $idOrMsgid,
+                'domain' => $domain,
+            ];
 
         $result = $this->getEntityManager()->getRepository(Translation::fqcn())->findOneBy($criteria);
 
