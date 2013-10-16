@@ -89,6 +89,62 @@ class TranslationController extends AbstractActionController
         return $this->redirect()->toRoute($this->getBaseRoute());
     }
 
+    public function updateAction()
+    {
+        $translation = $this->getTranslationService()->findTranslation($this->params('id'));
+
+        if (!$translation) {
+            return $this->notFoundAction();
+        }
+
+        $form = $this->getTranslationForm();
+        $form->prepareToUpdate($translation);
+
+        $request = $this->getRequest();
+
+        if (!$request->isPost()) {
+            $viewModel = new ViewModel(array(
+                'translationForm' => $form,
+                'translation' => $translation,
+            ));
+            $viewModel->setTemplate('my-i18n/translation-form');
+
+            return $viewModel;
+        }
+
+        $data = $request->getPost();
+        $form->setData($data);
+
+        if (!$form->isValid()) {
+            $session = $this->getSession();
+            $session->formMessages = $form->getMessages();
+            $session->formData = $data;
+            $session->status = 400;
+            $this->flashMessenger()->addErrorMessage('Invalid data');
+
+            return $this->redirect()->toRoute($this->getBaseRoute().'/translations/update', array(), array(), true);
+        }
+
+        $this->getTranslationService()->save($translation);
+        $this->flashMessenger()->addSuccessMessage('Entry was updated successfully');
+
+        return $this->redirect()->toRoute($this->getBaseRoute());
+    }
+
+    public function deleteAction()
+    {
+        $translation = $this->getTranslationService()->findArticle($this->params('id'));
+
+        if (!$translation) {
+            return $this->notFoundAction();
+        }
+
+        $this->getTranslationService()->remove($translation);
+        $this->flashMessenger()->addSuccessMessage('Entry was deleted successfully');
+
+        return $this->redirect()->toRoute($this->getBaseRoute());
+    }
+
     /**
      * @return TranslationForm
      */

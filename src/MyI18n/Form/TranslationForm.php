@@ -7,6 +7,7 @@
 
 namespace MyI18n\Form;
 
+use MyI18n\Entity\Translation;
 use Zend\Form\Form;
 
 class TranslationForm extends Form
@@ -57,5 +58,19 @@ class TranslationForm extends Form
     public function isUpdating()
     {
         return $this->isUpdating;
+    }
+
+    /**
+     * @param  Translation $translation
+     * @return Translation
+     */
+    public function prepareToUpdate(Translation $translation)
+    {
+        $this->bind($translation);
+
+        $this->get('submit')->setLabel('Edit');
+        $this->isUpdating = true;
+
+        return $this;
     }
 }

@@ -7,6 +7,7 @@
  * ************************************************
  */
 
+/** @var \MyI18n\Form\TranslationForm $form */
 $form = $this->translationForm;
 $form->prepare();
 $translationFieldset = $form->get('translation');
@@ -34,11 +35,12 @@ $CKEditorOptions = [
     'script_options' => [
         'toolbar' => [
             ['Bold','Italic','Underline','StrikeThrough','-','Undo','Redo','-','Cut','Copy','Paste','Find','Replace','-','Outdent','Indent','-','Print'],
-            ['Styles','Format','Font','FontSize'],
+            ['Format','Font','FontSize'],
             '/',
             ['NumberedList','BulletedList','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
             ['Image','Table','-','Link','Smiley','TextColor','BGColor','Source']
         ],
+        'startupMode' => 'source',
     ],
 ];
 
@@ -77,8 +79,8 @@ $CKEditorOptions = [
 
         <div class="controls text-center margin-top-20">
             <?= $this->formButton()->openTag($form->get('submit')->setAttribute('class',
-                'btn btn-primary btn-large btn-aggiungi')) ?>
-            <i class="icon-plus-sign icon-white"></i>
+                'btn btn-primary btn-large')) ?>
+            <i class="icon-<?= $form->isUpdating() ? 'edit' : 'plus-sign' ?> icon-white"></i>
             <?= $this->escapeHtml($this->translate($form->get('submit')->getLabel())) ?>
             <?= $this->formButton()->closeTag() ?>
             <?= $this->formRow($form->get('translationFormCSRF')) ?>
