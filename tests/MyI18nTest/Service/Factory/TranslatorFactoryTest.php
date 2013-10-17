@@ -8,11 +8,7 @@
 namespace MyI18nTest\Service\Factory;
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Tools\SchemaTool;
-use MyI18n\Entity\Translation;
 use MyI18n\Service\Factory\TranslatorFactory;
-use MyI18nTest\Bootstrap;
-use MyI18nTest\TestAsset\Translations;
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\I18n\Translator\Translator;
 
