@@ -71,6 +71,7 @@ class TranslationServiceTest extends TestCase
         $event = new Event;
         $event->setParam('message', 'foo');
         $event->setParam('text_domain', 'bar');
+        $event->setParam('locale', 'test');
 
         $this->translationService->missingTranslationListener($event);
 

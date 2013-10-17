@@ -101,15 +101,16 @@ class TranslationService extends AbstractEntityService implements RemoteLoaderIn
     public function missingTranslationListener(Event $e)
     {
         $message = $e->getParam('message');
-        $locale = $e->getParam('locale');
+        $localeCode = $e->getParam('locale');
         $domain = $e->getParam('text_domain');
 
         if (! $this->findTranslation($message, $domain)) {
             $translation = new Translation();
             $translation->setMsgid($message);
             $translation->setDomain($domain);
-            if (! $locale = $this->getLocaleService()->findOneByCode($locale)) {
-                $locale = new Locale($locale);
+
+            if (! $locale = $this->getLocaleService()->findOneByCode($localeCode)) {
+                $locale = new Locale($localeCode);
             }
             $translation->setLocale($locale);
 
