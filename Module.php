@@ -11,6 +11,7 @@ use Zend\Mvc\MvcEvent;
 
 class Module
 {
+    const VERSION = '0.1.2';
 
     public function onBootstrap(MvcEvent $e)
     {
