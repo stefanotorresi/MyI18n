@@ -7,17 +7,17 @@
 
 namespace MyI18nTest\Service;
 
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Tools\SchemaTool;
 use MyI18n\Entity\Translation;
 use MyI18n\Service\TranslationService;
-use MyI18nTest\Bootstrap;
-use MyI18nTest\TestAsset\Translations;
+use MyI18nTest\EntityManagerAwareFunctionalTestTrait;
+use MyI18nTest\TestAsset;
 use PHPUnit_Framework_TestCase as TestCase;
-use Zend\EventManager\Event;
+use Zend\Paginator\Paginator;
 
-class TranslationServiceTest extends TestCase
+class TranslationServiceFunctionalTest extends TestCase
 {
+    use EntityManagerAwareFunctionalTestTrait;
+
     /**
      * @var TranslationService;
      */
@@ -25,15 +25,8 @@ class TranslationServiceTest extends TestCase
 
     public function setUp()
     {
-        $this->translationService = Bootstrap::getServiceManager()->get('MyI18n\Service\TranslationService');
-
-        /** @var EntityManager $entityManager */
-        $entityManager = Bootstrap::getServiceManager()->get('Doctrine\ORM\EntityManager');
-        $classes    = $entityManager->getMetadataFactory()->getAllMetadata();
-        $schemaTool = new SchemaTool($entityManager);
-        $schemaTool->dropDatabase();
-        $schemaTool->createSchema($classes);
-        Translations::populateService($this->translationService);
+        $this->translationService = new TranslationService($this->getFunctionalEntityManager());
+        TestAsset\Translations::populateService($this->translationService);
     }
 
     public function testGetAllDomains()
@@ -60,29 +53,15 @@ class TranslationServiceTest extends TestCase
 
         $i = 0;
         foreach ($translations as $msgid => $msgstr) {
-            $this->assertEquals(Translations::getTranslations()[$i]->getMsgstr(), $msgstr);
-            $this->assertEquals(Translations::getTranslations()[$i]->getMsgid(), $msgid);
+            $this->assertEquals(TestAsset\Translations::getTranslations()[$i]->getMsgstr(), $msgstr);
+            $this->assertEquals(TestAsset\Translations::getTranslations()[$i]->getMsgid(), $msgid);
             $i++;
         }
     }
 
-    public function testMissingTranslationListener()
-    {
-        $event = new Event;
-        $event->setParam('message', 'foo');
-        $event->setParam('text_domain', 'bar');
-        $event->setParam('locale', 'test');
-
-        $this->translationService->missingTranslationListener($event);
-
-        $translation = $this->translationService->findTranslation('foo', 'bar');
-
-        $this->assertInstanceOf('MyI18n\Entity\Translation', $translation);
-    }
-
     public function testFindTranslation()
     {
-        foreach (Translations::getTranslations() as $translation) {/** @var Translation $translation */
+        foreach (TestAsset\Translations::getTranslations() as $translation) {/** @var Translation $translation */
             $this->assertEquals(
                 $translation,
                 $this->translationService->findTranslation(
@@ -95,7 +74,7 @@ class TranslationServiceTest extends TestCase
 
     public function testFindTranslationByIdOnly()
     {
-        foreach (Translations::getTranslations() as $translation) {/** @var Translation $translation */
+        foreach (TestAsset\Translations::getTranslations() as $translation) {/** @var Translation $translation */
             $this->assertEquals(
                 $translation,
                 $this->translationService->findTranslation(
@@ -103,5 +82,17 @@ class TranslationServiceTest extends TestCase
                 )
             );
         }
+    }
+
+    public function testGetPagedTranslation()
+    {
+        /** @var Paginator $paginator */
+        $paginator = $this->translationService->getPagedTranslations(1, 2);
+
+        $this->assertInstanceOf('Zend\Paginator\Paginator', $paginator);
+
+        $this->assertEquals(1, $paginator->getCurrentPageNumber());
+        $this->assertCount(2, $paginator);
+        $this->assertEquals(3, $paginator->getTotalItemCount());
     }
 }

@@ -8,10 +8,10 @@ return array(
     ),
     'module_listener_options' => array(
         'config_glob_paths'    => array(
-            __DIR__ . '/autoload/{,*.}{global,local}.php',
+            './config/doctrine.config.php',
+            __DIR__ . '/test.module.config.php',
         ),
         'module_paths' => array(
-            './modules',
             './vendor',
         ),
     ),

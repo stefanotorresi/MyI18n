@@ -20,18 +20,6 @@ use Zend\Paginator\Paginator;
 class TranslationService extends AbstractEntityService implements RemoteLoaderInterface
 {
     /**
-     * @var LocaleService
-     */
-    protected $localeService;
-
-    public function __construct(EntityManager $entityManager, LocaleService $localeService)
-    {
-        parent::__construct($entityManager);
-
-        $this->localeService = $localeService;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function load($locale, $textDomain)
@@ -96,44 +84,5 @@ class TranslationService extends AbstractEntityService implements RemoteLoaderIn
         $result = $this->getEntityManager()->getRepository(Translation::fqcn())->findOneBy($criteria);
 
         return $result;
-    }
-
-    public function missingTranslationListener(Event $e)
-    {
-        $message = $e->getParam('message');
-        $localeCode = $e->getParam('locale');
-        $domain = $e->getParam('text_domain');
-
-        if (! $this->findTranslation($message, $domain)) {
-            $translation = new Translation();
-            $translation->setMsgid($message);
-            $translation->setDomain($domain);
-
-            if (! $locale = $this->getLocaleService()->findOneByCode($localeCode)) {
-                $locale = new Locale($localeCode);
-            }
-            $translation->setLocale($locale);
-
-            $this->save($translation);
-        }
-    }
-
-    /**
-     * @return LocaleService
-     */
-    public function getLocaleService()
-    {
-        return $this->localeService;
-    }
-
-    /**
-     * @param LocaleService $localeService
-     * @return $this
-     */
-    public function setLocaleService(LocaleService $localeService)
-    {
-        $this->localeService = $localeService;
-
-        return $this;
     }
 }

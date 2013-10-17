@@ -26,10 +26,7 @@ class TranslationServiceFactory implements FactoryInterface
         /** @var EntityManager $entityManager */
         $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');
 
-        /** @var LocaleService $localeService */
-        $localeService = $serviceLocator->get('MyI18n\Service\LocaleService');
-
-        $translationService = new TranslationService($entityManager, $localeService);
+        $translationService = new TranslationService($entityManager);
 
         return $translationService;
     }

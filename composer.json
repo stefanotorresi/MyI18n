@@ -19,7 +19,14 @@
     ],
     "require": {
         "php": ">=5.4.1",
-        "zendframework/zendframework": "~2.2"
+        "zendframework/zendframework": "~2.2",
+        "doctrine/doctrine-module": "~0.8@dev",
+        "doctrine/doctrine-orm-module": "~0.8@dev",
+        "stefanotorresi/my-base": "0.1.x-dev",
+        "soflomo/purifier": "0.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "3.7.*"
     },
     "autoload": {
         "psr-0": {
@@ -28,8 +35,5 @@
         "classmap": [
             "./"
         ]
-    },
-    "require-dev": {
-        "phpunit/phpunit": "3.7.*"
     }
 }

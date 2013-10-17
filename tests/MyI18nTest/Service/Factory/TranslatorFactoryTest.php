@@ -19,62 +19,37 @@ use Zend\Stdlib\SplPriorityQueue;
 
 class TranslatorFactoryTest extends TestCase
 {
-    public function setUp()
-    {
-        /** @var EntityManager $entityManager */
-        $entityManager = Bootstrap::getServiceManager()->get('Doctrine\ORM\EntityManager');
+//    public function setUp()
+//    {
+//        /** @var EntityManager $entityManager */
+//        $entityManager = Bootstrap::getServiceManager()->get('Doctrine\ORM\EntityManager');
+//
+//        $classes    = $entityManager->getMetadataFactory()->getAllMetadata();
+//
+//        $schemaTool = new SchemaTool($entityManager);
+//        $schemaTool->dropDatabase();
+//        $schemaTool->createSchema($classes);
+//
+//        $translationService = Bootstrap::getServiceManager()->get('MyI18n\Service\TranslationService');
+//
+//        Translations::populateService($translationService);
+//    }
+//
+//    public function testTranslationsLoading()
+//    {
+//        /** @var Translator $translator */
+//        $translator = Bootstrap::getServiceManager()->get('translator');
+//
+//        foreach (Translations::getTranslations() as $translation) { /** @var Translation $translation */
+//            $translator->setLocale($translation->getLocale()->getCode());
+//            $this->assertEquals(
+//                $translation->getMsgstr(),
+//                $translator->translate($translation->getMsgid(), $translation->getDomain())
+//            );
+//        }
+//    }
 
-        $classes    = $entityManager->getMetadataFactory()->getAllMetadata();
-
-        $schemaTool = new SchemaTool($entityManager);
-        $schemaTool->dropDatabase();
-        $schemaTool->createSchema($classes);
-
-        $translationService = Bootstrap::getServiceManager()->get('MyI18n\Service\TranslationService');
-
-        Translations::populateService($translationService);
-    }
-
-    public function testTranslationsLoading()
-    {
-        /** @var Translator $translator */
-        $translator = Bootstrap::getServiceManager()->get('translator');
-
-        foreach (Translations::getTranslations() as $translation) { /** @var Translation $translation */
-            $translator->setLocale($translation->getLocale()->getCode());
-            $this->assertEquals(
-                $translation->getMsgstr(),
-                $translator->translate($translation->getMsgid(), $translation->getDomain())
-            );
-        }
-    }
-
-    public function testMissingTranslationListenerEnabler()
-    {
-        $translatorFactory = new TranslatorFactory();
-
-        $config = [
-            'MyI18n' => [
-                'missing_translation_listener' => [
-                    'enabled' => true,
-                    'ignore_domains' => [],
-                    'only_domains' => [],
-                ],
-            ],
-        ];
-
-        $serviceManager = $this->getServiceManagerMock($config);
-
-        $translator = $translatorFactory->createService($serviceManager);
-
-        /** @var SplPriorityQueue $listeners */
-        $listeners = $translator->getEventManager()->getListeners(Translator::EVENT_MISSING_TRANSLATION);
-
-        $this->assertTrue($translator->isEventManagerEnabled());
-        $this->assertCount(1, $listeners);
-    }
-
-    public function testMissingTranslationListenerDisabled()
+    public function testCreateService()
     {
         $translatorFactory = new TranslatorFactory();
 
@@ -90,13 +65,37 @@ class TranslatorFactoryTest extends TestCase
 
         $serviceManager = $this->getServiceManagerMock($config);
 
+        $translatorFactory->createService($serviceManager);
+    }
+
+    public function testMissingTranslationListenerEnabled()
+    {
+        $translatorFactory = new TranslatorFactory();
+
+        $config = [
+            'MyI18n' => [
+                'missing_translation_listener' => [
+                    'enabled' => true,
+                    'ignore_domains' => [],
+                    'only_domains' => [],
+                ],
+            ],
+        ];
+
+        $serviceManager = $this->getServiceManagerMock($config);
+
+        $listener = $this->getMissingTranslationListenerMock();
+        $listener->expects($this->once())->method('attach');
+
+        $serviceManager
+            ->expects($this->at(3))
+            ->method('get')
+            ->with('MyI18n\Listener\MissingTranslation')
+            ->will($this->returnValue($listener));
+
         $translator = $translatorFactory->createService($serviceManager);
+        $this->assertTrue($translator->isEventManagerEnabled());
 
-        /** @var SplPriorityQueue $listeners */
-        $listeners = $translator->getEventManager()->getListeners(Translator::EVENT_MISSING_TRANSLATION);
-
-        $this->assertFalse($translator->isEventManagerEnabled());
-        $this->assertCount(0, $listeners);
     }
 
     public function getServiceManagerMock($config)
@@ -121,15 +120,21 @@ class TranslatorFactoryTest extends TestCase
     public function getTranslatorServiceMock()
     {
         $entityManager = $this->getMock('Doctrine\ORM\EntityManager', [], [], '', false);
-        $localeService = $this->getMock('MyI18n\Service\LocaleService', [], [$entityManager]);
 
-        $translatorService = $this->getMock('MyI18n\Service\TranslationService', [], [$entityManager, $localeService]);
+        $translatorService = $this->getMock('MyI18n\Service\TranslationService', [], [$entityManager]);
 
         $translatorService
             ->expects($this->once())
             ->method('getAllDomains')
-            ->will($this->returnValue([]));
+            ->will($this->returnValue(['someTextDomain']));
 
         return $translatorService;
+    }
+
+    public function getMissingTranslationListenerMock()
+    {
+        $listener = $this->getMock('MyI18n\Listener\MissingTranslation', [], [], '', false);
+
+        return $listener;
     }
 }
