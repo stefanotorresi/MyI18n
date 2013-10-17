@@ -21,7 +21,12 @@
         "php": ">=5.3.3",
         "zendframework/zendframework": "~2.2"
     },
-    "autoload": {
+    "extra": {
+        "branch-alias": {
+            "dev-0.x": "0.x-dev" 
+        }
+    },
+    "autload": {
         "psr-0": {
             "MyI18n": "src/"
         },
