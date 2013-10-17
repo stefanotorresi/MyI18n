@@ -9,7 +9,6 @@ namespace MyI18nTest\Listener;
 
 use MyI18n\Entity;
 use MyI18n\Listener\MissingTranslation;
-use MyI18nTest\EntityManagerAwareFunctionalTestTrait;
 use Zend\EventManager\Event;
 use PHPUnit_Framework_TestCase as TestCase;
 

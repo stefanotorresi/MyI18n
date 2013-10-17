@@ -5,7 +5,6 @@
  * ************************************************
  */
 
-
 namespace MyI18nTest;
 
 use Doctrine\ORM\EntityManager;

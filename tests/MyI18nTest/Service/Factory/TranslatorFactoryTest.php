@@ -15,7 +15,6 @@ use MyI18nTest\Bootstrap;
 use MyI18nTest\TestAsset\Translations;
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\I18n\Translator\Translator;
-use Zend\Stdlib\SplPriorityQueue;
 
 class TranslatorFactoryTest extends TestCase
 {

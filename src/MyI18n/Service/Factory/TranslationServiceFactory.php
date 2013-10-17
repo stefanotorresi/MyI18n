@@ -8,7 +8,6 @@
 namespace MyI18n\Service\Factory;
 
 use Doctrine\ORM\EntityManager;
-use MyI18n\Service\LocaleService;
 use MyI18n\Service\TranslationService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;

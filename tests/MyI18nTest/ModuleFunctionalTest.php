@@ -23,7 +23,7 @@ class ModuleFunctionalTest extends TestCase
     {
         $serviceManager = ServiceManagerFactory::getServiceManager();
 
-        foreach($this->services as $service) {
+        foreach ($this->services as $service) {
             $this->assertInstanceOf($service, $serviceManager->get($service));
         }
     }

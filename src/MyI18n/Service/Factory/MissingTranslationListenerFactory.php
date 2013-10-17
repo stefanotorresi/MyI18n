@@ -17,7 +17,7 @@ class MissingTranslationListenerFactory implements FactoryInterface
     /**
      * Create service
      *
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param  ServiceLocatorInterface $serviceLocator
      * @return MissingTranslation
      */
     public function createService(ServiceLocatorInterface $serviceLocator)

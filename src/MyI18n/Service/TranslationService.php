@@ -8,11 +8,9 @@
 namespace MyI18n\Service;
 
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\EntityManager;
 use MyBase\Service\AbstractEntityService;
 use MyI18n\Entity\Locale;
 use MyI18n\Entity\Translation;
-use Zend\EventManager\Event;
 use Zend\I18n\Translator\Loader\RemoteLoaderInterface;
 use Zend\I18n\Translator\TextDomain;
 use Zend\Paginator\Paginator;
