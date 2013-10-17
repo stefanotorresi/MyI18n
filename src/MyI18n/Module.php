@@ -20,13 +20,13 @@ class Module implements
     public function onBootstrap(MvcEvent $e)
     {
         $app = $e->getApplication();
-        $events = $app->getEventManager();
-        $services = $app->getServiceManager();
+        $eventManager = $app->getEventManager();
+        $serviceManager = $app->getServiceManager();
 
-        /* @var $strategy LocaleStrategy */
-        $strategy = $services->get('MyI18n\LocaleStrategy');
+        /* @var $localeStrategy LocaleStrategy */
+        $localeStrategy = $serviceManager->get('MyI18n\LocaleStrategy');
 
-        $strategy->attach($events);
+        $eventManager->attach($localeStrategy);
     }
 
     public function getDir()
