@@ -25,6 +25,12 @@
         "stefanotorresi/my-base": "1.x-dev",
         "soflomo/purifier": "0.*"
     },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.x-dev",
+            "dev-0.x": "0.x-dev" 
+        }
+    },
     "autoload": {
         "psr-0": {
             "MyI18n": "src/"
