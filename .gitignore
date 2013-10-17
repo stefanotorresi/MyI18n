@@ -1,7 +1,6 @@
 .idea
 vendor
 composer.lock
-tests/test.db
 tests/phpunit.xml
 tests/coverage
 tests/config/config.php
