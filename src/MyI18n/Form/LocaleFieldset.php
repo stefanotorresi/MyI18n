@@ -45,7 +45,7 @@ class LocaleFieldset extends Fieldset
                         ),
                     ),
                     'label' => 'Language',
-                    'label_generator' => function(LocaleEntity $targetEntity) {
+                    'label_generator' => function (LocaleEntity $targetEntity) {
                         return ucfirst(Locale::getDisplayLanguage($targetEntity->getCode()));
                     },
                 ),
