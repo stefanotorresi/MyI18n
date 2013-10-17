@@ -7,7 +7,6 @@
 
 namespace MyI18nTest;
 
-use DoctrineORMModuleTest\Util\ServiceManagerFactory;
 use PHPUnit_Framework_TestCase as TestCase;
 
 class ModuleFunctionalTest extends TestCase
@@ -21,7 +20,7 @@ class ModuleFunctionalTest extends TestCase
 
     public function testServiceManagerConfiguration()
     {
-        $serviceManager = ServiceManagerFactory::getServiceManager();
+        $serviceManager = Bootstrap::getServiceManager();
 
         foreach ($this->services as $service) {
             $this->assertInstanceOf($service, $serviceManager->get($service));

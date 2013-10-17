@@ -5,9 +5,11 @@
  * ************************************************
  */
 
+namespace MyI18nTest;
+
 error_reporting(E_ALL | E_STRICT);
 chdir(__DIR__);
 
-include __DIR__ . '/MyI18nTest/Bootstrap.php';
+include __DIR__ . '/' . __NAMESPACE__ . '/Bootstrap.php';
 
-MyI18nTest\Bootstrap::init();
+Bootstrap::init();

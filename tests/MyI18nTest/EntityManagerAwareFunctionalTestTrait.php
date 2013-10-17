@@ -9,7 +9,6 @@ namespace MyI18nTest;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
-use DoctrineORMModuleTest\Util\ServiceManagerFactory;
 
 trait EntityManagerAwareFunctionalTestTrait
 {
@@ -18,7 +17,7 @@ trait EntityManagerAwareFunctionalTestTrait
      */
     public function getFunctionalEntityManager()
     {
-        $serviceManager = ServiceManagerFactory::getServiceManager();
+        $serviceManager = Bootstrap::getServiceManager();
 
         /** @var EntityManager $entityManager */
         $entityManager = $serviceManager->get('Doctrine\ORM\EntityManager');
