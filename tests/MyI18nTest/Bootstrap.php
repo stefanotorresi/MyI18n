@@ -21,7 +21,7 @@ class Bootstrap
             throw new \RuntimeException("Autoloader could not be found. Did you run 'composer install --dev'?");
         }
 
-        $loader->add('MyI18nTest', __DIR__);
+        $loader->add('MyI18nTest', dirname(__DIR__));
 
         if (file_exists('./config/test.application.config.php')) {
             $config = require './config/test.application.config.php';
