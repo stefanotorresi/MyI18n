@@ -55,11 +55,12 @@ return [
 
     'service_manager' => [
         'factories' => [
-            'MyI18n\Service\TranslationService' => 'MyI18n\Service\Factory\TranslationServiceFactory',
-            'MyI18n\Service\LocaleService' => 'MyI18n\Service\Factory\LocaleServiceFactory',
-            'MyI18n\Form\TranslationForm' => 'MyI18n\Service\Factory\TranslationFormFactory',
             'MvcTranslator' => 'MyI18n\Service\Factory\TranslatorFactory',
+            'MyI18n\Form\TranslationForm' => 'MyI18n\Service\Factory\TranslationFormFactory',
+            'MyI18n\Listener\MissingTranslation' => 'MyI18n\Service\Factory\MissingTranslationListenerFactory',
             'MyI18n\Navigation' => 'MyI18n\NavigationFactory',
+            'MyI18n\Service\LocaleService' => 'MyI18n\Service\Factory\LocaleServiceFactory',
+            'MyI18n\Service\TranslationService' => 'MyI18n\Service\Factory\TranslationServiceFactory',
         ],
         'invokables' => [
             'MyI18n\Detector\Query'   => 'MyI18n\Detector\Query',
