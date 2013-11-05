@@ -20,6 +20,7 @@ return array(
             'query_uri' => false,
         )
     ),
+
     'router' => array(
         'routes' => array(
             'lang-switch' => array(
@@ -36,6 +37,24 @@ return array(
                 ),
                 'may_terminate' => true,
             ),
+        ),
+    ),
+
+    'service_manager' => array(
+        'factories' => array(
+            'MvcTranslator' => 'Zend\Mvc\Service\TranslatorServiceFactory',
+            'MyI18n\Navigation' => 'MyI18n\NavigationFactory',
+        ),
+        'invokables' => array (
+            'MyI18n\Detector\Query'   => 'MyI18n\Detector\Query',
+            'MyI18n\Detector\Session'   => 'MyI18n\Detector\Session',
+            'MyI18n\Detector\Route'   => 'MyI18n\Detector\Route',
+            'MyI18n\Detector\Headers'   => 'MyI18n\Detector\Headers',
+        ),
+        'aliases' => array(
+            'nav-lang' => 'MyI18n\Navigation',
+            'MyI18n\Translator' => 'MvcTranslator',
+            'translator' => 'MvcTranslator',
         ),
     ),
 );

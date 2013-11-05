@@ -1,43 +1,14 @@
 <?php
-
 /**
+ * @author Stefano Torresi (http://stefanotorresi.it)
+ * @license See the file LICENSE.txt for copying permission.
+ * ************************************************
  *
- * @author Stefano Torresi <webdeveloper@stefanotorresi.it>
+ * This file is placed here for compatibility with Zendframework 2's ModuleManager.
+ * It allows usage of this module even without composer.
+ * The original Module.php is in 'src/{ModuleNamespace}' in order to respect PSR-0
  */
 
 namespace MyI18n;
 
-use Zend\Mvc\MvcEvent;
-
-class Module
-{
-    const VERSION = '0.1.2';
-
-    public function onBootstrap(MvcEvent $e)
-    {
-        $app = $e->getApplication();
-        $events = $app->getEventManager();
-        $services = $app->getServiceManager();
-
-        /* @var $strategy LocaleStrategy */
-        $strategy = $services->get("MyI18n\LocaleStrategy");
-
-        $strategy->attach($events);
-
-    }
-
-    public function getAutoloaderConfig()
-    {
-        return include __DIR__ . '/config/autoloader.config.php';
-    }
-
-    public function getConfig()
-    {
-        return include __DIR__ . '/config/module.config.php';
-    }
-
-    public function getServiceConfig()
-    {
-        return include __DIR__ . '/config/service.config.php';
-    }
-}
+require_once __DIR__ . '/src/' . __NAMESPACE__ . '/Module.php';
