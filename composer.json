@@ -23,7 +23,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-0.x": "0.x-dev" 
+            "dev-0.x": "0.x-dev"
         }
     },
     "autload": {
