@@ -50,7 +50,7 @@ $ellipsis = new \MyBase\Filter\Ellipsis(100);
                     <td class="span4"><?= $ellipsis($this->escapeHtml($translation->getMsgid())) ?></td>
                     <td class="span4"><?= $ellipsis($this->escapeHtml($translation->getMsgstr())) ?></td>
                     <td class="span2"><?= ucfirst(Locale::getDisplayLanguage($translation->getLocale()->getCode())) ?></td>
-                    <td class="span1"><?= $this->escapeHtml($translation->getDomain()) ?></td>
+                    <td class="span1"><?= $this->escapeHtml($translation->getTextDomain()) ?></td>
                     <td class="span2 text-right">
                         <div class="btn-group">
                             <a class="btn btn-small btn-modifica"

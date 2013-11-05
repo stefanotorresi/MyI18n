@@ -27,7 +27,7 @@ class TranslationService extends AbstractEntityService implements RemoteLoaderIn
 
         $queryBuilder->select('translation')->from(Translation::fqcn(), 'translation')
             ->innerJoin('translation.locale', 'locale', $expr->eq('code', $expr->literal($locale)))
-            ->where($expr->eq('translation.domain', $expr->literal($textDomain)));
+            ->where($expr->eq('translation.textDomain', $expr->literal($textDomain)));
 
         $translations = $queryBuilder->getQuery()->getResult();
 
@@ -58,13 +58,13 @@ class TranslationService extends AbstractEntityService implements RemoteLoaderIn
     public function getAllDomains()
     {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder();
-        $queryBuilder->select('DISTINCT translation.domain')->from(Translation::fqcn(), 'translation');
+        $queryBuilder->select('DISTINCT translation.textDomain')->from(Translation::fqcn(), 'translation');
 
         $result  = $queryBuilder->getQuery()->getScalarResult();
         $domains = array();
 
         foreach ($result as $r) {
-            $domains[] = $r['domain'];
+            $domains[] = $r['textDomain'];
         }
 
         return $domains;
@@ -76,7 +76,7 @@ class TranslationService extends AbstractEntityService implements RemoteLoaderIn
             [ 'id' => $idOrMsgid ]
             : [
                 'msgid' => $idOrMsgid,
-                'domain' => $domain,
+                'textDomain' => $domain,
             ];
 
         $result = $this->getEntityManager()->getRepository(Translation::fqcn())->findOneBy($criteria);

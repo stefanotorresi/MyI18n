@@ -19,13 +19,13 @@ class Translations
         $locale->setId(1);
 
         $translation = new Translation();
-        $translation->setId(1)->setDomain('test')->setLocale($locale)->setMsgid('foo')->setMsgstr('bar');
+        $translation->setId(1)->setTextDomain('test')->setLocale($locale)->setMsgid('foo')->setMsgstr('bar');
 
         $translation1 = new Translation();
-        $translation1->setId(2)->setDomain('test')->setLocale($locale)->setMsgid('hello')->setMsgstr('ciao');
+        $translation1->setId(2)->setTextDomain('test')->setLocale($locale)->setMsgid('hello')->setMsgstr('ciao');
 
         $translation2 = new Translation();
-        $translation2->setId(3)->setDomain('test-2')->setLocale($locale)->setMsgid('bye')->setMsgstr('derci');
+        $translation2->setId(3)->setTextDomain('test-2')->setLocale($locale)->setMsgid('bye')->setMsgstr('derci');
 
         return [
             $translation,

@@ -26,8 +26,10 @@ return [
         ],
         'missing_translation_listener' => [
             'enabled' => false,
-            'ignore_domains' => [],
-            'only_domains' => [],
+            'locales_blacklist' => [],
+            'locales_whitelist' => [],
+            'domains_blacklist' => [],
+            'domains_whitelist' => [],
         ],
     ],
 

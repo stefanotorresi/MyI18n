@@ -69,13 +69,149 @@ class MissingTranslationTest extends TestCase
         $translation = new Entity\Translation();
         $translation
             ->setMsgid($event->getParam('message'))
-            ->setDomain($event->getParam('text_domain'))
+            ->setTextDomain($event->getParam('text_domain'))
             ->setLocale(new Entity\Locale($event->getParam('locale')));
 
         $listener->getTranslationService()
             ->expects($this->once())
             ->method('save')
             ->with($translation);
+
+        $listener->addMissingTranslations($event);
+    }
+
+    public function testLocalesBlackList()
+    {
+        $listener = $this->listener;
+        $listener->setLocalesBlackList(['black_listed_locale']);
+
+        $event = new Event;
+        $event->setParam('message', 'foo');
+        $event->setParam('text_domain', 'bar');
+        $event->setParam('locale', 'black_listed_locale');
+
+        $listener->getTranslationService()
+            ->expects($this->never())
+            ->method('save');
+
+        $listener->addMissingTranslations($event);
+    }
+
+    public function testLocalesBlackListInverseCondition()
+    {
+        $listener = $this->listener;
+        $listener->setLocalesBlackList(['black_listed_locale']);
+
+        $event = new Event;
+        $event->setParam('message', 'foo');
+        $event->setParam('text_domain', 'bar');
+        $event->setParam('locale', 'not_a_black_listed_locale');
+
+        $translation = new Entity\Translation();
+        $translation
+            ->setMsgid($event->getParam('message'))
+            ->setTextDomain($event->getParam('text_domain'))
+            ->setLocale(new Entity\Locale($event->getParam('locale')));
+
+        $listener->getTranslationService()
+            ->expects($this->once())
+            ->method('save')
+            ->with($translation);
+
+        $listener->addMissingTranslations($event);
+    }
+
+    public function testDomainsBlackList()
+    {
+        $listener = $this->listener;
+        $listener->setDomainsBlackList(['black_listed_domain']);
+
+        $event = new Event;
+        $event->setParam('message', 'foo');
+        $event->setParam('text_domain', 'black_listed_domain');
+        $event->setParam('locale', 'test');
+
+        $listener->getTranslationService()
+            ->expects($this->never())
+            ->method('save');
+
+        $listener->addMissingTranslations($event);
+    }
+
+    public function testDomainsBlackListInverseCondition()
+    {
+        $listener = $this->listener;
+        $listener->setDomainsBlackList(['black_listed_domain']);
+
+        $event = new Event;
+        $event->setParam('message', 'foo');
+        $event->setParam('text_domain', 'not_a_black_listed_domain');
+        $event->setParam('locale', 'test');
+
+        $translation = new Entity\Translation();
+        $translation
+            ->setMsgid($event->getParam('message'))
+            ->setTextDomain($event->getParam('text_domain'))
+            ->setLocale(new Entity\Locale($event->getParam('locale')));
+
+        $listener->getTranslationService()
+            ->expects($this->once())
+            ->method('save')
+            ->with($translation);
+
+        $listener->addMissingTranslations($event);
+    }
+
+    public function testLocalesBlackListPrecedesWhiteList()
+    {
+        $listener = $this->listener;
+        $listener->setLocalesBlackList(['some_locale']);
+        $listener->setLocalesWhiteList(['some_locale']);
+
+        $event = new Event;
+        $event->setParam('message', 'foo');
+        $event->setParam('text_domain', 'bar');
+        $event->setParam('locale', 'some_locale');
+
+        $listener->getTranslationService()
+            ->expects($this->never())
+            ->method('save');
+
+        $listener->addMissingTranslations($event);
+    }
+
+    public function testDomainsBlackListPrecedesWhiteList()
+    {
+        $listener = $this->listener;
+        $listener->setDomainsBlackList(['some_domain']);
+        $listener->setDomainsWhiteList(['some_domain']);
+
+        $event = new Event;
+        $event->setParam('message', 'foo');
+        $event->setParam('text_domain', 'some_domain');
+        $event->setParam('locale', 'some_locale');
+
+        $listener->getTranslationService()
+            ->expects($this->never())
+            ->method('save');
+
+        $listener->addMissingTranslations($event);
+    }
+
+    public function testLocalesBlackListPrecedesDomainsWhiteList()
+    {
+        $listener = $this->listener;
+        $listener->setLocalesBlackList(['some_locale']);
+        $listener->setDomainsWhiteList(['some_domain']);
+
+        $event = new Event;
+        $event->setParam('message', 'foo');
+        $event->setParam('text_domain', 'some_domain');
+        $event->setParam('locale', 'some_locale');
+
+        $listener->getTranslationService()
+            ->expects($this->never())
+            ->method('save');
 
         $listener->addMissingTranslations($event);
     }

@@ -26,7 +26,7 @@ class Translation extends Entity
      * @var string
      * @ORM\Column(type="string")
      */
-    protected $domain;
+    protected $textDomain;
 
     /**
      * @var string
@@ -62,18 +62,18 @@ class Translation extends Entity
     /**
      * @return string
      */
-    public function getDomain()
+    public function getTextDomain()
     {
-        return $this->domain;
+        return $this->textDomain;
     }
 
     /**
-     * @param string $domain
+     * @param string $textDomain
      * @return $this
      */
-    public function setDomain($domain)
+    public function setTextDomain($textDomain)
     {
-        $this->domain = $domain;
+        $this->textDomain = $textDomain;
 
         return $this;
     }

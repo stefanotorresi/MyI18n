@@ -28,7 +28,13 @@ class MissingTranslationListenerFactory implements FactoryInterface
         /** @var Service\LocaleService $localeService */
         $localeService = $serviceLocator->get('MyI18n\Service\LocaleService');
 
+        $config = $serviceLocator->get('config')['MyI18n']['missing_translation_listener'];
+
         $listener = new MissingTranslation($translationService, $localeService);
+        $listener->setDomainsBlackList($config['domains_blacklist'])
+            ->setDomainsWhiteList($config['domains_whitelist'])
+            ->setLocalesBlackList($config['locales_blacklist'])
+            ->setLocalesWhiteList($config['locales_whitelist']);
 
         return $listener;
     }

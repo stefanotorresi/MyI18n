@@ -66,7 +66,7 @@ class TranslationServiceFunctionalTest extends TestCase
                 $translation,
                 $this->translationService->findTranslation(
                     $translation->getMsgid(),
-                    $translation->getDomain()
+                    $translation->getTextDomain()
                 )
             );
         }
