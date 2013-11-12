@@ -28,31 +28,29 @@ class LocaleFieldset extends Fieldset
 
     public function init()
     {
-        $this->add(
-            array(
-                'name' => 'id',
-                'type' => 'DoctrineModule\Form\Element\ObjectSelect',
-                'options' => array(
-                    'empty_option' => '',
-                    'object_manager' => $this->objectManager,
-                    'target_class'   => LocaleEntity::fqcn(),
-                    'property'       => 'code',
-                    'find_method'    => array(
-                        'name'   => 'findBy',
-                        'params' => array(
-                            'criteria' => array(),
-                            'orderBy'  => array('code' => 'ASC'),
-                        ),
+        $this->add(array(
+            'name' => 'id',
+            'type' => 'DoctrineModule\Form\Element\ObjectSelect',
+            'options' => array(
+                'empty_option' => '',
+                'object_manager' => $this->objectManager,
+                'target_class'   => LocaleEntity::fqcn(),
+                'property'       => 'code',
+                'find_method'    => array(
+                    'name'   => 'findBy',
+                    'params' => array(
+                        'criteria' => array(),
+                        'orderBy'  => array('code' => 'ASC'),
                     ),
-                    'label' => 'Language',
-                    'label_generator' => function (LocaleEntity $targetEntity) {
-                        return ucfirst(Locale::getDisplayLanguage($targetEntity->getCode()));
-                    },
                 ),
-                'attributes' => array(
-                    'required' => true,
-                ),
-            )
-        );
+                'label' => 'Language',
+                'label_generator' => function (LocaleEntity $targetEntity) {
+                    return ucfirst(Locale::getDisplayLanguage($targetEntity->getCode()));
+                },
+            ),
+            'attributes' => array(
+                'required' => true,
+            ),
+        ));
     }
 }

@@ -24,13 +24,6 @@ return [
             'full_lang_as_label' => true,
             'query_uri' => false,
         ],
-        'missing_translation_listener' => [
-            'enabled' => false,
-            'locales_blacklist' => [],
-            'locales_whitelist' => [],
-            'domains_blacklist' => [],
-            'domains_whitelist' => [],
-        ],
     ],
 
     'navigation' => [
@@ -57,36 +50,31 @@ return [
 
     'service_manager' => [
         'factories' => [
-            'MvcTranslator' => 'MyI18n\Service\Factory\TranslatorFactory',
             'MyI18n\Form\TranslationForm' => 'MyI18n\Service\Factory\TranslationFormFactory',
-            'MyI18n\Listener\MissingTranslation' => 'MyI18n\Service\Factory\MissingTranslationListenerFactory',
             'MyI18n\Navigation' => 'MyI18n\NavigationFactory',
             'MyI18n\Service\LocaleService' => 'MyI18n\Service\Factory\LocaleServiceFactory',
-            'MyI18n\Service\TranslationService' => 'MyI18n\Service\Factory\TranslationServiceFactory',
         ],
         'invokables' => [
-            'MyI18n\Detector\Query'   => 'MyI18n\Detector\Query',
-            'MyI18n\Detector\Session'   => 'MyI18n\Detector\Session',
-            'MyI18n\Detector\Route'   => 'MyI18n\Detector\Route',
-            'MyI18n\Detector\Headers'   => 'MyI18n\Detector\Headers',
+            'MyI18n\Detector\Query' => 'MyI18n\Detector\Query',
+            'MyI18n\Detector\Session' => 'MyI18n\Detector\Session',
+            'MyI18n\Detector\Route' => 'MyI18n\Detector\Route',
+            'MyI18n\Detector\Headers' => 'MyI18n\Detector\Headers',
         ],
         'aliases' => [
             'nav-lang' => 'MyI18n\Navigation',
-            'MyI18n\Translator' => 'MvcTranslator',
             'translator' => 'MvcTranslator',
-            'MyI18n\Service\Translation' => 'MyI18n\Service\TranslationService',
             'MyI18n\Service\Locale' => 'MyI18n\Service\LocaleService',
         ],
     ],
 
-    'translator' => array(
-        'translation_file_patterns' => array(
-            array(
+    'translator' => [
+        'translation_file_patterns' => [
+            [
                 'type' => 'phpArray',
                 'base_dir'      => __DIR__ . '/../language',
                 'pattern'       => '%s/'.__NAMESPACE__.'.php',
                 'text_domain'   => 'MyBackend',
-            ),
-        ),
-    ),
+            ],
+        ],
+    ],
 ];

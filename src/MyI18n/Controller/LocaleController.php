@@ -7,27 +7,25 @@
 
 namespace MyI18n\Controller;
 
-use MyI18n\Entity\Translation;
-use MyI18n\Form\TranslationForm;
-use MyI18n\Service\TranslationService;
+use MyI18n\Form\LocaleForm;
+use MyI18n\Service\LocaleService;
 use Zend\EventManager\EventManagerInterface;
 use Zend\Http\Response as HttpResponse;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\MvcEvent;
-use Zend\Session\Container as Session;
 use Zend\View\Model\ViewModel;
 
-class TranslationController extends AbstractActionController
+class LocaleController extends AbstractActionController
 {
     /**
-     * @var TranslationForm
+     * @var LocaleForm
      */
-    protected $translationForm;
+    protected $localeForm;
 
     /**
-     * @var TranslationService
+     * @var LocaleService
      */
-    protected $translationService;
+    protected $localeService;
 
     /**
      * @var Session
@@ -43,7 +41,7 @@ class TranslationController extends AbstractActionController
 
     public function indexAction()
     {
-        $translations = $this->getTranslationService()->getPagedTranslations(
+        $translations = $this->getLocaleService()->getPagedTranslations(
             $this->params('page', 1),
             $this->params('itemsPerPage', 20)
         );
@@ -55,7 +53,7 @@ class TranslationController extends AbstractActionController
 
     public function createAction()
     {
-        $form = $this->getTranslationForm();
+        $form = $this->getLocaleForm();
 
         $request = $this->getRequest();
 
@@ -83,7 +81,7 @@ class TranslationController extends AbstractActionController
             return $this->redirect()->toRoute($this->getBaseRoute().'/translations/create');
         }
 
-        $this->getTranslationService()->save($translation);
+        $this->getLocaleService()->save($translation);
         $this->flashMessenger()->addSuccessMessage('New entry was added successfully');
 
         return $this->redirect()->toRoute($this->getBaseRoute());
@@ -91,13 +89,13 @@ class TranslationController extends AbstractActionController
 
     public function updateAction()
     {
-        $translation = $this->getTranslationService()->findTranslation($this->params('id'));
+        $translation = $this->getLocaleService()->findTranslation($this->params('id'));
 
         if (!$translation) {
             return $this->notFoundAction();
         }
 
-        $form = $this->getTranslationForm();
+        $form = $this->getLocaleForm();
         $form->prepareToUpdate($translation);
 
         $request = $this->getRequest();
@@ -125,7 +123,7 @@ class TranslationController extends AbstractActionController
             return $this->redirect()->toRoute($this->getBaseRoute().'/translations/update', array(), array(), true);
         }
 
-        $this->getTranslationService()->save($translation);
+        $this->getLocaleService()->save($translation);
         $this->flashMessenger()->addSuccessMessage('Entry was updated successfully');
 
         return $this->redirect()->toRoute($this->getBaseRoute());
@@ -133,60 +131,60 @@ class TranslationController extends AbstractActionController
 
     public function deleteAction()
     {
-        $translation = $this->getTranslationService()->findTranslation($this->params('id'));
+        $translation = $this->getLocaleService()->findTranslation($this->params('id'));
 
         if (!$translation) {
             return $this->notFoundAction();
         }
 
-        $this->getTranslationService()->remove($translation);
+        $this->getLocaleService()->remove($translation);
         $this->flashMessenger()->addSuccessMessage('Entry was deleted successfully');
 
         return $this->redirect()->toRoute($this->getBaseRoute());
     }
 
     /**
-     * @return TranslationForm
+     * @return LocaleForm
      */
-    public function getTranslationForm()
+    public function getLocaleForm()
     {
-        if (! $this->translationForm) {
-            $this->translationForm = $this->getServiceLocator()->get('MyI18n\Form\TranslationForm');
+        if (! $this->localeForm) {
+            $this->localeForm = $this->getServiceLocator()->get('MyI18n\Form\LocaleForm');
         }
 
-        return $this->translationForm;
+        return $this->localeForm;
     }
 
     /**
      * @param mixed $translationList
      * @return $this
      */
-    public function setTranslationForm($translationList)
+    public function setLocaleForm($translationList)
     {
-        $this->translationForm = $translationList;
+        $this->localeForm = $translationList;
 
         return $this;
     }
 
     /**
-     * @return array|TranslationService|object
+     * @return LocaleService
      */
-    private function getTranslationService()
+    private function getLocaleService()
     {
-        if (! $this->translationService) {
-            $this->translationService = $this->getServiceLocator()->get('MyI18n\Service\TranslationService');
+        if (! $this->localeService) {
+            $this->localeService = $this->getServiceLocator()->get('MyI18n\Service\LocaleService');
         }
 
-        return $this->translationService;
+        return $this->localeService;
     }
 
     /**
-     * @param TranslationService $translationService
+     * @param LocaleService $localeService
      * @return $this
      */
-    public function setTranslationService($translationService)
+    public function setLocaleService($localeService)
     {
-        $this->translationService = $translationService;
+        $this->localeService = $localeService;
 
         return $this;
     }
@@ -215,12 +213,12 @@ class TranslationController extends AbstractActionController
         $session = $this->getSession();
 
         if (isset($session->formMessages)) {
-            $this->getTranslationForm()->setMessages($session->formMessages);
+            $this->getLocaleForm()->setMessages($session->formMessages);
             unset($session->formMessages);
         }
 
         if (isset($session->formData)) {
-            $this->getTranslationForm()->setData($session->formData);
+            $this->getLocaleForm()->setData($session->formData);
             unset($session->formData);
         }
 

@@ -7,10 +7,9 @@
 
 namespace MyI18n\Form;
 
-use MyI18n\Entity\Translation;
 use Zend\Form\Form;
 
-class TranslationForm extends Form
+class LocaleForm extends Form
 {
     /**
      * @var bool
@@ -20,7 +19,7 @@ class TranslationForm extends Form
     /**
      * {@inheritdoc}
      */
-    public function __construct($name = 'translation-form', $options = array())
+    public function __construct($name = 'locale-form', $options = array())
     {
         parent::__construct($name, $options);
     }
@@ -32,14 +31,9 @@ class TranslationForm extends Form
     public function init()
     {
         $this->add(array(
-            'name' => 'translationFormCSRF',
+            'name' => 'localeFormCSRF',
             'type' => 'csrf',
         ));
-
-        $this->add([
-            'name' => 'translation',
-            'type' => __NAMESPACE__ . '\Fieldset\Translation'
-        ]);
 
         $this->add(array(
             'name' => 'submit',
@@ -48,29 +42,5 @@ class TranslationForm extends Form
                 'label' => 'Add',
             ),
         ));
-
-        $this->setBaseFieldset($this->get('translation'));
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isUpdating()
-    {
-        return $this->isUpdating;
-    }
-
-    /**
-     * @param  Translation $translation
-     * @return Translation
-     */
-    public function prepareToUpdate(Translation $translation)
-    {
-        $this->bind($translation);
-
-        $this->get('submit')->setLabel('Edit');
-        $this->isUpdating = true;
-
-        return $this;
     }
 }

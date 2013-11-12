@@ -9,18 +9,9 @@ namespace MyI18n;
 
 use Zend\Form\FormElementManager;
 
-return array(
-    'factories' => array(
-        'MyI18n\Form\Fieldset\Translation' => function(FormElementManager $formElementManager) {
-            $serviceManager = $formElementManager->getServiceLocator();
-            $hydrator = $serviceManager->get('HydratorManager')->get('DoctrineModule\Stdlib\Hydrator\DoctrineObject');
-
-            $translationFieldset = new Form\TranslationFieldset();
-            $translationFieldset->setHydrator($hydrator)->setObject(new Entity\Translation());
-
-            return $translationFieldset;
-        },
-        'MyI18n\Form\Fieldset\Locale' => function(FormElementManager $formElementManager) {
+return [
+    'factories' => [
+        'MyI18n\Form\LocaleFieldset' => function(FormElementManager $formElementManager) {
             $serviceManager = $formElementManager->getServiceLocator();
             $objectManager = $serviceManager->get('Doctrine\ORM\EntityManager');
             $hydrator = $serviceManager->get('HydratorManager')->get('DoctrineModule\Stdlib\Hydrator\DoctrineObject');
@@ -30,5 +21,5 @@ return array(
 
             return $localeFieldset;
         },
-    ),
-);
+    ],
+];

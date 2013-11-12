@@ -2,25 +2,37 @@
 
 namespace MyI18n;
 
+use Doctrine\ORM\EntityManager;
+use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Session\Container as Session;
 
 return [
     'factories' => [
-        'MyI18n\LocaleStrategy' => function($serviceLocator) {
-            $config = $serviceLocator->get('config');
-            $instance = new LocaleStrategy($config[__NAMESPACE__]);
+        'MyI18n\LocaleStrategy' => function(ServiceLocatorInterface $serviceLocator) {
+            $config = $serviceLocator->get('config')[__NAMESPACE__];
+            $localeStrategy = new LocaleStrategy($config);
 
-            return $instance;
+            return $localeStrategy;
+        },
+        'MyI18n\LocaleService' => function(ServiceLocatorInterface $serviceLocator) {
+            /** @var EntityManager $entityManager */
+            $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');
+            $localeService = new Service\LocaleService($entityManager);
+
+            return $localeService;
         },
     ],
+
     'initializers' => [
-        function($instance, $serviceLocator) {
-            if ($instance instanceof Detector\AbstractDetector) {
-                $config = $serviceLocator->get('MyI18n\LocaleStrategy')->getConfig();
-                $instance->setConfig($config);
+        function($instance, ServiceLocatorInterface $serviceLocator) {
+            if (! $instance instanceof Detector\AbstractDetector) {
+                return;
             }
+            $config = $serviceLocator->get('MyI18n\LocaleStrategy')->getConfig();
+            $instance->setConfig($config);
         }
     ],
+
     'services' => [
         'MyI18n\Session' => new Session(__NAMESPACE__),
     ],

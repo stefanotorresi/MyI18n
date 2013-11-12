@@ -11,19 +11,24 @@ use PHPUnit_Framework_TestCase as TestCase;
 
 class ModuleFunctionalTest extends TestCase
 {
-    protected $services = [
-        'MyI18n\Form\TranslationForm',
-        'MyI18n\Listener\MissingTranslation',
-        'MyI18n\Service\LocaleService',
-        'MyI18n\Service\TranslationService',
-    ];
-
-    public function testServiceManagerConfiguration()
+    /**
+     * @dataProvider servicesProvider
+     * @param $locatorInstance
+     * @param $name
+     * @param $class
+     */
+    public function testServiceManagerConfiguration($locatorInstance, $name, $class)
     {
-        $serviceManager = Bootstrap::getServiceManager();
+        $serviceLocator = Bootstrap::getServiceManager()->get($locatorInstance);
+        $this->assertTrue($serviceLocator->has($name));
+        $this->assertInstanceOf($class, $serviceLocator->get($name));
+    }
 
-        foreach ($this->services as $service) {
-            $this->assertInstanceOf($service, $serviceManager->get($service));
-        }
+    public function servicesProvider()
+    {
+        return array(
+            array('ServiceManager', 'MyI18n\Service\LocaleService', 'MyI18n\Service\LocaleService'),
+            array('FormElementManager', 'MyI18n\Form\LocaleFieldset', 'MyI18n\Form\LocaleFieldset'),
+        );
     }
 }
