@@ -7,112 +7,18 @@
 
 namespace MyI18n\Entity;
 
-use MyBase\Entity\Entity;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Translatable\Entity\MappedSuperclass\AbstractTranslation;
 
 /**
- * @ORM\Entity
- * @ORM\Table(name="m18n_translations")
+ * @ORM\Table(name="mi18n_translations", indexes={
+ *      @ORM\Index(name="mi18n_translation_idx", columns={"locale", "object_class", "field", "foreign_key"})
+ * })
+ * @ORM\Entity(repositoryClass="Gedmo\Translatable\Entity\Repository\TranslationRepository")
  */
-class Translation extends Entity
+class Translation extends AbstractTranslation
 {
     /**
-     * @var Locale
-     * @ORM\ManyToOne(targetEntity="Locale", cascade={"persist"})
+     * All required columns are mapped through inherited superclass
      */
-    protected $locale;
-
-    /**
-     * @var string
-     * @ORM\Column(type="string")
-     */
-    protected $textDomain;
-
-    /**
-     * @var string
-     * @ORM\Column(type="text")
-     */
-    protected $msgid;
-
-    /**
-     * @var string
-     * @ORM\Column(type="text", nullable=true)
-     */
-    protected $msgstr;
-
-    /**
-     * @return Locale
-     */
-    public function getLocale()
-    {
-        return $this->locale;
-    }
-
-    /**
-     * @param Locale $locale
-     * @return $this
-     */
-    public function setLocale(Locale $locale)
-    {
-        $this->locale = $locale;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTextDomain()
-    {
-        return $this->textDomain;
-    }
-
-    /**
-     * @param string $textDomain
-     * @return $this
-     */
-    public function setTextDomain($textDomain)
-    {
-        $this->textDomain = $textDomain;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMsgid()
-    {
-        return $this->msgid;
-    }
-
-    /**
-     * @param string $msgid
-     * @return $this
-     */
-    public function setMsgid($msgid)
-    {
-        $this->msgid = $msgid;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMsgstr()
-    {
-        return $this->msgstr;
-    }
-
-    /**
-     * @param string $msgstr
-     * @return $this
-     */
-    public function setMsgstr($msgstr)
-    {
-        $this->msgstr = $msgstr;
-
-        return $this;
-    }
 }

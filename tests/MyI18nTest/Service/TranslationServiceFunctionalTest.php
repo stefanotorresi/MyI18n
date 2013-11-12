@@ -25,7 +25,7 @@ class TranslationServiceFunctionalTest extends TestCase
 
     public function setUp()
     {
-        $this->translationService = new TranslationService($this->getFunctionalEntityManager());
+        $this->translationService = new TranslationService($this->getNewEntityManager());
         TestAsset\Translations::populateService($this->translationService);
     }
 

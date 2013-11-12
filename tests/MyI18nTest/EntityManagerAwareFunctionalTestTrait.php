@@ -15,7 +15,7 @@ trait EntityManagerAwareFunctionalTestTrait
     /**
      * @return EntityManager
      */
-    public function getFunctionalEntityManager()
+    public function getNewEntityManager()
     {
         $serviceManager = Bootstrap::getServiceManager();
 
