@@ -12,11 +12,19 @@ use MyI18n\Entity\Locale;
 
 class LocaleService extends AbstractEntityService
 {
+    /**
+     * @param int $id
+     * @return null|Locale
+     */
     public function find($id)
     {
         return $this->getEntityManager()->find(Locale::fqcn(), $id);
     }
 
+    /**
+     * @param string $code
+     * @return null|Locale
+     */
     public function findOneByCode($code)
     {
         return $this->getEntityManager()->getRepository(Locale::fqcn())->findOneBy(['code' => $code]);

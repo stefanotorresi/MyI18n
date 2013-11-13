@@ -14,7 +14,7 @@ return [
 
             return $localeStrategy;
         },
-        'MyI18n\LocaleService' => function(ServiceLocatorInterface $serviceLocator) {
+        'MyI18n\Service\LocaleService' => function(ServiceLocatorInterface $serviceLocator) {
             /** @var EntityManager $entityManager */
             $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');
             $localeService = new Service\LocaleService($entityManager);

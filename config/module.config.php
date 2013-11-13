@@ -50,9 +50,7 @@ return [
 
     'service_manager' => [
         'factories' => [
-            'MyI18n\Form\TranslationForm' => 'MyI18n\Service\Factory\TranslationFormFactory',
             'MyI18n\Navigation' => 'MyI18n\NavigationFactory',
-            'MyI18n\Service\LocaleService' => 'MyI18n\Service\Factory\LocaleServiceFactory',
         ],
         'invokables' => [
             'MyI18n\Detector\Query' => 'MyI18n\Detector\Query',

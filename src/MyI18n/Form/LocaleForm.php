@@ -8,8 +8,9 @@
 namespace MyI18n\Form;
 
 use Zend\Form\Form;
+use Zend\InputFilter\InputFilterProviderInterface;
 
-class LocaleForm extends Form
+class LocaleForm extends Form implements InputFilterProviderInterface
 {
     /**
      * @var bool
@@ -31,16 +32,41 @@ class LocaleForm extends Form
     public function init()
     {
         $this->add(array(
-            'name' => 'localeFormCSRF',
-            'type' => 'csrf',
+            'name' => 'code',
+            'type' => 'MyBase\Form\Element\CountrySelect'
         ));
 
         $this->add(array(
-            'name' => 'submit',
+            'name' => 'enable',
             'type' => 'submit',
             'options' => array(
-                'label' => 'Add',
+                'label' => 'Enable',
             ),
         ));
+
+        $this->add(array(
+            'name' => 'disable',
+            'type' => 'submit',
+            'options' => array(
+                'label' => 'Disable',
+            ),
+        ));
+    }
+
+    /**
+     * Should return an array specification compatible with
+     * {@link Zend\InputFilter\Factory::createInputFilter()}.
+     *
+     * @return array
+     */
+    public function getInputFilterSpecification()
+    {
+        return array(
+            'code' => array(
+                'filters' => array(
+                    array('name' => 'stringtolower'),
+                ),
+            ),
+        );
     }
 }

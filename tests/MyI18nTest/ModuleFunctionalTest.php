@@ -28,6 +28,7 @@ class ModuleFunctionalTest extends TestCase
     {
         return array(
             array('ServiceManager', 'MyI18n\Service\LocaleService', 'MyI18n\Service\LocaleService'),
+            array('ServiceManager', 'MyI18n\Service\Locale', 'MyI18n\Service\LocaleService'),
             array('FormElementManager', 'MyI18n\Form\LocaleFieldset', 'MyI18n\Form\LocaleFieldset'),
         );
     }
