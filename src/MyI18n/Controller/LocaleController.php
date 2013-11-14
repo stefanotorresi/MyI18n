@@ -7,13 +7,10 @@
 
 namespace MyI18n\Controller;
 
+use MyI18n\Entity\Locale;
 use MyI18n\Form\LocaleForm;
 use MyI18n\Service\LocaleService;
-use Zend\EventManager\EventManagerInterface;
-use Zend\Http\Response as HttpResponse;
 use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Mvc\MvcEvent;
-use Zend\View\Model\ViewModel;
 
 class LocaleController extends AbstractActionController
 {
@@ -28,117 +25,41 @@ class LocaleController extends AbstractActionController
     protected $localeService;
 
     /**
-     * @var Session
+     * @var string
      */
-    protected $session;
-
-    public function setEventManager(EventManagerInterface $events)
-    {
-        $events->attach(MvcEvent::EVENT_DISPATCH, array($this, 'preDispatch'), 100);
-
-        return parent::setEventManager($events);
-    }
+    protected $baseRoute;
 
     public function indexAction()
     {
-        $translations = $this->getLocaleService()->getPagedTranslations(
-            $this->params('page', 1),
-            $this->params('itemsPerPage', 20)
-        );
+        $locales = $this->getLocaleService()->getAll();
 
         return [
-            'translations' => $translations,
+            'localeForm' => $this->getLocaleForm(),
+            'locales' => $locales,
         ];
     }
 
-    public function createAction()
+    public function processAction()
     {
-        $form = $this->getLocaleForm();
-
-        $request = $this->getRequest();
-
-        if (!$request->isPost()) {
-            $viewModel = new ViewModel(array(
-                'translationForm' => $form
-            ));
-            $viewModel->setTemplate('my-i18n/translation-form');
-
-            return $viewModel;
-        }
-
-        $data = $request->getPost();
-
-        $translation = new Translation();
-        $form->bind($translation)->setData($data);
-
-        if (!$form->isValid()) {
-            $session = $this->getSession();
-            $session->formMessages = $form->getMessages();
-            $session->formData = $data;
-            $session->status = 400;
-            $this->flashMessenger()->addErrorMessage('Invalid data');
-
-            return $this->redirect()->toRoute($this->getBaseRoute().'/translations/create');
-        }
-
-        $this->getLocaleService()->save($translation);
-        $this->flashMessenger()->addSuccessMessage('New entry was added successfully');
-
-        return $this->redirect()->toRoute($this->getBaseRoute());
-    }
-
-    public function updateAction()
-    {
-        $translation = $this->getLocaleService()->findTranslation($this->params('id'));
-
-        if (!$translation) {
-            return $this->notFoundAction();
-        }
+        $post = $this->params()->fromPost();
 
         $form = $this->getLocaleForm();
-        $form->prepareToUpdate($translation);
+        $form->setData($post);
 
-        $request = $this->getRequest();
+        if ($form->isValid()) {
+            $data = $form->getData();
+            $code = $data['code'];
+            $locale = $this->getLocaleService()->findOneByCode($code);
 
-        if (!$request->isPost()) {
-            $viewModel = new ViewModel(array(
-                'translationForm' => $form,
-                'translation' => $translation,
-            ));
-            $viewModel->setTemplate('my-i18n/translation-form');
+            if ($data['enable'] === true && !$locale) {
+                $locale = new Locale($code);
+                $this->getLocaleService()->save($locale);
+            }
 
-            return $viewModel;
+            if ($data['enable'] === false && $locale instanceof Locale) {
+                $this->getLocaleService()->remove($locale);
+            }
         }
-
-        $data = $request->getPost();
-        $form->setData($data);
-
-        if (!$form->isValid()) {
-            $session = $this->getSession();
-            $session->formMessages = $form->getMessages();
-            $session->formData = $data;
-            $session->status = 400;
-            $this->flashMessenger()->addErrorMessage('Invalid data');
-
-            return $this->redirect()->toRoute($this->getBaseRoute().'/translations/update', array(), array(), true);
-        }
-
-        $this->getLocaleService()->save($translation);
-        $this->flashMessenger()->addSuccessMessage('Entry was updated successfully');
-
-        return $this->redirect()->toRoute($this->getBaseRoute());
-    }
-
-    public function deleteAction()
-    {
-        $translation = $this->getLocaleService()->findTranslation($this->params('id'));
-
-        if (!$translation) {
-            return $this->notFoundAction();
-        }
-
-        $this->getLocaleService()->remove($translation);
-        $this->flashMessenger()->addSuccessMessage('Entry was deleted successfully');
 
         return $this->redirect()->toRoute($this->getBaseRoute());
     }
@@ -156,20 +77,17 @@ class LocaleController extends AbstractActionController
     }
 
     /**
-     * @param mixed $translationList
-     * @return $this
+     * @param mixed $localeForm
      */
-    public function setLocaleForm($translationList)
+    public function setLocaleForm($localeForm)
     {
-        $this->localeForm = $translationList;
-
-        return $this;
+        $this->localeForm = $localeForm;
     }
 
     /**
      * @return LocaleService
      */
-    private function getLocaleService()
+    public function getLocaleService()
     {
         if (! $this->localeService) {
             $this->localeService = $this->getServiceLocator()->get('MyI18n\Service\LocaleService');
@@ -180,52 +98,27 @@ class LocaleController extends AbstractActionController
 
     /**
      * @param LocaleService $localeService
-     * @return $this
      */
     public function setLocaleService($localeService)
     {
         $this->localeService = $localeService;
-
-        return $this;
-    }
-
-    /**
-     * @return Session
-     */
-    public function getSession()
-    {
-        if (! $this->session) {
-            $this->session = new Session(__CLASS__);
-        }
-
-        return $this->session;
     }
 
     public function getBaseRoute()
     {
-        $config = $this->getServiceLocator()->get('config');
+        if (! $this->baseRoute) {
+            $config = $this->getServiceLocator()->get('config');
+            $this->baseRoute = $config['navigation']['backend']['my-i18n']['route'];
+        }
 
-        return $config['navigation']['backend']['my-i18n']['route'];
+        return $this->baseRoute;
     }
 
-    public function preDispatch()
+    /**
+     * @param string $baseRoute
+     */
+    public function setBaseRoute($baseRoute)
     {
-        $session = $this->getSession();
-
-        if (isset($session->formMessages)) {
-            $this->getLocaleForm()->setMessages($session->formMessages);
-            unset($session->formMessages);
-        }
-
-        if (isset($session->formData)) {
-            $this->getLocaleForm()->setData($session->formData);
-            unset($session->formData);
-        }
-
-        $response = $this->getResponse();
-        if (isset($session->status) && $response instanceof HttpResponse) {
-            $response->setStatusCode($session->status);
-            unset($session->status);
-        }
+        $this->baseRoute = $baseRoute;
     }
 }

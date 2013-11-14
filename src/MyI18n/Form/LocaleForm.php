@@ -33,22 +33,25 @@ class LocaleForm extends Form implements InputFilterProviderInterface
     {
         $this->add(array(
             'name' => 'code',
-            'type' => 'MyBase\Form\Element\CountrySelect'
+            'type' => 'MyI18n\Form\LanguageSelect'
         ));
 
         $this->add(array(
             'name' => 'enable',
-            'type' => 'submit',
-            'options' => array(
-                'label' => 'Enable',
-            ),
+            'type' => 'radio',
+            'options' => [
+                'value_options' => [
+                    '1' => 'Enable',
+                    '0' => 'Disable',
+                ],
+            ],
         ));
 
         $this->add(array(
-            'name' => 'disable',
+            'name' => 'submit',
             'type' => 'submit',
             'options' => array(
-                'label' => 'Disable',
+                'label' => 'Submit',
             ),
         ));
     }
@@ -65,6 +68,12 @@ class LocaleForm extends Form implements InputFilterProviderInterface
             'code' => array(
                 'filters' => array(
                     array('name' => 'stringtolower'),
+                ),
+            ),
+            'enable' => array(
+                'required' => false,
+                'filters' => array(
+                    array('name' => 'boolean'),
                 ),
             ),
         );
