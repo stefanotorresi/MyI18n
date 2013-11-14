@@ -29,35 +29,24 @@ class LocaleServiceFunctionalTest extends TestCase
         TestAsset\Locales::populateService($this->localeService);
     }
 
-    /**
-     * @dataProvider localesProvider
-     * @param Locale $locale
-     */
-    public function testFind($locale)
+    public function testFind()
     {
-        $found = $this->localeService->find($locale->getId());
-
-        $this->assertEquals($locale, $found);
-    }
-
-    /**
-     * @dataProvider localesProvider
-     * @param Locale $locale
-     */
-    public function testFindOneByCode($locale)
-    {
-        $found = $this->localeService->findOneByCode($locale->getCode());
-
-        $this->assertEquals($locale, $found);
-    }
-
-    public function localesProvider()
-    {
-        $data = [];
         foreach (TestAsset\Locales::getLocales() as $locale) {
-            $data[] = [$locale];
+            $found = $this->localeService->find($locale->getId());
+            $this->assertEquals($locale, $found);
         };
+    }
 
-        return $data;
+    public function testFindOneByCode()
+    {
+        foreach (TestAsset\Locales::getLocales() as $locale) {
+            $found = $this->localeService->findOneByCode($locale->getCode());
+            $this->assertEquals($locale, $found);
+        };
+    }
+
+    public function testGetAll()
+    {
+        $this->assertEquals(TestAsset\Locales::getLocales(), $this->localeService->getAll());
     }
 }

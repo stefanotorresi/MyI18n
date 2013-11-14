@@ -7,6 +7,7 @@
 
 namespace MyI18n\Service;
 
+use Doctrine\Common\Collections\Criteria;
 use MyBase\Service\AbstractEntityService;
 use MyI18n\Entity\Locale;
 
@@ -28,5 +29,10 @@ class LocaleService extends AbstractEntityService
     public function findOneByCode($code)
     {
         return $this->getEntityManager()->getRepository(Locale::fqcn())->findOneBy(['code' => $code]);
+    }
+
+    public function getAll()
+    {
+        return $this->getEntityManager()->getRepository(Locale::fqcn())->findBy([], ['code' => Criteria::ASC]);
     }
 }

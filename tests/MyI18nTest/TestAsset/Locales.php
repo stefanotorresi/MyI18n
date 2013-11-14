@@ -12,19 +12,28 @@ use MyI18n\Service\LocaleService;
 
 class Locales
 {
+    public static $locales;
+
     public static function getLocales()
     {
-        return [
-            new Locale('en', 1),
-            new Locale('de', 2),
-            new Locale('it', 3),
-        ];
+        if (empty(static::$locales)) {
+            static::$locales = [
+                // note the alphabetical order
+                // it is assumed to be this way by testGetAll()
+                new Locale('de'),
+                new Locale('en'),
+                new Locale('it'),
+            ];
+        }
+        return static::$locales;
     }
 
     public static function populateService(LocaleService $service)
     {
-        foreach (static::getLocales() as $t) {
-            $service->save($t);
+        $locales = static::getLocales();
+        foreach ($locales as $key => &$locale) {
+            $service->save($locale);
+            $locale->setId($key+1);
         }
     }
 }
