@@ -6,7 +6,7 @@
  */
 
 return [
-    'Internationalization' => 'Internazionalizzazione',
+    'Languages' => 'Lingue',
     'Text' => 'Testo',
     'Translation' => 'Traduzione',
     'Language' => 'Lingua',

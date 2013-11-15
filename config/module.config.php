@@ -29,7 +29,7 @@ return [
     'navigation' => [
         'backend' => [
             'my-i18n' => [
-                'label' => 'Internationalization',
+                'label' => 'Languages',
                 'route' => 'admin/i18n',
             ],
         ],
@@ -44,7 +44,10 @@ return [
 
     'controllers' => [
         'invokables' => [
-            'MyI18n\Controller\Translation' => 'MyI18n\Controller\TranslationController',
+            'MyI18n\Controller\LocaleController' => 'MyI18n\Controller\LocaleController',
+        ],
+        'aliases' => [
+            'MyI18n\Controller\Locale' => 'MyI18n\Controller\LocaleController',
         ],
     ],
 
@@ -57,11 +60,13 @@ return [
             'MyI18n\Detector\Session' => 'MyI18n\Detector\Session',
             'MyI18n\Detector\Route' => 'MyI18n\Detector\Route',
             'MyI18n\Detector\Headers' => 'MyI18n\Detector\Headers',
+            'MyI18n\Form\LocaleForm' => 'MyI18n\Form\LocaleForm',
         ],
         'aliases' => [
             'nav-lang' => 'MyI18n\Navigation',
             'translator' => 'MvcTranslator',
             'MyI18n\Service\Locale' => 'MyI18n\Service\LocaleService',
+            'MyI18n\Form\Locale' => 'MyI18n\Form\LocaleForm',
         ],
     ],
 

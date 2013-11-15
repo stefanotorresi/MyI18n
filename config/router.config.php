@@ -7,54 +7,6 @@
 
 use Zend\Stdlib\ArrayUtils;
 
-$crud = array(
-    'create' => array(
-        'type' => 'Literal',
-        'options' => array(
-            'route' => '/create',
-            'defaults' => array(
-                'action' => 'create',
-            ),
-        ),
-    ),
-    'read' => array(
-        'type' => 'Segment',
-        'options' => array(
-            'route' => '/:id',
-            'defaults' => array(
-                'action' => 'get',
-            ),
-            'constraints' => array(
-                'id' => '\d+'
-            ),
-        ),
-    ),
-    'update' => array(
-        'type' => 'Segment',
-        'options' => array(
-            'route' => '/update/:id',
-            'defaults' => array(
-                'action' => 'update',
-            ),
-            'constraints' => array(
-                'id' => '\d+'
-            ),
-        ),
-    ),
-    'delete' => array(
-        'type' => 'Segment',
-        'options' => array(
-            'route' => '/delete/:id',
-            'defaults' => array(
-                'action' => 'delete',
-            ),
-            'constraints' => array(
-                'id' => '\d+'
-            ),
-        ),
-    ),
-);
-
 $paged = array(
     'paged' => array(
         'type' => 'Segment',
@@ -94,22 +46,12 @@ return array(
                         'options' => array(
                             'route' => '/i18n',
                             'defaults' => array(
-                                'controller' => 'MyI18n\Controller\Translation',
+                                'controller' => 'MyI18n\Controller\Locale',
                                 'action' => 'index',
                             ),
                         ),
                         'may_terminate' => true,
                         'child_routes' => array(
-                            'translations' => array(
-                                'type' => 'Literal',
-                                'options' => array(
-                                    'route' => '/translations',
-                                    'defaults' => array(
-                                        'controller' => 'MyI18n\Controller\Translation',
-                                    ),
-                                ),
-                                'child_routes' => ArrayUtils::merge($crud, $paged)
-                            ),
                             'locales' => array(
                                 'type' => 'Literal',
                                 'options' => array(
@@ -120,7 +62,20 @@ return array(
                                     ),
                                 ),
                                 'may_terminate' => true,
-                                'child_routes' => ArrayUtils::merge($crud, $paged)
+                                'child_routes' => ArrayUtils::merge(
+                                    array(
+                                        'process' => array(
+                                            'type' => 'Literal',
+                                            'options' => array(
+                                                'route' => '/process',
+                                                'defaults' => array(
+                                                    'action' => 'process',
+                                                ),
+                                            ),
+                                        ),
+                                    ),
+                                    $paged
+                                ),
                             ),
                         ),
                     ),

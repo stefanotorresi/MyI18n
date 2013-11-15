@@ -29,7 +29,11 @@ class ModuleFunctionalTest extends TestCase
         return array(
             array('ServiceManager', 'MyI18n\Service\LocaleService', 'MyI18n\Service\LocaleService'),
             array('ServiceManager', 'MyI18n\Service\Locale', 'MyI18n\Service\LocaleService'),
+            array('ServiceManager', 'MyI18n\Form\LocaleForm', 'MyI18n\Form\LocaleForm'),
+            array('ServiceManager', 'MyI18n\Form\Locale', 'MyI18n\Form\LocaleForm'),
             array('FormElementManager', 'MyI18n\Form\LocaleFieldset', 'MyI18n\Form\LocaleFieldset'),
+            array('ControllerLoader', 'MyI18n\Controller\LocaleController', 'MyI18n\Controller\LocaleController'),
+            array('ControllerLoader', 'MyI18n\Controller\Locale', 'MyI18n\Controller\LocaleController'),
         );
     }
 }
