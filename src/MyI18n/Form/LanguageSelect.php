@@ -8,7 +8,6 @@
 namespace MyI18n\Form;
 
 use Zend\Form\Element\Select;
-use Zend\Form\Exception;
 
 class LanguageSelect extends Select
 {

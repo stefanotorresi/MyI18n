@@ -9,7 +9,6 @@
 namespace MyI18n;
 
 use Zend\Mvc\MvcEvent;
-use Zend\Session\Container as Session;
 use Zend\ModuleManager\Feature;
 use Zend\Stdlib\ArrayUtils;
 

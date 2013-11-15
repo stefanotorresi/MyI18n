@@ -12,7 +12,6 @@ use MyI18n\Service\LocaleService;
 use MyI18nTest\EntityManagerAwareFunctionalTestTrait;
 use MyI18nTest\TestAsset;
 use PHPUnit_Framework_TestCase as TestCase;
-use Zend\Paginator\Paginator;
 
 class LocaleServiceFunctionalTest extends TestCase
 {

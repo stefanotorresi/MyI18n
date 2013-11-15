@@ -14,7 +14,7 @@ use MyI18n\Entity\Locale;
 class LocaleService extends AbstractEntityService
 {
     /**
-     * @param int $id
+     * @param  int         $id
      * @return null|Locale
      */
     public function find($id)
@@ -23,7 +23,7 @@ class LocaleService extends AbstractEntityService
     }
 
     /**
-     * @param string $code
+     * @param  string      $code
      * @return null|Locale
      */
     public function findOneByCode($code)

@@ -13,7 +13,6 @@ use MyI18n\Form\LocaleForm;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\Mvc\Router\RouteMatch;
-use Zend\Mvc\Service\RouterFactory;
 use Zend\Mvc\View\Http\CreateViewModelListener;
 
 class LocaleControllerTest extends \PHPUnit_Framework_TestCase

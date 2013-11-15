@@ -25,6 +25,7 @@ class Locales
                 new Locale('it'),
             ];
         }
+
         return static::$locales;
     }
 
