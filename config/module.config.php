@@ -1,59 +1,78 @@
 <?php
+/**
+ * @author Stefano Torresi (http://stefanotorresi.it)
+ * @license See the file LICENSE.txt for copying permission.
+ * ************************************************
+ */
 
 namespace MyI18n;
 
-return array(
-    __NAMESPACE__ => array(
+return [
+    __NAMESPACE__ => [
         'default'   => 'en',
-        'supported' => array(),
+        'supported' => [],
         'fallback'  => '',
-        'handlers' => array(
+        'handlers' => [
             'MyI18n\Detector\Query',
             'MyI18n\Detector\Route',
             'MyI18n\Detector\Session',
             'MyI18n\Detector\Headers',
-        ),
+        ],
         'key_name'  => 'lang',
-        'navigation' => array(
+        'navigation' => [
             // possible values: true, false, 'only_active'
             'full_lang_as_label' => true,
             'query_uri' => false,
-        )
-    ),
+        ],
+    ],
 
-    'router' => array(
-        'routes' => array(
-            'lang-switch' => array(
-                'type'    => 'segment',
-                'options' => array(
-                    'route'    => '/:lang',
-                    'defaults' => array(
-                        'controller' => 'index',
-                        'action'     => 'index'
-                    ),
-                    'constraints' => array(
-                        'lang' => '[a-z]{2}',
-                    ),
-                ),
-                'may_terminate' => true,
-            ),
-        ),
-    ),
+    'navigation' => [
+        'backend' => [
+            'my-i18n' => [
+                'label' => 'Internationalization',
+                'route' => 'admin/i18n',
+            ],
+        ],
+    ],
 
-    'service_manager' => array(
-        'factories' => array(
-            'MvcTranslator' => 'Zend\Mvc\Service\TranslatorServiceFactory',
+    'view_manager' => [
+        'template_map' => [
+            'my-i18n/translation/index' => __DIR__ . '/../view/index.phtml',
+            'my-i18n/translation-form' => __DIR__ . '/../view/translation-form.phtml',
+        ],
+    ],
+
+    'controllers' => [
+        'invokables' => [
+            'MyI18n\Controller\Translation' => 'MyI18n\Controller\TranslationController',
+        ],
+    ],
+
+    'service_manager' => [
+        'factories' => [
             'MyI18n\Navigation' => 'MyI18n\NavigationFactory',
-        ),
-        'invokables' => array (
-            'MyI18n\Detector\Query'   => 'MyI18n\Detector\Query',
-            'MyI18n\Detector\Session'   => 'MyI18n\Detector\Session',
-            'MyI18n\Detector\Route'   => 'MyI18n\Detector\Route',
-            'MyI18n\Detector\Headers'   => 'MyI18n\Detector\Headers',
-        ),
-        'aliases' => array(
+        ],
+        'invokables' => [
+            'MyI18n\Detector\Query' => 'MyI18n\Detector\Query',
+            'MyI18n\Detector\Session' => 'MyI18n\Detector\Session',
+            'MyI18n\Detector\Route' => 'MyI18n\Detector\Route',
+            'MyI18n\Detector\Headers' => 'MyI18n\Detector\Headers',
+        ],
+        'aliases' => [
             'nav-lang' => 'MyI18n\Navigation',
             'translator' => 'MvcTranslator',
-        ),
-    ),
-);
+            'MyI18n\Service\Locale' => 'MyI18n\Service\LocaleService',
+        ],
+    ],
+
+    'translator' => [
+        'translation_file_patterns' => [
+            [
+                'type' => 'phpArray',
+                'base_dir'      => __DIR__ . '/../language',
+                'pattern'       => '%s/'.__NAMESPACE__.'.php',
+                'text_domain'   => 'MyBackend',
+            ],
+        ],
+    ],
+];

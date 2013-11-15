@@ -1,0 +1,18 @@
+<?php
+
+return array(
+    'modules' => array(
+        'DoctrineModule',
+        'DoctrineORMModule',
+        'MyI18n',
+    ),
+    'module_listener_options' => array(
+        'config_glob_paths'    => array(
+            './config/doctrine.config.php',
+            __DIR__ . '/test.module.config.php',
+        ),
+        'module_paths' => array(
+            './vendor',
+        ),
+    ),
+);

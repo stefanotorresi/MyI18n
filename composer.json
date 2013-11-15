@@ -18,8 +18,20 @@
         }
     ],
     "require": {
-        "php": ">=5.3.3",
-        "zendframework/zendframework": "~2.2"
+        "php": ">=5.4.1",
+        "ext-intl": "*",
+        "zendframework/zendframework": "~2.2",
+        "gedmo/doctrine-extensions": "~2.3",
+        "doctrine/doctrine-module": "~0.8@dev",
+        "doctrine/doctrine-orm-module": "~0.8@dev",
+        "stefanotorresi/my-base": "1.x-dev",
+        "soflomo/purifier": "0.*"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.x-dev",
+            "dev-0.x": "0.x-dev"
+        }
     },
     "extra": {
         "branch-alias": {

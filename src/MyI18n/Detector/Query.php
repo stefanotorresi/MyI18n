@@ -15,7 +15,7 @@ class Query extends AbstractDetector
     {
         $request = $e->getRequest();
 
-        if ( ! $request instanceof Request) {
+        if (! $request instanceof Request) {
             return;
         }
 

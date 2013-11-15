@@ -8,14 +8,14 @@ use Zend\Mvc\MvcEvent;
 class Headers extends AbstractDetector
 {
     /**
-     * @param MvcEvent $e
+     * @param  MvcEvent $e
      * @return string
      */
     public function getLocale(MvcEvent $e)
     {
         $request = $e->getRequest();
 
-        if ( ! $request instanceof Request) {
+        if (! $request instanceof Request) {
             return;
         }
 

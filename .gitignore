@@ -1,3 +1,7 @@
-/.idea
-/vendor
+.idea
+vendor
 composer.lock
+tests/phpunit.xml
+tests/coverage
+tests/config/config.php
+tests/config/autoload/*local.php
