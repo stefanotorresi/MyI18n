@@ -87,7 +87,7 @@ class LocaleStrategy implements ListenerAggregateInterface
 
         $app        = $e->getApplication();
         $services   = $app->getServiceManager();
-        $translator = $services->get('MyI18n\Translator');
+        $translator = $services->get('translator');
         $handlers   = $this->config['handlers'];
 
         foreach ($handlers as $handlerName) {

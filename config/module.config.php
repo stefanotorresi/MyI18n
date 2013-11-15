@@ -53,7 +53,6 @@ return array(
         ),
         'aliases' => array(
             'nav-lang' => 'MyI18n\Navigation',
-            'MyI18n\Translator' => 'MvcTranslator',
             'translator' => 'MvcTranslator',
         ),
     ),
