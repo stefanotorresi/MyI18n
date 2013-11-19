@@ -9,6 +9,7 @@ namespace MyI18nTest;
 
 use Composer\Autoload\ClassLoader;
 use Zend\ModuleManager\ModuleManager;
+use Zend\Mvc\Router\Http\TreeRouteStack;
 use Zend\Mvc\Service\ServiceManagerConfig;
 use Zend\ServiceManager\ServiceManager;
 
@@ -66,6 +67,7 @@ class Bootstrap
                 isset(static::$config['service_manager']) ? static::$config['service_manager'] : array()
             )
         );
+
         $serviceManager->setService('ApplicationConfig', static::$config);
         $serviceManager->setFactory('ServiceListener', 'Zend\Mvc\Service\ServiceListenerFactory');
 

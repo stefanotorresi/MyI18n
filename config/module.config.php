@@ -36,9 +36,8 @@ return [
     ],
 
     'view_manager' => [
-        'template_map' => [
-            'my-i18n/translation/index' => __DIR__ . '/../view/index.phtml',
-            'my-i18n/translation-form' => __DIR__ . '/../view/translation-form.phtml',
+        'template_path_stack' => [
+            __DIR__ . '/../view',
         ],
     ],
 
@@ -60,7 +59,6 @@ return [
             'MyI18n\Detector\Session' => 'MyI18n\Detector\Session',
             'MyI18n\Detector\Route' => 'MyI18n\Detector\Route',
             'MyI18n\Detector\Headers' => 'MyI18n\Detector\Headers',
-            'MyI18n\Form\LocaleForm' => 'MyI18n\Form\LocaleForm',
         ],
         'aliases' => [
             'nav-lang' => 'MyI18n\Navigation',

@@ -19,7 +19,6 @@ class LocaleFormTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->form = new LocaleForm();
-        $this->form->init();
     }
 
     /**
@@ -45,23 +44,28 @@ class LocaleFormTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [
-                [ 'code' => 'en', 'enable' => '1'],
-                [ 'code' => 'en', 'enable' => true, 'submit' => null],
+                [ 'code' => 'en', 'mode' => 'enable'],
+                [ 'code' => 'en', 'mode' => 'enable', 'submit' => null],
                 true
             ],
             [
-                [ 'code' => 'IT', 'enable' => '0'],
-                [ 'code' => 'it', 'enable' => false, 'submit' => null],
+                [ 'code' => 'IT', 'mode' => 'Enable'],
+                [ 'code' => 'it', 'mode' => 'enable', 'submit' => null],
                 true
             ],
             [
-                [ 'code' => 'En', 'enable' => 0],
-                [ 'code' => 'en', 'enable' => false, 'submit' => null],
+                [ 'code' => 'En', 'mode' => 'DISABLE'],
+                [ 'code' => 'en', 'mode' => 'disable', 'submit' => null],
                 true
             ],
             [
-                [ 'code' => 'invalid', 'enable' => 'asdasd'],
-                [ 'code' => 'invalid', 'enable' => true, 'submit' => null],
+                [ 'code' => 'invalid', 'mode' => 'invalid'],
+                [ 'code' => 'invalid', 'mode' => 'invalid', 'submit' => null],
+                false
+            ],
+            [
+                [ 'code' => 'it', 'mode' => 'invalid'],
+                [ 'code' => 'it', 'mode' => 'invalid', 'submit' => null],
                 false
             ],
         ];

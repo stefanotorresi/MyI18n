@@ -65,11 +65,12 @@ return array(
                                 'child_routes' => ArrayUtils::merge(
                                     array(
                                         'process' => array(
-                                            'type' => 'Literal',
+                                            'type' => 'Segment',
                                             'options' => array(
-                                                'route' => '/process',
+                                                'route' => '/:mode[/:code]',
                                                 'defaults' => array(
                                                     'action' => 'process',
+                                                    'mode' => \MyI18n\Controller\LocaleController::MODE_ENABLE
                                                 ),
                                             ),
                                         ),

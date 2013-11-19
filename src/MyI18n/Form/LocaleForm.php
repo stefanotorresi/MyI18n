@@ -7,8 +7,10 @@
 
 namespace MyI18n\Form;
 
+use MyI18n\Controller\LocaleController;
 use Zend\Form\Form;
 use Zend\InputFilter\InputFilterProviderInterface;
+use Zend\Mvc\Router\RouteStackInterface;
 
 class LocaleForm extends Form implements InputFilterProviderInterface
 {
@@ -23,37 +25,30 @@ class LocaleForm extends Form implements InputFilterProviderInterface
     public function __construct($name = 'locale-form', $options = array())
     {
         parent::__construct($name, $options);
-    }
 
-    /**
-     * this method is called manually by the factory,
-     * after FormElementManager has been injected into the element factory
-     */
-    public function init()
-    {
-        $this->add(array(
+        $this->add([
             'name' => 'code',
-            'type' => 'MyI18n\Form\LanguageSelect'
-        ));
-
-        $this->add(array(
-            'name' => 'enable',
-            'type' => 'radio',
+            'type' => 'MyI18n\Form\LanguageSelect',
             'options' => [
-                'value_options' => [
-                    '1' => 'Enable',
-                    '0' => 'Disable',
-                ],
+                'label' => 'Select a language to enable'
             ],
-        ));
+        ]);
 
-        $this->add(array(
+        $this->add([
+            'type' => 'hidden',
+            'name' => 'mode',
+            'attributes' => [
+                'value' => LocaleController::MODE_ENABLE
+            ],
+        ]);
+
+        $this->add([
             'name' => 'submit',
             'type' => 'submit',
-            'options' => array(
-                'label' => 'Submit',
-            ),
-        ));
+            'options' => [
+                'label' => 'Enable',
+            ],
+        ]);
     }
 
     /**
@@ -64,18 +59,29 @@ class LocaleForm extends Form implements InputFilterProviderInterface
      */
     public function getInputFilterSpecification()
     {
-        return array(
-            'code' => array(
-                'filters' => array(
-                    array('name' => 'stringtolower'),
-                ),
-            ),
-            'enable' => array(
-                'required' => false,
-                'filters' => array(
-                    array('name' => 'boolean'),
-                ),
-            ),
-        );
+        return [
+            'code' => [
+                'filters' => [
+                    ['name' => 'stringtolower'],
+                ],
+            ],
+            'mode' => [
+                'required' => true,
+                'filters' => [
+                    ['name' => 'stringtolower'],
+                ],
+                'validators' => [
+                    [
+                        'name' => 'inarray',
+                        'options' => [
+                            'haystack' => [
+                                LocaleController::MODE_ENABLE,
+                                LocaleController::MODE_DISABLE
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
     }
 }

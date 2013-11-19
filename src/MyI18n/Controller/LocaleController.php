@@ -14,6 +14,9 @@ use Zend\Mvc\Controller\AbstractActionController;
 
 class LocaleController extends AbstractActionController
 {
+    const MODE_ENABLE = 'enable';
+    const MODE_DISABLE = 'disable';
+
     /**
      * @var LocaleForm
      */
@@ -41,22 +44,25 @@ class LocaleController extends AbstractActionController
 
     public function processAction()
     {
-        $post = $this->params()->fromPost();
+        /** @var \Zend\Http\Request $request */
+        $request = $this->getRequest();
+
+        $data = $request->isPost() ? $this->params()->fromPost() : $this->params()->fromRoute();
 
         $form = $this->getLocaleForm();
-        $form->setData($post);
+        $form->setData($data);
 
         if ($form->isValid()) {
             $data = $form->getData();
             $code = $data['code'];
             $locale = $this->getLocaleService()->findOneByCode($code);
 
-            if ($data['enable'] === true && !$locale) {
+            if ($data['mode'] === self::MODE_ENABLE && !$locale) {
                 $locale = new Locale($code);
                 $this->getLocaleService()->save($locale);
             }
 
-            if ($data['enable'] === false && $locale instanceof Locale) {
+            if ($data['mode'] === self::MODE_DISABLE && $locale instanceof Locale) {
                 $this->getLocaleService()->remove($locale);
             }
         }

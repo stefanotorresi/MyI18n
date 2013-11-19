@@ -120,7 +120,8 @@ class LocaleControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testProcessActionEnable()
     {
-        $this->controller->setLocaleForm(new LocaleForm());
+        $form = new LocaleForm();
+        $this->controller->setLocaleForm($form);
 
         $this->controller->getLocaleService()
             ->expects($this->once())
@@ -129,17 +130,19 @@ class LocaleControllerTest extends \PHPUnit_Framework_TestCase
         $this->controller->getEvent()->setRouteMatch(new RouteMatch(['action' => 'process']));
 
         $request = new Request();
+        $request->setMethod(Request::METHOD_POST);
         $request->getPost()->set('code', 'en');
-        $request->getPost()->set('enable', '1');
+        $request->getPost()->set('mode', LocaleController::MODE_ENABLE);
 
         /** @var Response $result */
         $result = $this->controller->dispatch($request);
+
+        $this->assertTrue($form->isValid());
     }
 
     public function testProcessActionDisable()
     {
         $form = new LocaleForm();
-        $form->init();
         $this->controller->setLocaleForm($form);
 
         $this->controller->getLocaleService()
@@ -155,10 +158,13 @@ class LocaleControllerTest extends \PHPUnit_Framework_TestCase
         $this->controller->getEvent()->setRouteMatch(new RouteMatch(['action' => 'process']));
 
         $request = new Request();
+        $request->setMethod(Request::METHOD_POST);
         $request->getPost()->set('code', 'en');
-        $request->getPost()->set('enable', '0');
+        $request->getPost()->set('mode', LocaleController::MODE_DISABLE);
 
         /** @var Response $result */
         $result = $this->controller->dispatch($request);
+
+        $this->assertTrue($form->isValid());
     }
 }
