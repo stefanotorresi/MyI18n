@@ -211,7 +211,7 @@ class LanguageSelect extends Select
 
         $valueOptions = [];
 
-        foreach(static::$codes as $code) {
+        foreach (static::$codes as $code) {
             $valueOptions[$code] = ucfirst(\Locale::getDisplayLanguage($code, $code));
         }
 

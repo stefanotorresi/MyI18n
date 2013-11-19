@@ -9,7 +9,6 @@ namespace MyI18nTest;
 
 use Composer\Autoload\ClassLoader;
 use Zend\ModuleManager\ModuleManager;
-use Zend\Mvc\Router\Http\TreeRouteStack;
 use Zend\Mvc\Service\ServiceManagerConfig;
 use Zend\ServiceManager\ServiceManager;
 
