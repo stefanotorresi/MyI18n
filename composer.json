@@ -27,9 +27,6 @@
         "stefanotorresi/my-base": "1.x-dev",
         "soflomo/purifier": "0.*"
     },
-    "require-dev": {
-        "phpunit/phpunit": "3.7.*"
-    },
     "extra": {
         "branch-alias": {
             "dev-master": "1.x-dev",
