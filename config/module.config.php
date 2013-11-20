@@ -9,8 +9,6 @@ namespace MyI18n;
 
 return [
     __NAMESPACE__ => [
-//        'default_locale'   => 'en',
-//        'supported_locales' => [],
 //        'detectors' => [
 //            'MyI18n\Detector\Query',
 //            'MyI18n\Detector\Route',

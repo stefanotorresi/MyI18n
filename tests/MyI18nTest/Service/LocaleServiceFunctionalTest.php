@@ -48,4 +48,48 @@ class LocaleServiceFunctionalTest extends TestCase
     {
         $this->assertEquals(TestAsset\Locales::getLocales(), $this->localeService->getAll());
     }
+
+    public function testGetDefaultLocale()
+    {
+        $default = array_filter(TestAsset\Locales::getLocales(), function(Locale $locale){
+            return $locale->isDefaultLocale();
+        });
+        $default = array_pop($default);
+
+        $this->assertEquals($default, $this->localeService->getDefaultLocale());
+    }
+
+    public function testCodeUniqueConstraint()
+    {
+        $nonUniqueCode = 'it';
+        $locale = new Locale($nonUniqueCode);
+        try {
+            $this->localeService->save($locale);
+            $this->fail(sprintf(
+                'A Locale with non unique field \'code=%s\' was successfully saved',
+                $nonUniqueCode
+            ));
+        } catch (\Doctrine\DBAL\DBALException $e) {
+            $this->assertContains('code is not unique', $e->getMessage());
+        }
+    }
+
+    public function testDefaultLocaleUniqueConstraint()
+    {
+        $locale = new Locale('ru');
+        $locale->setDefaultLocale();
+        try {
+            $this->localeService->save($locale);
+            $this->fail(sprintf(
+                'More than one Locale with field \'defaultLocale=true\' were successfully saved'
+            ));
+        } catch (\Doctrine\DBAL\DBALException $e) {
+            $this->assertContains('defaultLocale is not unique', $e->getMessage());
+        }
+    }
+
+    public function testGetAllCodesAsArray()
+    {
+        $this->assertSame(['de', 'en', 'it'], $this->localeService->getAllCodesAsArray());
+    }
 }

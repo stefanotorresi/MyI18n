@@ -13,16 +13,6 @@ class ModuleOptions extends AbstractOptions implements
     DetectorOptionsInterface
 {
     /**
-     * @var string $defaultLocale
-     */
-    protected $defaultLocale = 'en';
-
-    /**
-     * @var array $supportedLocales
-     */
-    protected $supportedLocales = [];
-
-    /**
      * @var array $detectors
      */
     protected $detectors = [
@@ -41,22 +31,6 @@ class ModuleOptions extends AbstractOptions implements
      * @var NavigationOptions $navigationOptions
      */
     protected $navigationOptions;
-
-    /**
-     * @param string $defaultLocale
-     */
-    public function setDefaultLocale($defaultLocale)
-    {
-        $this->defaultLocale = $defaultLocale;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDefaultLocale()
-    {
-        return $this->defaultLocale;
-    }
 
     /**
      * @param array $handlers
@@ -88,22 +62,6 @@ class ModuleOptions extends AbstractOptions implements
     public function getKeyName()
     {
         return $this->key_name;
-    }
-
-    /**
-     * @param array $supportedLocales
-     */
-    public function setSupportedLocales($supportedLocales)
-    {
-        $this->supportedLocales = $supportedLocales;
-    }
-
-    /**
-     * @return array
-     */
-    public function getSupportedLocales()
-    {
-        return $this->supportedLocales;
     }
 
     /**

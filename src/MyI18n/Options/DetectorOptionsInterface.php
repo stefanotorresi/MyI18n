@@ -9,8 +9,6 @@ namespace MyI18n\Options;
 
 interface DetectorOptionsInterface
 {
-    public function getSupportedLocales();
-    public function setSupportedLocales($supportedLocales);
     public function getKeyName();
     public function setKeyName($keyName);
 }

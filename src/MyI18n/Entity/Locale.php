@@ -22,6 +22,15 @@ class Locale extends Entity
      */
     protected $code;
 
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean", unique=true, nullable=true)
+     */
+    protected $defaultLocale;
+
+    /**
+     * @param string|null $code
+     */
     public function __construct($code = null)
     {
         $this->code = $code;
@@ -49,5 +58,28 @@ class Locale extends Entity
     public function __toString()
     {
         return $this->code;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isDefaultLocale()
+    {
+        return $this->defaultLocale;
+    }
+
+    /**
+     * @param boolean $flag
+     */
+    public function setDefaultLocale($flag = true)
+    {
+        $flag = (bool) $flag;
+
+        // we have a unique constraint so it's either true or null
+        if (! $flag) {
+            $flag = null;
+        }
+
+        $this->defaultLocale = $flag;
     }
 }

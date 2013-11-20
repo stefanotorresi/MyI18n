@@ -38,4 +38,24 @@ class LocaleService extends AbstractEntityService
     {
         return $this->getEntityManager()->getRepository(Locale::fqcn())->findBy([], ['code' => Criteria::ASC]);
     }
+
+    public function getAllCodesAsArray()
+    {
+        $queryBuilder = $this->getEntityManager()->getRepository(Locale::fqcn())->createQueryBuilder('locale');
+        $queryBuilder->addOrderBy('locale.code', Criteria::ASC);
+
+        $result = $queryBuilder->getQuery()->getScalarResult();
+
+        $array = array_map('current', $result);
+
+        return $array;
+    }
+
+    /**
+     * @return null|Locale
+     */
+    public function getDefaultLocale()
+    {
+        return $this->getEntityManager()->getRepository(Locale::fqcn())->findOneBy(['defaultLocale' => true]);
+    }
 }

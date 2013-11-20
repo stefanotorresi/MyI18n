@@ -32,11 +32,16 @@ class NavigationFactory implements FactoryInterface
 
         /** @var Options\ModuleOptions $options */
         $options = $serviceLocator->get('MyI18n\Options\ModuleOptions');
+
+        /** @var Service\LocaleService $localeService */
+        $localeService = $serviceLocator->get('MyI18n\ServiceLocaleService');
+        $locales = $localeService->getAll();
+
         $currentLocale = Locale::getDefault();
 
         $pages = array();
 
-        foreach ($options->getSupportedLocales() as $localeEntry) {
+        foreach ($locales as $localeEntry) {
 
             $fullLangName = ucfirst(Locale::getDisplayLanguage($localeEntry, $localeEntry));
             $pageConfig = $options->getNavigationOptions()->getQueryString() ?

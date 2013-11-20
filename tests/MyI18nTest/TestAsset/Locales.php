@@ -17,13 +17,14 @@ class Locales
     public static function getLocales()
     {
         if (empty(static::$locales)) {
-            static::$locales = [
-                // note the alphabetical order
-                // it is assumed to be this way by testGetAll()
-                new Locale('de'),
-                new Locale('en'),
-                new Locale('it'),
-            ];
+            $de = new Locale('de');
+            $en = new Locale('en');
+            $it = new Locale('it');
+            $it->setDefaultLocale();
+
+            // note the alphabetical order
+            // it is assumed to be this way by testGetAll()
+            static::$locales = [$de, $en, $it];
         }
 
         return static::$locales;

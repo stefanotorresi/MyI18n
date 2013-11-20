@@ -8,13 +8,19 @@
 namespace MyI18n;
 
 use Locale;
+use MyI18n\Service\LocaleServiceAwareInterface;
+use MyI18n\Service\LocaleServiceAwareTrait;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\Mvc\MvcEvent;
 use Zend\View\Model\JsonModel;
 
-class LocaleStrategy implements ListenerAggregateInterface
+class LocaleStrategy implements
+    ListenerAggregateInterface,
+    LocaleServiceAwareInterface
 {
+    use LocaleServiceAwareTrait;
+
     /**
      * @var array
      */
@@ -78,10 +84,10 @@ class LocaleStrategy implements ListenerAggregateInterface
             return;
         }
 
-        $app        = $e->getApplication();
-        $serviceManager   = $app->getServiceManager();
-        $translator = $serviceManager->get('translator');
-        $detectors   = $this->moduleOptions->getDetectors();
+        $app                = $e->getApplication();
+        $serviceManager     = $app->getServiceManager();
+        $translator         = $serviceManager->get('translator');
+        $detectors          = $this->moduleOptions->getDetectors();
 
         foreach ($detectors as $detectorServiceName) {
             $detector = $serviceManager->get($detectorServiceName);
@@ -94,7 +100,7 @@ class LocaleStrategy implements ListenerAggregateInterface
         }
 
         if (!isset($locale)) {
-            $locale = $this->moduleOptions->getDefaultLocale();
+            $locale = $this->getLocaleService()->getDefaultLocale();
         }
 
         Locale::setDefault($locale);

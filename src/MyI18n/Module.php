@@ -8,6 +8,7 @@
 
 namespace MyI18n;
 
+use Zend\Console\Console;
 use Zend\Mvc\MvcEvent;
 use Zend\ModuleManager\Feature;
 use Zend\Stdlib\ArrayUtils;
@@ -20,6 +21,11 @@ class Module implements
 {
     public function onBootstrap(MvcEvent $e)
     {
+        // nothing to do if in console environment
+        if (Console::isConsole()) {
+            return;
+        }
+
         $app = $e->getApplication();
         $eventManager = $app->getEventManager();
         $serviceManager = $app->getServiceManager();

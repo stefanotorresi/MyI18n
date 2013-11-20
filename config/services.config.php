@@ -3,8 +3,6 @@
 namespace MyI18n;
 
 use Doctrine\ORM\EntityManager;
-use MyI18n\Form\LocaleForm;
-use MyI18n\Options\ModuleOptions;
 use Zend\Mvc\Router\Http\TreeRouteStack;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Session\Container as Session;
@@ -25,7 +23,7 @@ return [
                 return $localeService;
             },
         'MyI18n\Form\LocaleForm' => function (ServiceLocatorInterface $serviceLocator) {
-                $form = new LocaleForm();
+                $form = new Form\LocaleForm();
 
                 $router = $serviceLocator->get('router');
 
@@ -38,17 +36,22 @@ return [
             },
         'MyI18n\Options\ModuleOptions' => function (ServiceLocatorInterface $serviceLocator) {
                 $moduleConfig = $serviceLocator->get('config')[__NAMESPACE__];
-                $moduleOptions = new ModuleOptions($moduleConfig);
-
-                /** @var Service\LocaleService $localeService */
-                $localeService = $serviceLocator->get('MyI18n\Service\LocaleService');
-                $locales = $localeService->getAll();
-
-                $moduleOptions->setSupportedLocales($locales);
+                $moduleOptions = new Options\ModuleOptions($moduleConfig);
 
                 return $moduleOptions;
             },
         'MyI18n\Navigation' => 'MyI18n\NavigationFactory',
+    ],
+
+    'initializers' => [
+        function($instance, ServiceLocatorInterface $serviceLocator) {
+            if ($instance instanceof Service\LocaleServiceAwareInterface) {
+                /** @var Service\LocaleService $localeService */
+                $localeService = $serviceLocator->get('MyI18n\Service\LocaleService');
+                $instance->setLocaleService($localeService);
+            }
+            return $instance;
+        }
     ],
 
     'abstract_factories' => [

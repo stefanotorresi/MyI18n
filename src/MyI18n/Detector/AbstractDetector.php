@@ -9,9 +9,15 @@ namespace MyI18n\Detector;
 
 use Locale;
 use MyI18n\Options\DetectorOptionsInterface;
+use MyI18n\Service\LocaleServiceAwareInterface;
+use MyI18n\Service\LocaleServiceAwareTrait;
 
-abstract class AbstractDetector implements DetectorInterface
+abstract class AbstractDetector implements
+    DetectorInterface,
+    LocaleServiceAwareInterface
 {
+    use LocaleServiceAwareTrait;
+
     /**
      *
      * @var array
@@ -33,7 +39,7 @@ abstract class AbstractDetector implements DetectorInterface
      */
     public function lookup($locale)
     {
-        return Locale::lookup($this->options->getSupportedLocales(), $locale);
+        return Locale::lookup($this->getLocaleService()->getAllCodesAsArray(), $locale);
     }
 
     /**
