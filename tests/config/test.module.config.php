@@ -11,6 +11,15 @@ return [
             __NAMESPACE__ => [
                 'cache' => 'array',
             ],
+            'test_driver' => [
+                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+                'paths' => [__DIR__ . '/../MyI18nTest/TestAsset']
+            ],
+            'orm_default' => [
+                'drivers' => [
+                    'MyI18nTest\TestAsset' => 'test_driver'
+                ],
+            ],
         ],
         'connection' => array(
             'orm_default' => array(

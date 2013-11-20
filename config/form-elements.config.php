@@ -11,7 +11,7 @@ use Zend\Form\FormElementManager;
 
 return [
     'factories' => [
-        'MyI18n\Form\LocaleFieldset' => function(FormElementManager $formElementManager) {
+        'MyI18n\Form\LocaleFieldset' => function (FormElementManager $formElementManager) {
             $serviceManager = $formElementManager->getServiceLocator();
             $objectManager = $serviceManager->get('Doctrine\ORM\EntityManager');
             $hydrator = $serviceManager->get('HydratorManager')->get('DoctrineModule\Stdlib\Hydrator\DoctrineObject');
