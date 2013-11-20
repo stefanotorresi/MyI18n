@@ -9,21 +9,19 @@ namespace MyI18n;
 
 return [
     __NAMESPACE__ => [
-        'default'   => 'en',
-        'supported' => [],
-        'fallback'  => '',
-        'handlers' => [
-            'MyI18n\Detector\Query',
-            'MyI18n\Detector\Route',
-            'MyI18n\Detector\Session',
-            'MyI18n\Detector\Headers',
-        ],
-        'key_name'  => 'lang',
-        'navigation' => [
-            // possible values: true, false, 'only_active'
-            'full_lang_as_label' => true,
-            'query_uri' => false,
-        ],
+//        'default_locale'   => 'en',
+//        'supported_locales' => [],
+//        'detectors' => [
+//            'MyI18n\Detector\Query',
+//            'MyI18n\Detector\Route',
+//            'MyI18n\Detector\Session',
+//            'MyI18n\Detector\Headers',
+//        ],
+//        'key_name'  => 'lang',
+//        'navigation_options' => [
+//            'label_display' => Options\NavigationOptions::LABEL_DISPLAY_FULL,
+//            'queryString' => false,
+//        ],
     ],
 
     'navigation' => [
@@ -47,24 +45,6 @@ return [
         ],
         'aliases' => [
             'MyI18n\Controller\Locale' => 'MyI18n\Controller\LocaleController',
-        ],
-    ],
-
-    'service_manager' => [
-        'factories' => [
-            'MyI18n\Navigation' => 'MyI18n\NavigationFactory',
-        ],
-        'invokables' => [
-            'MyI18n\Detector\Query' => 'MyI18n\Detector\Query',
-            'MyI18n\Detector\Session' => 'MyI18n\Detector\Session',
-            'MyI18n\Detector\Route' => 'MyI18n\Detector\Route',
-            'MyI18n\Detector\Headers' => 'MyI18n\Detector\Headers',
-        ],
-        'aliases' => [
-            'nav-lang' => 'MyI18n\Navigation',
-            'translator' => 'MvcTranslator',
-            'MyI18n\Service\Locale' => 'MyI18n\Service\LocaleService',
-            'MyI18n\Form\Locale' => 'MyI18n\Form\LocaleForm',
         ],
     ],
 

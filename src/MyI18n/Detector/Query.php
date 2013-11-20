@@ -19,7 +19,7 @@ class Query extends AbstractDetector
             return;
         }
 
-        $query = $request->getQuery($this->config['key_name']);
+        $query = $request->getQuery($this->getOptions()->getKeyName());
 
         if ($query) {
             return $this->lookup($query);

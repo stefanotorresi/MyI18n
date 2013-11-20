@@ -31,6 +31,9 @@ class LocaleService extends AbstractEntityService
         return $this->getEntityManager()->getRepository(Locale::fqcn())->findOneBy(['code' => $code]);
     }
 
+    /**
+     * @return array
+     */
     public function getAll()
     {
         return $this->getEntityManager()->getRepository(Locale::fqcn())->findBy([], ['code' => Criteria::ASC]);

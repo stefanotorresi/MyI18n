@@ -14,12 +14,6 @@ interface DetectorInterface
 
     /**
      *
-     * @param array $config
-     */
-    public function setConfig(array $config);
-
-    /**
-     *
      * @param string $locale
      */
     public function lookup($locale);

@@ -3,19 +3,15 @@
 namespace MyI18n\Detector;
 
 use Zend\Mvc\MvcEvent;
-use Zend\ServiceManager\ServiceManagerAwareInterface;
-use Zend\ServiceManager\ServiceManager;
+use Zend\Session\Container as SessionContainer;
 
 class Session extends AbstractDetector
-    implements
-        PersistCapableInterface,
-        ServiceManagerAwareInterface
+    implements PersistCapableInterface, SessionAwareInterface
 {
     /**
-     *
-     * @var ServiceManager
+     * @var SessionContainer
      */
-    protected $services;
+    protected $session;
 
     /**
      *
@@ -24,23 +20,31 @@ class Session extends AbstractDetector
      */
     public function getLocale(MvcEvent $e)
     {
-        $session = $this->services->get('MyI18n\Session');
+        $param = $this->getSession()->{$this->getOptions()->getKeyName()};
 
-        $query = $session->{$this->config['key_name']};
-
-        if ($query) {
-            return $this->lookup($query);
+        if ($param) {
+            return $this->lookup($param);
         }
     }
 
     public function persist($locale)
     {
-        $session = $this->services->get('MyI18n\Session');
-        $session->{$this->config['key_name']} = $locale;
+        $this->getSession()->{$this->getOptions()->getKeyName()} = $locale;
     }
 
-    public function setServiceManager(ServiceManager $serviceManager)
+    /**
+     * @return SessionContainer
+     */
+    public function getSession()
     {
-        $this->services = $serviceManager;
+        return $this->session;
+    }
+
+    /**
+     * @param SessionContainer $session
+     */
+    public function setSession(SessionContainer $session)
+    {
+        $this->session = $session;
     }
 }

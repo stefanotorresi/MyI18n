@@ -16,34 +16,29 @@ use Zend\View\Model\JsonModel;
 class LocaleStrategy implements ListenerAggregateInterface
 {
     /**
-     *
      * @var array
      */
     protected $listeners = array();
 
     /**
-     *
      * @var string
      */
     protected $locale;
 
     /**
-     *
-     * @var string
+     * @var Options\ModuleOptions
      */
-    protected $config;
+    protected $moduleOptions;
 
     /**
-     *
-     * @param array $config
+     * @param Options\ModuleOptions $options
      */
-    public function __construct(array $config)
+    public function __construct(Options\ModuleOptions $options)
     {
-        $this->config = $config;
+        $this->moduleOptions = $options;
     }
 
     /**
-     *
      * @param EventManagerInterface $events
      */
     public function attach(EventManagerInterface $events)
@@ -63,7 +58,6 @@ class LocaleStrategy implements ListenerAggregateInterface
     }
 
     /**
-     *
      * @param EventManagerInterface $events
      */
     public function detach(EventManagerInterface $events)
@@ -76,7 +70,6 @@ class LocaleStrategy implements ListenerAggregateInterface
     }
 
     /**
-     *
      * @param MvcEvent $e
      */
     public function detectLocale(MvcEvent $e)
@@ -86,14 +79,14 @@ class LocaleStrategy implements ListenerAggregateInterface
         }
 
         $app        = $e->getApplication();
-        $services   = $app->getServiceManager();
-        $translator = $services->get('translator');
-        $handlers   = $this->config['handlers'];
+        $serviceManager   = $app->getServiceManager();
+        $translator = $serviceManager->get('translator');
+        $detectors   = $this->moduleOptions->getDetectors();
 
-        foreach ($handlers as $handlerName) {
-            $handler = $services->get($handlerName);
+        foreach ($detectors as $detectorServiceName) {
+            $detector = $serviceManager->get($detectorServiceName);
 
-            $locale = $handler->getLocale($e);
+            $locale = $detector->getLocale($e);
 
             if ($locale) {
                 break;
@@ -101,7 +94,7 @@ class LocaleStrategy implements ListenerAggregateInterface
         }
 
         if (!isset($locale)) {
-            $locale = $this->config['default'];
+            $locale = $this->moduleOptions->getDefaultLocale();
         }
 
         Locale::setDefault($locale);
@@ -109,42 +102,51 @@ class LocaleStrategy implements ListenerAggregateInterface
         $this->locale = $locale;
     }
 
+    /**
+     * @param MvcEvent $e
+     */
     public function persistLocale(MvcEvent $e)
     {
         $app        = $e->getApplication();
         $services   = $app->getServiceManager();
-        $handlers   = $this->config['handlers'];
+        $detectors   = $this->moduleOptions->getDetectors();
 
         if ($this->locale) {
-            foreach ($handlers as $handlerName) {
+            foreach ($detectors as $detectorServiceName) {
 
-                $handler = $services->get($handlerName);
+                $detector = $services->get($detectorServiceName);
 
-                if ($handler instanceof Detector\PersistCapableInterface) {
-                    $handler->persist($this->locale);
+                if ($detector instanceof Detector\PersistCapableInterface) {
+                    $detector->persist($this->locale);
                 }
             }
         }
     }
 
     /**
-     *
      * @param MvcEvent $e
      */
     public function updateViewModel(MvcEvent $e)
     {
         $model = $e->getViewModel();
         if (!$model instanceof JsonModel) {
-            $model->setVariable($this->config['key_name'], $this->locale);
+            $model->setVariable($this->moduleOptions->getKeyName(), $this->locale);
         }
     }
 
     /**
-     *
-     * @return array
+     * @return Options\ModuleOptions
      */
-    public function getConfig()
+    public function getModuleOptions()
     {
-        return $this->config;
+        return $this->moduleOptions;
+    }
+
+    /**
+     * @param Options\ModuleOptions $moduleOptions
+     */
+    public function setModuleOptions(Options\ModuleOptions $moduleOptions)
+    {
+        $this->moduleOptions = $moduleOptions;
     }
 }

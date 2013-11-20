@@ -8,6 +8,7 @@
 namespace MyI18n\Detector;
 
 use Locale;
+use MyI18n\Options\DetectorOptionsInterface;
 
 abstract class AbstractDetector implements DetectorInterface
 {
@@ -15,11 +16,14 @@ abstract class AbstractDetector implements DetectorInterface
      *
      * @var array
      */
-    protected $config;
+    protected $options;
 
-    public function setConfig(array $config)
+    /**
+     * @param DetectorOptionsInterface $options
+     */
+    public function __construct(DetectorOptionsInterface $options = null)
     {
-        $this->config = $config;
+        $this->options = $options;
     }
 
     /**
@@ -29,6 +33,22 @@ abstract class AbstractDetector implements DetectorInterface
      */
     public function lookup($locale)
     {
-        return Locale::lookup($this->config['supported'], $locale);
+        return Locale::lookup($this->options->getSupportedLocales(), $locale);
+    }
+
+    /**
+     * @return DetectorOptionsInterface
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    /**
+     * @param DetectorOptionsInterface $options
+     */
+    public function setOptions(DetectorOptionsInterface $options)
+    {
+        $this->options = $options;
     }
 }
