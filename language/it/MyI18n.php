@@ -7,12 +7,10 @@
 
 return [
     'Languages' => 'Lingue',
-    'Text' => 'Testo',
-    'Translation' => 'Traduzione',
     'Language' => 'Lingua',
-    'Domain' => 'Dominio',
-    'Translations management' => 'Gestione traduzioni',
-    'Add translation' => 'Aggiungi traduzione',
-    'Edit translation' => 'Modifica traduzione',
-    'There are no translations at the moment' => 'Non ci sono traduzioni al momento'
+    'Languages management' => 'Gestione lingue',
+    'There are no languages enabled at the moment' => 'Non ci sono lingue abilitate al momento',
+    'Select a language to enable' => 'Seleziona una lingua da abilitare',
+    'Enable' => 'Abilita',
+    'Disable' => 'Disabilita',
 ];
