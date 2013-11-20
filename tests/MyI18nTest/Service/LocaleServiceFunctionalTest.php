@@ -51,7 +51,7 @@ class LocaleServiceFunctionalTest extends TestCase
 
     public function testGetDefaultLocale()
     {
-        $default = array_filter(TestAsset\Locales::getLocales(), function(Locale $locale){
+        $default = array_filter(TestAsset\Locales::getLocales(), function (Locale $locale) {
             return $locale->isDefaultLocale();
         });
         $default = array_pop($default);

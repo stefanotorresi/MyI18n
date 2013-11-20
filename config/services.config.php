@@ -44,12 +44,13 @@ return [
     ],
 
     'initializers' => [
-        function($instance, ServiceLocatorInterface $serviceLocator) {
+        function ($instance, ServiceLocatorInterface $serviceLocator) {
             if ($instance instanceof Service\LocaleServiceAwareInterface) {
                 /** @var Service\LocaleService $localeService */
                 $localeService = $serviceLocator->get('MyI18n\Service\LocaleService');
                 $instance->setLocaleService($localeService);
             }
+
             return $instance;
         }
     ],
