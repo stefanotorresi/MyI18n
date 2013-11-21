@@ -44,28 +44,23 @@ class LocaleFormTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [
-                [ 'code' => 'en', 'mode' => 'enable'],
-                [ 'code' => 'en', 'mode' => 'enable', 'submit' => null],
+                [ 'code' => 'en', 'defaultLocale' => null, ],
+                [ 'code' => 'en', 'defaultLocale' => false, 'submit' => null],
                 true
             ],
             [
-                [ 'code' => 'IT', 'mode' => 'Enable'],
-                [ 'code' => 'it', 'mode' => 'enable', 'submit' => null],
+                [ 'code' => 'IT', 'defaultLocale' => 1, ],
+                [ 'code' => 'it', 'defaultLocale' => true, 'submit' => null],
                 true
             ],
             [
-                [ 'code' => 'En', 'mode' => 'DISABLE'],
-                [ 'code' => 'en', 'mode' => 'disable', 'submit' => null],
+                [ 'code' => 'En', 'defaultLocale' => 'asdasd', ],
+                [ 'code' => 'en', 'defaultLocale' => true, 'submit' => null],
                 true
             ],
             [
-                [ 'code' => 'invalid', 'mode' => 'invalid'],
-                [ 'code' => 'invalid', 'mode' => 'invalid', 'submit' => null],
-                false
-            ],
-            [
-                [ 'code' => 'it', 'mode' => 'invalid'],
-                [ 'code' => 'it', 'mode' => 'invalid', 'submit' => null],
+                [ 'code' => 'invalid', 'defaultLocale' => 0, ],
+                [ 'code' => 'invalid', 'defaultLocale' => false, 'submit' => null],
                 false
             ],
         ];

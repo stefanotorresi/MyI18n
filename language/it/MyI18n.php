@@ -13,4 +13,6 @@ return [
     'Select a language to enable' => 'Seleziona una lingua da abilitare',
     'Enable' => 'Abilita',
     'Disable' => 'Disabilita',
+    'Default' => 'Predefinito',
+    'Make default' => 'Rendi predefinito',
 ];

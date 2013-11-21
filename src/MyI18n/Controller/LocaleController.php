@@ -42,29 +42,34 @@ class LocaleController extends AbstractActionController
         ];
     }
 
-    public function processAction()
+    public function enableAction()
     {
-        /** @var \Zend\Http\Request $request */
-        $request = $this->getRequest();
+        $form           = $this->getLocaleForm();
+        $localeService  = $this->getLocaleService();
+        $data           = $this->params()->fromPost();
 
-        $data = $request->isPost() ? $this->params()->fromPost() : $this->params()->fromRoute();
-
-        $form = $this->getLocaleForm();
+        $locale = new Locale;
+        $form->bind($locale);
         $form->setData($data);
 
         if ($form->isValid()) {
-            $data = $form->getData();
-            $code = $data['code'];
-            $locale = $this->getLocaleService()->findOneByCode($code);
 
-            if ($data['mode'] === self::MODE_ENABLE && !$locale) {
-                $locale = new Locale($code);
-                $this->getLocaleService()->save($locale);
+            if (! $localeService->findOneByCode($locale->getCode())) {
+                $localeService->save($locale);
             }
+        }
 
-            if ($data['mode'] === self::MODE_DISABLE && $locale instanceof Locale) {
-                $this->getLocaleService()->remove($locale);
-            }
+        return $this->redirect()->toRoute($this->getBaseRoute());
+    }
+
+    public function disableAction()
+    {
+        $code = $this->params()->fromRoute('code');
+
+        $locale = $this->getLocaleService()->findOneByCode($code);
+
+        if ($locale instanceof Locale) {
+            $this->getLocaleService()->remove($locale);
         }
 
         return $this->redirect()->toRoute($this->getBaseRoute());

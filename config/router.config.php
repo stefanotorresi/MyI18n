@@ -5,21 +5,6 @@
  * ************************************************
  */
 
-use Zend\Stdlib\ArrayUtils;
-
-$paged = array(
-    'paged' => array(
-        'type' => 'Segment',
-        'options' => array(
-            'route' => '/page-:page[-:itemsPerPage]',
-            'constraints' => array(
-                'page' => '\d+',
-                'itemsPerPage' => '\d+',
-            ),
-        ),
-    ),
-);
-
 return array(
     'router' => array(
         'routes' => array(
@@ -62,20 +47,40 @@ return array(
                                     ),
                                 ),
                                 'may_terminate' => true,
-                                'child_routes' => ArrayUtils::merge(
-                                    array(
-                                        'process' => array(
-                                            'type' => 'Segment',
-                                            'options' => array(
-                                                'route' => '/:mode[/:code]',
-                                                'defaults' => array(
-                                                    'action' => 'process',
-                                                    'mode' => \MyI18n\Controller\LocaleController::MODE_ENABLE
-                                                ),
+                                'child_routes' => array(
+                                    'enable' => array(
+                                        'type' => 'Literal',
+                                        'options' => array(
+                                            'route' => '/enable',
+                                            'defaults' => array(
+                                                'action' => 'enable',
                                             ),
                                         ),
                                     ),
-                                    $paged
+                                    'disable' => array(
+                                        'type' => 'Segment',
+                                        'options' => array(
+                                            'route' => '/disable/:code',
+                                            'defaults' => array(
+                                                'action' => 'disable',
+                                            ),
+                                            'constraints' => array(
+                                                'code' => '[a-zA-Z]{2}',
+                                            ),
+                                        ),
+                                    ),
+                                    'make-default' => array(
+                                        'type' => 'Segment',
+                                        'options' => array(
+                                            'route' => '/make-default/:code',
+                                            'defaults' => array(
+                                                'action' => 'make-default',
+                                            ),
+                                            'constraints' => array(
+                                                'code' => '[a-zA-Z]{2}',
+                                            ),
+                                        ),
+                                    ),
                                 ),
                             ),
                         ),

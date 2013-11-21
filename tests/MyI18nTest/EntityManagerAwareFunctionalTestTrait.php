@@ -17,10 +17,8 @@ trait EntityManagerAwareFunctionalTestTrait
      */
     public function getNewEntityManager()
     {
-        $serviceManager = Bootstrap::getServiceManager();
-
         /** @var EntityManager $entityManager */
-        $entityManager = $serviceManager->get('Doctrine\ORM\EntityManager');
+        $entityManager = Bootstrap::getServiceManager()->get('Doctrine\ORM\EntityManager');
 
         $classes    = $entityManager->getMetadataFactory()->getAllMetadata();
         $schemaTool = new SchemaTool($entityManager);

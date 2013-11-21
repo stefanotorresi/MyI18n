@@ -1,7 +1,4 @@
 <?php
-use MyI18n\Controller\LocaleController;
-use MyI18n\Entity\Locale;
-
 /**
  * @var \Zend\View\Renderer\PhpRenderer $this
  *
@@ -10,34 +7,20 @@ use MyI18n\Entity\Locale;
  * ************************************************
  */
 
-/** @var \MyI18n\Form\LocaleForm $form */
-$form = $this->localeForm;
+use MyI18n\Entity\Locale;
 
 /* @var $locales array */
 $locales = $this->locales;
 
-$form->setAttribute('class', 'span6 form-inline');
-
 ?>
+
 <h3 class="section-title">
     <?= $this->translate('Languages management') ?>
 </h3>
 
 <div class="row-fluid">
 
-    <?= $this->form()->openTag($form); ?>
-
-        <?= $this->formLabel($form->get('code')); ?><br />
-        <?= $this->formSelect($form->get('code')); ?>
-
-        <?= $this->formButton()->openTag($form->get('submit')->setAttribute('class', 'btn btn-small btn-primary margin-left-10')) ?>
-            <i class="icon-check icon-white"></i>
-            <?= $this->escapeHtml($this->translate($form->get('submit')->getLabel())) ?>
-        <?= $this->formButton()->closeTag() ?>
-
-        <?= $this->formRow($form->get('mode')); ?>
-
-    <?= $this->form()->closeTag() ?>
+    <?= $this->render('my-i18n/locale/form') ?>
 
     <div class="locale-list span6">
 
@@ -53,13 +36,24 @@ $form->setAttribute('class', 'span6 form-inline');
                 <tbody>
                 <?php foreach($locales as $i => $locale) :
                     /* @var $locale Locale */ ?>
-                    <tr data-id="<?=$locale->getId()?>">
+                    <tr data-id="<?= $locale->getId() ?>">
                         <td class="span1"><?= $i+1 ?></td>
-                        <td class="span4"><?= ucfirst(\Locale::getDisplayLanguage($locale->getCode(), \Locale::getDefault())) ?></td>
+                        <td class="span4">
+                            <?= ucfirst(\Locale::getDisplayLanguage($locale->getCode(), \Locale::getDefault())) ?>
+                            <?= $locale->isDefaultLocale() ? '('.$this->translate("Default").')' : '' ?>
+                        </td>
                         <td class="span2 text-right">
                             <div class="btn-group">
+                            <?php if (! $locale->isDefaultLocale()) : ?>
+                                <div class="btn-group">
+                                    <a class="btn btn-small btn-info btn-make-default"
+                                       href="<?= $this->url('admin/i18n/locales/make-default', ['code' => $locale->getCode()])?>"
+                                       title="<?= $this->translate("Disable") ?>">
+                                        <i class="icon-check icon-white"></i> <?= $this->translate("Make default") ?>
+                                    </a>
+                            <?php endif; ?>
                                 <a class="btn btn-small btn-danger btn-disable"
-                                   href="<?= $this->url('admin/i18n/locales/process', ['mode' => LocaleController::MODE_DISABLE, 'code' => $locale->getCode()])?>"
+                                   href="<?= $this->url('admin/i18n/locales/disable', ['code' => $locale->getCode()])?>"
                                    title="<?= $this->translate("Disable") ?>"><i class="icon-remove icon-white"></i> <?= $this->translate("Disable") ?></a>
                             </div>
                         </td>

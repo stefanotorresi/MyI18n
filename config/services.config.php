@@ -23,13 +23,16 @@ return [
                 return $localeService;
             },
         'MyI18n\Form\LocaleForm' => function (ServiceLocatorInterface $serviceLocator) {
-                $form = new Form\LocaleForm();
 
                 $router = $serviceLocator->get('router');
+                $hydrator = $serviceLocator->get('HydratorManager')->get('DoctrineModule\Stdlib\Hydrator\DoctrineObject');
 
-                // makes functional test possible
+                $form = new Form\LocaleForm();
+                $form->setHydrator($hydrator)->setObject(new Entity\Locale());
+
+                // wrap in an if to makes functional testing possible
                 if ($router instanceof TreeRouteStack) {
-                    $form->setAttribute('action', $router->assemble([], ['name' => 'admin/i18n/locales/process']));
+                    $form->setAttribute('action', $router->assemble([], ['name' => 'admin/i18n/locales/enable']));
                 }
 
                 return $form;

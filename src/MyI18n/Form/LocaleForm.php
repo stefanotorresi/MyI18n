@@ -34,10 +34,10 @@ class LocaleForm extends Form implements InputFilterProviderInterface
         ]);
 
         $this->add([
-            'type' => 'hidden',
-            'name' => 'mode',
-            'attributes' => [
-                'value' => LocaleController::MODE_ENABLE
+            'name' => 'defaultLocale',
+            'type' => 'checkbox',
+            'options' => [
+                'label' => 'Make default'
             ],
         ]);
 
@@ -64,21 +64,10 @@ class LocaleForm extends Form implements InputFilterProviderInterface
                     ['name' => 'stringtolower'],
                 ],
             ],
-            'mode' => [
-                'required' => true,
+            'defaultLocale' => [
+                'required' => false,
                 'filters' => [
-                    ['name' => 'stringtolower'],
-                ],
-                'validators' => [
-                    [
-                        'name' => 'inarray',
-                        'options' => [
-                            'haystack' => [
-                                LocaleController::MODE_ENABLE,
-                                LocaleController::MODE_DISABLE
-                            ],
-                        ],
-                    ],
+                    ['name' => 'boolean'],
                 ],
             ],
         ];

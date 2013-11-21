@@ -7,9 +7,11 @@
 
 namespace MyI18nTest\Controller;
 
+use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
 use MyI18n\Controller\LocaleController;
 use MyI18n\Entity\Locale;
 use MyI18n\Form\LocaleForm;
+use MyI18nTest\EntityManagerAwareFunctionalTestTrait;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\Mvc\Router\RouteMatch;
@@ -17,6 +19,8 @@ use Zend\Mvc\View\Http\CreateViewModelListener;
 
 class LocaleControllerTest extends \PHPUnit_Framework_TestCase
 {
+    use EntityManagerAwareFunctionalTestTrait;
+
     /**
      * @var LocaleController
      */
@@ -101,14 +105,18 @@ class LocaleControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('MyI18n\Form\LocaleForm', $result->getVariable('localeForm'));
     }
 
-    public function testProcessActionWithInvalidForm()
+    public function testEnableActionWithInvalidForm()
     {
         $this->controller->getLocaleForm()
             ->expects($this->once())
             ->method('isValid')
             ->will($this->returnValue(false));
 
-        $this->controller->getEvent()->setRouteMatch(new RouteMatch(['action' => 'process']));
+        $this->controller->getLocaleService()
+            ->expects($this->never())
+            ->method('save');
+
+        $this->controller->getEvent()->setRouteMatch(new RouteMatch(['action' => 'enable']));
 
         /** @var Response $result */
         $result = $this->controller->dispatch(new Request());
@@ -118,21 +126,23 @@ class LocaleControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('someurl', $result->getHeaders()->get('Location')->getUri());
     }
 
-    public function testProcessActionEnable()
+    public function testEnableAction()
     {
         $form = new LocaleForm();
+        $hydrator = new DoctrineObject($this->getNewEntityManager());
+        $form->setHydrator($hydrator);
         $this->controller->setLocaleForm($form);
 
         $this->controller->getLocaleService()
             ->expects($this->once())
-            ->method('save');
+            ->method('save')
+            ->with($this->equalTo(new Locale('en')));
 
-        $this->controller->getEvent()->setRouteMatch(new RouteMatch(['action' => 'process']));
+        $this->controller->getEvent()->setRouteMatch(new RouteMatch(['action' => 'enable']));
 
         $request = new Request();
         $request->setMethod(Request::METHOD_POST);
         $request->getPost()->set('code', 'en');
-        $request->getPost()->set('mode', LocaleController::MODE_ENABLE);
 
         /** @var Response $result */
         $result = $this->controller->dispatch($request);
@@ -140,31 +150,26 @@ class LocaleControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($form->isValid());
     }
 
-    public function testProcessActionDisable()
+    public function testDisableAction()
     {
-        $form = new LocaleForm();
-        $this->controller->setLocaleForm($form);
+        $locale = new Locale('en');
 
         $this->controller->getLocaleService()
             ->expects($this->once())
             ->method('findOneByCode')
             ->with('en')
-            ->will($this->returnValue(new Locale('en')));
+            ->will($this->returnValue($locale));
 
         $this->controller->getLocaleService()
             ->expects($this->once())
-            ->method('remove');
+            ->method('remove')
+            ->with($locale);
 
-        $this->controller->getEvent()->setRouteMatch(new RouteMatch(['action' => 'process']));
+        $this->controller->getEvent()->setRouteMatch(new RouteMatch(['action' => 'disable', 'code' => 'en']));
 
         $request = new Request();
-        $request->setMethod(Request::METHOD_POST);
-        $request->getPost()->set('code', 'en');
-        $request->getPost()->set('mode', LocaleController::MODE_DISABLE);
 
         /** @var Response $result */
         $result = $this->controller->dispatch($request);
-
-        $this->assertTrue($form->isValid());
     }
 }
