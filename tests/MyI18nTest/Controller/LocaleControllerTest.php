@@ -172,4 +172,27 @@ class LocaleControllerTest extends \PHPUnit_Framework_TestCase
         /** @var Response $result */
         $result = $this->controller->dispatch($request);
     }
+
+    public function testMakeDefaultAction()
+    {
+        $locale = new Locale('en');
+
+        $this->controller->getLocaleService()
+            ->expects($this->once())
+            ->method('findOneByCode')
+            ->with('en')
+            ->will($this->returnValue($locale));
+
+        $this->controller->getLocaleService()
+            ->expects($this->once())
+            ->method('makeDefault')
+            ->with($locale);
+
+        $this->controller->getEvent()->setRouteMatch(new RouteMatch(['action' => 'make-default', 'code' => 'en']));
+
+        $request = new Request();
+
+        /** @var Response $result */
+        $result = $this->controller->dispatch($request);
+    }
 }

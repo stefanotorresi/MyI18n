@@ -12,6 +12,7 @@ use MyI18n\Service\LocaleService;
 use MyI18nTest\EntityManagerAwareFunctionalTestTrait;
 use MyI18nTest\TestAsset;
 use PHPUnit_Framework_TestCase as TestCase;
+use Zend\EventManager\Event;
 
 class LocaleServiceFunctionalTest extends TestCase
 {
@@ -27,7 +28,6 @@ class LocaleServiceFunctionalTest extends TestCase
         $this->localeService = new LocaleService($this->getNewEntityManager());
         TestAsset\Locales::populateService($this->localeService);
     }
-
 
     public function testFind()
     {
@@ -101,5 +101,43 @@ class LocaleServiceFunctionalTest extends TestCase
         $first = $locales[0];
         $this->assertTrue($first->isDefaultLocale());
         $this->assertSame($default, $first);
+    }
+
+    public function testMakeDefault()
+    {
+        $locale = new Locale('ru');
+
+        $this->localeService->makeDefault($locale);
+
+        $this->assertTrue($locale->isDefaultLocale());
+        $this->assertSame($locale, $this->localeService->getDefaultLocale());
+    }
+
+    public function testGetLastById()
+    {
+        $locale = $this->localeService->getLastById();
+        $locales = TestAsset\Locales::getLocales();
+
+        $this->assertEquals(end($locales), $locale);
+    }
+
+    public function testEnsureDefaultLocaleListener()
+    {
+        $defaultLocale = $this->localeService->getDefaultLocale();
+        $this->localeService->remove($defaultLocale);
+
+        $this->assertNotNull($this->localeService->getDefaultLocale());
+    }
+
+    public function testEnsureDefaultLocaleListenerDoesNothingWhenRemovingNonDefaultLocale()
+    {
+        $default = $this->localeService->getDefaultLocale();
+        $this->assertNotNull($default);
+
+        $event = new Event();
+        $event->setParam('entity', new Locale('ru'));
+        $this->localeService->ensureDefaultLocaleListener($event);
+
+        $this->assertSame($default, $this->localeService->getDefaultLocale());
     }
 }

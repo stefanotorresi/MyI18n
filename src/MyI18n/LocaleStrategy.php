@@ -100,7 +100,7 @@ class LocaleStrategy implements
         }
 
         if (!isset($locale)) {
-            $locale = $this->getLocaleService()->getDefaultLocale();
+            $locale = $this->getLocaleService()->getDefaultLocale()->getCode();
         }
 
         Locale::setDefault($locale);

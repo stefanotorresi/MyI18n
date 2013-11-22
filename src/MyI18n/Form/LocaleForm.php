@@ -7,7 +7,6 @@
 
 namespace MyI18n\Form;
 
-use MyI18n\Controller\LocaleController;
 use Zend\Form\Form;
 use Zend\InputFilter\InputFilterProviderInterface;
 

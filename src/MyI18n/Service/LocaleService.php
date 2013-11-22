@@ -19,7 +19,8 @@ class LocaleService extends AbstractEntityService
     {
         parent::__construct($entityManager);
 
-        $this->getEventManager()->attach('save.pre', [$this, 'preSave']);
+        $this->getEventManager()->attach('save.pre', [$this, 'defaultLocaleSwitcherListener']);
+        $this->getEventManager()->attach('remove.post', [$this, 'ensureDefaultLocaleListener']);
     }
 
     /**
@@ -84,15 +85,59 @@ class LocaleService extends AbstractEntityService
     }
 
     /**
+     * save.pre event listener
+     *
      * @param Event $event
      */
-    public function preSave(Event $event)
+    public function defaultLocaleSwitcherListener(Event $event)
     {
+        /** @var Locale $locale */
         $locale = $event->getParam('entity');
 
-        if ($locale->isDefaultLocale() && $default = $this->getDefaultLocale()) {
-            $default->setDefaultLocale(false);
-            $this->save($default);
+        if ($locale->isDefaultLocale() && $oldDefault = $this->getDefaultLocale()) {
+            $oldDefault->setDefaultLocale(false);
+            $this->getEntityManager()->flush($oldDefault);
         };
+    }
+
+    /**
+     * remove.post event listener
+     *
+     * @param Event $event
+     */
+    public function ensureDefaultLocaleListener(Event $event)
+    {
+        /** @var Locale $removedLocale */
+        $removedLocale = $event->getParam('entity');
+
+        if (! $removedLocale->isDefaultLocale()) {
+            return;
+        }
+
+        $newDefault = $this->getLastById();
+        $newDefault->setDefaultLocale();
+        $this->save($newDefault);
+    }
+
+    /**
+     * @param  Locale $locale
+     * @return Locale
+     */
+    public function makeDefault(Locale $locale)
+    {
+        $locale->setDefaultLocale(true);
+        $this->save($locale);
+
+        return $locale;
+    }
+
+    /**
+     * @return Locale
+     */
+    public function getLastById()
+    {
+        $order = ['id' => Criteria::DESC];
+
+        return $this->getEntityManager()->getRepository(Locale::fqcn())->findOneBy([], $order);
     }
 }

@@ -75,6 +75,19 @@ class LocaleController extends AbstractActionController
         return $this->redirect()->toRoute($this->getBaseRoute());
     }
 
+    public function makeDefaultAction()
+    {
+        $code = $this->params()->fromRoute('code');
+
+        $locale = $this->getLocaleService()->findOneByCode($code);
+
+        if ($locale instanceof Locale) {
+            $this->getLocaleService()->makeDefault($locale);
+        }
+
+        return $this->redirect()->toRoute($this->getBaseRoute());
+    }
+
     /**
      * @return LocaleForm
      */
