@@ -3,6 +3,7 @@
 namespace MyI18n;
 
 use Doctrine\ORM\EntityManager;
+use Gedmo\Translatable\TranslatableListener;
 use Zend\Mvc\Router\Http\TreeRouteStack;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Session\Container as Session;
@@ -19,6 +20,13 @@ return [
                 /** @var EntityManager $entityManager */
                 $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');
                 $localeService = new Service\LocaleService($entityManager);
+
+                $defaultLocaleCode= $localeService->getDefaultLocale()->getCode();
+
+                /** @var \Gedmo\Translatable\TranslatableListener $translatableSubscriber */
+                $translatableSubscriber = $serviceLocator->get('Gedmo\Translatable\TranslatableListener');
+                $translatableSubscriber->setDefaultLocale($defaultLocaleCode);
+                $translatableSubscriber->setTranslatableLocale($defaultLocaleCode);
 
                 return $localeService;
             },
@@ -44,6 +52,10 @@ return [
                 return $moduleOptions;
             },
         'MyI18n\Navigation' => 'MyI18n\NavigationFactory',
+    ],
+
+    'invokables' => [
+        'Gedmo\Translatable\TranslatableListener' => 'Gedmo\Translatable\TranslatableListener',
     ],
 
     'initializers' => [
