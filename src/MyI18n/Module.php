@@ -8,6 +8,8 @@
 
 namespace MyI18n;
 
+use Doctrine\ORM\EntityManager;
+use Gedmo\Translatable\TranslatableListener;
 use Zend\Console\Console;
 use Zend\Mvc\MvcEvent;
 use Zend\ModuleManager\Feature;
@@ -34,6 +36,14 @@ class Module implements
         $localeStrategy = $serviceManager->get('MyI18n\LocaleStrategy');
 
         $eventManager->attach($localeStrategy);
+
+        /** @var EntityManager $entityManager */
+        $entityManager = $serviceManager->get('Doctrine\ORM\EntityManager');
+
+        /** @var TranslatableListener $translatableSubscriber */
+        $translatableSubscriber = $serviceManager->get('Gedmo\Translatable\TranslatableListener');
+
+        $entityManager->getEventManager()->addEventSubscriber($translatableSubscriber);
     }
 
     public function getDir()

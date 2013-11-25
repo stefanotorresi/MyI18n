@@ -9,13 +9,6 @@ namespace MyI18n;
 
 return [
     'doctrine' => [
-        'eventmanager' => [
-            'orm_default' => [
-                'subscribers' => [
-                    'Gedmo\Translatable\TranslatableListener',
-                ],
-            ],
-        ],
         'driver' => [
             __NAMESPACE__ => [
                 'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',

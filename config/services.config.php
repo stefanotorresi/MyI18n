@@ -4,6 +4,7 @@ namespace MyI18n;
 
 use Doctrine\ORM\EntityManager;
 use Gedmo\Translatable\TranslatableListener;
+use MyI18n\Listener\TranslatableListenerProxy;
 use Zend\Mvc\Router\Http\TreeRouteStack;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Session\Container as Session;
@@ -20,13 +21,6 @@ return [
                 /** @var EntityManager $entityManager */
                 $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');
                 $localeService = new Service\LocaleService($entityManager);
-
-                $defaultLocaleCode= $localeService->getDefaultLocale()->getCode();
-
-                /** @var \Gedmo\Translatable\TranslatableListener $translatableSubscriber */
-                $translatableSubscriber = $serviceLocator->get('Gedmo\Translatable\TranslatableListener');
-                $translatableSubscriber->setDefaultLocale($defaultLocaleCode);
-                $translatableSubscriber->setTranslatableLocale($defaultLocaleCode);
 
                 return $localeService;
             },
@@ -54,10 +48,6 @@ return [
         'MyI18n\Navigation' => 'MyI18n\NavigationFactory',
     ],
 
-    'invokables' => [
-        'Gedmo\Translatable\TranslatableListener' => 'Gedmo\Translatable\TranslatableListener',
-    ],
-
     'initializers' => [
         function ($instance, ServiceLocatorInterface $serviceLocator) {
             if ($instance instanceof Service\LocaleServiceAwareInterface) {
@@ -70,12 +60,32 @@ return [
         }
     ],
 
-    'abstract_factories' => [
-        'MyI18n\Detector\AbstractDetectorFactory',
+    'delegators' => [
+        'Gedmo\Translatable\TranslatableListener' => [
+            function (ServiceLocatorInterface $serviceLocator, $name, $requestedName, $callback) {
+                /** @var TranslatableListener $translatableListener */
+                $translatableListener = call_user_func($callback);
+
+                /** @var Service\LocaleService $localeService */
+                $localeService = $serviceLocator->get('MyI18n\Service\LocaleService');
+
+                $translatableListener = new TranslatableListenerProxy($translatableListener, $localeService);
+
+                return $translatableListener;
+            }
+        ],
     ],
 
     'services' => [
         'MyI18n\Session' => new Session(__NAMESPACE__),
+    ],
+
+    'abstract_factories' => [
+        'MyI18n\Detector\AbstractDetectorFactory',
+    ],
+
+    'invokables' => [
+        'Gedmo\Translatable\TranslatableListener' => 'Gedmo\Translatable\TranslatableListener',
     ],
 
     'aliases' => [

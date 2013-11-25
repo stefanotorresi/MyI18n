@@ -7,6 +7,7 @@
 
 namespace MyI18nTest;
 
+use Gedmo\Translatable\TranslatableListener;
 use MyI18nTest\TestAsset\TranslatableEntity;
 
 class TranslatableFunctionalTest extends \PHPUnit_Framework_TestCase
@@ -16,6 +17,7 @@ class TranslatableFunctionalTest extends \PHPUnit_Framework_TestCase
     public function testIntegration()
     {
         $em = $this->getNewEntityManager();
+        $em->getEventManager()->addEventSubscriber(new TranslatableListener);
 
         $translatable = new TranslatableEntity();
         $translatable->setId(1);
