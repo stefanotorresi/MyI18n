@@ -11,7 +11,7 @@ use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
 use MyI18n\Controller\LocaleController;
 use MyI18n\Entity\Locale;
 use MyI18n\Form\LocaleForm;
-use MyI18nTest\EntityManagerAwareFunctionalTestTrait;
+use MyI18nTest\Bootstrap;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\Mvc\Router\RouteMatch;
@@ -19,8 +19,6 @@ use Zend\Mvc\View\Http\CreateViewModelListener;
 
 class LocaleControllerTest extends \PHPUnit_Framework_TestCase
 {
-    use EntityManagerAwareFunctionalTestTrait;
-
     /**
      * @var LocaleController
      */
@@ -128,8 +126,12 @@ class LocaleControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testEnableAction()
     {
+        $sm = Bootstrap::getServiceManager();
+        $em = Bootstrap::initEntityManager($sm);
+
         $form = new LocaleForm();
-        $hydrator = new DoctrineObject($this->getNewEntityManager());
+        $hydrator = new DoctrineObject($em);
+
         $form->setHydrator($hydrator);
         $this->controller->setLocaleForm($form);
 

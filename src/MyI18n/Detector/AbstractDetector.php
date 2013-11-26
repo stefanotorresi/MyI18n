@@ -1,22 +1,22 @@
 <?php
-
 /**
- *
- * @author Stefano Torresi <webdeveloper@stefanotorresi.it>
+ * @author Stefano Torresi (http://stefanotorresi.it)
+ * @license See the file LICENSE.txt for copying permission.
+ * ************************************************
  */
 
 namespace MyI18n\Detector;
 
 use Locale;
 use MyI18n\Options\DetectorOptionsInterface;
-use MyI18n\Service\LocaleServiceAwareInterface;
-use MyI18n\Service\LocaleServiceAwareTrait;
+use MyI18n\Service;
+use Zend\Stdlib\Exception\ExtensionNotLoadedException;
 
 abstract class AbstractDetector implements
     DetectorInterface,
-    LocaleServiceAwareInterface
+    Service\LocaleServiceAwareInterface
 {
-    use LocaleServiceAwareTrait;
+    use Service\LocaleServiceAwareTrait;
 
     /**
      *
@@ -25,21 +25,21 @@ abstract class AbstractDetector implements
     protected $options;
 
     /**
-     * @param DetectorOptionsInterface $options
+     * @param  DetectorOptionsInterface    $options
+     * @param  Service\LocaleService       $localeService
+     * @throws ExtensionNotLoadedException
      */
-    public function __construct(DetectorOptionsInterface $options = null)
+    public function __construct(DetectorOptionsInterface $options = null, Service\LocaleService $localeService = null)
     {
-        $this->options = $options;
-    }
+        if (! extension_loaded('intl')) {
+            throw new ExtensionNotLoadedException(sprintf(
+                '%s requires the intl PHP extension',
+                __CLASS__
+            ));
+        }
 
-    /**
-     *
-     * @param  string $locale
-     * @return string
-     */
-    public function lookup($locale)
-    {
-        return Locale::lookup($this->getLocaleService()->getAllCodesAsArray(), $locale);
+        $this->setOptions($options);
+        $this->setLocaleService($localeService);
     }
 
     /**
@@ -56,5 +56,15 @@ abstract class AbstractDetector implements
     public function setOptions(DetectorOptionsInterface $options)
     {
         $this->options = $options;
+    }
+
+    /**
+     *
+     * @param  string $locale
+     * @return string
+     */
+    public function lookup($locale)
+    {
+        return Locale::lookup($this->getLocaleService()->getAllCodesAsArray(), $locale);
     }
 }

@@ -9,15 +9,13 @@ namespace MyI18nTest\Service;
 
 use MyI18n\Entity\Locale;
 use MyI18n\Service\LocaleService;
-use MyI18nTest\EntityManagerAwareFunctionalTestTrait;
+use MyI18nTest\Bootstrap;
 use MyI18nTest\TestAsset;
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\EventManager\Event;
 
 class LocaleServiceFunctionalTest extends TestCase
 {
-    use EntityManagerAwareFunctionalTestTrait;
-
     /**
      * @var LocaleService;
      */
@@ -25,7 +23,9 @@ class LocaleServiceFunctionalTest extends TestCase
 
     public function setUp()
     {
-        $this->localeService = new LocaleService($this->getNewEntityManager());
+        $sm = Bootstrap::getServiceManager();
+        $em = Bootstrap::initEntityManager($sm);
+        $this->localeService = new LocaleService($em);
         TestAsset\Locales::populateService($this->localeService);
     }
 

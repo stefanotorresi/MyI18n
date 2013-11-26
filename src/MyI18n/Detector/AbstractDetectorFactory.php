@@ -7,6 +7,7 @@
 
 namespace MyI18n\Detector;
 
+use MyI18n\Service;
 use Zend\ServiceManager\AbstractFactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -60,7 +61,15 @@ class AbstractDetectorFactory implements AbstractFactoryInterface
         }
 
         if ($detector instanceof SessionAwareInterface) {
-            $detector->setSession($serviceLocator->get('MyI18n\Session'));
+            /** @var \Zend\Session\Container $session */
+            $session = $serviceLocator->get('MyI18n\Session');
+            $detector->setSession($session);
+        }
+
+        if ($detector instanceof Service\LocaleServiceAwareInterface) {
+            /** @var Service\LocaleService $localeService */
+            $localeService = $serviceLocator->get('MyI18n\Service\LocaleService');
+            $detector->setLocaleService($localeService);
         }
 
         return $detector;

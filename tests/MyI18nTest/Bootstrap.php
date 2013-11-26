@@ -8,8 +8,12 @@
 namespace MyI18nTest;
 
 use Composer\Autoload\ClassLoader;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Tools\SchemaTool;
 use Zend\ModuleManager\ModuleManager;
 use Zend\Mvc\Service\ServiceManagerConfig;
+use Zend\ServiceManager\AbstractPluginManager;
+use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
 class Bootstrap
@@ -75,6 +79,23 @@ class Bootstrap
         $moduleManager->loadModules();
 
         return $serviceManager;
+    }
+
+    public static function initEntityManager(ServiceLocatorInterface $serviceLocator)
+    {
+        $serviceManager = $serviceLocator instanceof AbstractPluginManager ?
+            $serviceLocator->getServiceLocator()
+            : $serviceLocator;
+
+        /** @var EntityManager $entityManager */
+        $entityManager = $serviceManager->get('Doctrine\ORM\EntityManager');
+
+        $classes    = $entityManager->getMetadataFactory()->getAllMetadata();
+        $schemaTool = new SchemaTool($entityManager);
+        $schemaTool->dropDatabase();
+        $schemaTool->createSchema($classes);
+
+        return $entityManager;
     }
 
     /**

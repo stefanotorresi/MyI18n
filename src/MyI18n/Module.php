@@ -10,82 +10,17 @@ namespace MyI18n;
 
 use Doctrine\ORM\EntityManager;
 use Gedmo\Translatable\TranslatableListener;
+use MyBase\AbstractModule;
 use Zend\Console\Console;
 use Zend\Mvc\MvcEvent;
 use Zend\ModuleManager\Feature;
-use Zend\Stdlib\ArrayUtils;
 
-class Module implements
-    Feature\AutoloaderProviderInterface,
-    Feature\ConfigProviderInterface,
-    Feature\ServiceProviderInterface,
-    Feature\FormElementProviderInterface
+class Module extends AbstractModule implements
+    Feature\ServiceProviderInterface
 {
-    public function onBootstrap(MvcEvent $e)
+    public function getConfigGlob()
     {
-        // nothing to do if in console environment
-        if (Console::isConsole()) {
-            return;
-        }
-
-        $app = $e->getApplication();
-        $eventManager = $app->getEventManager();
-        $serviceManager = $app->getServiceManager();
-
-        /* @var $localeStrategy LocaleStrategy */
-        $localeStrategy = $serviceManager->get('MyI18n\LocaleStrategy');
-
-        $eventManager->attach($localeStrategy);
-
-        /** @var EntityManager $entityManager */
-        $entityManager = $serviceManager->get('Doctrine\ORM\EntityManager');
-
-        /** @var TranslatableListener $translatableSubscriber */
-        $translatableSubscriber = $serviceManager->get('Gedmo\Translatable\TranslatableListener');
-
-        $entityManager->getEventManager()->addEventSubscriber($translatableSubscriber);
-    }
-
-    public function getDir()
-    {
-        return __DIR__ . '/../..';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getAutoloaderConfig()
-    {
-        return [
-            'Zend\Loader\ClassMapAutoloader' => [
-                $this->getDir() . '/autoload_classmap.php'
-            ],
-            'Zend\Loader\StandardAutoloader' => [
-                'namespaces' => [
-                    __NAMESPACE__ => __DIR__,
-                ],
-            ],
-        ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getConfig()
-    {
-        $config = include $this->getDir() . '/config/module.config.php';
-
-        $configFiles = array(
-            'router.config.php',
-            'doctrine.config.php',
-        );
-
-        foreach ($configFiles as $configFile) {
-            $configFilePath = $this->getDir() . '/config/' . $configFile;
-            $config = ArrayUtils::merge($config, include $configFilePath);
-        }
-
-        return $config;
+        return '{module,router,doctrine}.config.php';
     }
 
     /**
@@ -97,10 +32,30 @@ class Module implements
     }
 
     /**
-     * {@inheritdoc}
+     * @param MvcEvent $e
      */
-    public function getFormElementConfig()
+    public function onBootstrap(MvcEvent $e)
     {
-        return include $this->getDir() . '/config/form-elements.config.php';
+        // nothing to do if in console environment
+        if (Console::isConsole()) {
+            return;
+        }
+
+        $app = $e->getApplication();
+        $eventManager = $app->getEventManager();
+        $serviceManager = $app->getServiceManager();
+
+        /* @var $localeStrategy Listener\LocaleAggregateListener */
+        $localeStrategy = $serviceManager->get('MyI18n\Listener\LocaleAggregateListener');
+
+        $eventManager->attach($localeStrategy);
+
+        /** @var EntityManager $entityManager */
+        $entityManager = $serviceManager->get('Doctrine\ORM\EntityManager');
+
+        /** @var TranslatableListener $translatableSubscriber */
+        $translatableSubscriber = $serviceManager->get('Gedmo\Translatable\TranslatableListener');
+
+        $entityManager->getEventManager()->addEventSubscriber($translatableSubscriber);
     }
 }

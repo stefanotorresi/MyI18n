@@ -11,9 +11,14 @@ use Zend\Session\Container as Session;
 
 return [
     'factories' => [
-        'MyI18n\LocaleStrategy' => function (ServiceLocatorInterface $serviceLocator) {
+        'MyI18n\Listener\LocaleAggregateListener' => function (ServiceLocatorInterface $serviceLocator) {
+                /** @var Options\ModuleOptions $options */
                 $options = $serviceLocator->get('MyI18n\Options\ModuleOptions');
-                $localeStrategy = new LocaleStrategy($options);
+
+                /** @var Service\LocaleService $localeService */
+                $localeService = $serviceLocator->get('MyI18n\Service\LocaleService');
+
+                $localeStrategy = new Listener\LocaleAggregateListener($options, $localeService);
 
                 return $localeStrategy;
             },
@@ -45,19 +50,7 @@ return [
 
                 return $moduleOptions;
             },
-        'MyI18n\Navigation' => 'MyI18n\NavigationFactory',
-    ],
-
-    'initializers' => [
-        function ($instance, ServiceLocatorInterface $serviceLocator) {
-            if ($instance instanceof Service\LocaleServiceAwareInterface) {
-                /** @var Service\LocaleService $localeService */
-                $localeService = $serviceLocator->get('MyI18n\Service\LocaleService');
-                $instance->setLocaleService($localeService);
-            }
-
-            return $instance;
-        }
+        'MyI18n\Navigation' => 'MyI18n\Navigation\NavigationFactory',
     ],
 
     'delegators' => [
