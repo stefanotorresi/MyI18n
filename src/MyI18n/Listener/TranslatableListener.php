@@ -7,12 +7,12 @@
 
 namespace MyI18n\Listener;
 
-use Gedmo\Translatable\TranslatableListener;
+use Gedmo\Translatable\TranslatableListener as GedmoTranslatableListener;
 use MyI18n\Entity\Locale;
 use MyI18n\Service;
 use Zend\ServiceManager;
 
-class TranslatableListenerProxy extends TranslatableListener implements
+class TranslatableListener extends GedmoTranslatableListener implements
     ServiceManager\ServiceLocatorAwareInterface,
     Service\LocaleServiceAwareInterface
 {
@@ -20,22 +20,16 @@ class TranslatableListenerProxy extends TranslatableListener implements
     use ServiceManager\ServiceLocatorAwareTrait;
 
     /**
-     * @var TranslatableListener $listener
-     */
-    protected $realListener;
-
-    /**
      * @var bool $_initialized
      */
     protected $initialized = false;
 
     /**
-     * @param TranslatableListener                   $listener
      * @param ServiceManager\ServiceLocatorInterface $serviceLocator
      */
-    public function __construct(TranslatableListener $listener, ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        $this->realListener = $listener;
+        $this->setTranslationFallback(true);
         $this->serviceLocator = $serviceLocator;
     }
 
@@ -60,7 +54,7 @@ class TranslatableListenerProxy extends TranslatableListener implements
             $this->initialize();
         }
 
-        return $this->realListener->getDefaultLocale();
+        return parent::getDefaultLocale();
     }
 
     /**
@@ -72,7 +66,7 @@ class TranslatableListenerProxy extends TranslatableListener implements
             $this->initialize();
         }
 
-        return $this->realListener->getListenerLocale();
+        return parent::getListenerLocale();
     }
 
     /**
@@ -84,7 +78,7 @@ class TranslatableListenerProxy extends TranslatableListener implements
             $this->initialize();
         }
 
-        return $this->realListener->getTranslatableLocale($object, $meta);
+        return parent::getTranslatableLocale($object, $meta);
     }
 
     /**
@@ -97,9 +91,11 @@ class TranslatableListenerProxy extends TranslatableListener implements
         if ($defaultLocale instanceof Locale) {
             $defaultLocaleCode = $defaultLocale->getCode();
 
-            $this->realListener->setDefaultLocale($defaultLocaleCode);
-            $this->realListener->setTranslatableLocale($defaultLocaleCode);
+            $this->setDefaultLocale($defaultLocaleCode);
         }
+
+        // this is actually not the 'default' locale but the current one
+        $this->setTranslatableLocale(\Locale::getDefault());
 
         $this->initialized = true;
     }

@@ -41,7 +41,7 @@ class ModuleFunctionalTest extends PHPUnit_Framework_TestCase
             array('ServiceManager', 'MyI18n\Service\Locale', 'MyI18n\Service\LocaleService'),
             array('ServiceManager', 'MyI18n\Form\LocaleForm', 'MyI18n\Form\LocaleForm'),
             array('ServiceManager', 'MyI18n\Form\Locale', 'MyI18n\Form\LocaleForm'),
-            array('ServiceManager', 'Gedmo\Translatable\TranslatableListener', 'MyI18n\Listener\TranslatableListenerProxy'),
+            array('ServiceManager', 'MyI18n\Listener\TranslatableListener', 'MyI18n\Listener\TranslatableListener'),
             array('ServiceManager', 'MyI18n\Listener\LocaleAggregateListener', 'MyI18n\Listener\LocaleAggregateListener'),
             array('ServiceManager', 'MyI18n\Navigation', 'Zend\Navigation\Navigation'),
             array('ControllerLoader', 'MyI18n\Controller\LocaleController', 'MyI18n\Controller\LocaleController'),
@@ -54,32 +54,36 @@ class ModuleFunctionalTest extends PHPUnit_Framework_TestCase
     {
         $sm = Bootstrap::getServiceManager();
         $em = Bootstrap::initEntityManager($sm);
-        $em->getEventManager()->addEventSubscriber(new TranslatableListener);
+
+        /** @var \MyI18n\Listener\TranslatableListener $listener */
+        $listener = $sm->get('MyI18n\Listener\TranslatableListener');
+
+        TestAsset\Locales::populateService($listener->getLocaleService());
 
         $translatable = new TestAsset\TranslatableEntity();
         $translatable->setId(1);
-        $translatable->setText('text');
+        $translatable->setText('testo');
+        $translatable->setLocale('it');
         $em->persist($translatable);
         $em->flush();
 
-        $entity = $em->find(TestAsset\TranslatableEntity::fqcn(), 1);
-        $this->assertEquals($translatable, $entity);
+        $translatable = $em->find(TestAsset\TranslatableEntity::fqcn(), 1);
 
         /** @var TranslationRepository $repository */
         $repository = $em->getRepository('MyI18n\\Entity\\Translation');
-        $repository->translate($entity, 'text', 'it', 'testo');
+        $repository->translate($translatable, 'text', 'en', 'text');
+        $em->persist($translatable);
         $em->flush();
 
-        $translations = $repository->findTranslations($entity);
+        $translations = $repository->findTranslations($translatable);
+
         $this->assertCount(1, $translations);
 
-        $entity->setLocale('it');
-        $em->refresh($entity);
-        $this->assertEquals('testo', $entity->getText());
+        $translatable = $em->find(TestAsset\TranslatableEntity::fqcn(), 1);
+        $translatable->setLocale('en');
+        $em->refresh($translatable);
 
-        $entity->setLocale('en_US');
-        $em->refresh($entity);
-        $this->assertEquals('text', $entity->getText());
+        $this->assertSame('text', $translatable->getText());
     }
 
     public function testOnBootstrapListenerDoesNothingInConsole()

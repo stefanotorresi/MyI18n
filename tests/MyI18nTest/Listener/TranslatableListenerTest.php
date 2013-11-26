@@ -9,21 +9,15 @@ namespace MyI18nTest\Listener;
 
 use Doctrine\Common\EventManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
-use Gedmo\Translatable\TranslatableListener;
 use MyI18n\Entity\Locale;
-use MyI18n\Listener\TranslatableListenerProxy;
+use MyI18n\Listener\TranslatableListener;
 
-class TranslatableListenerProxyTest extends \PHPUnit_Framework_TestCase
+class TranslatableListenerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var TranslatableListenerProxy $listenerProxy
+     * @var TranslatableListener $listener
      */
-    protected $listenerProxy;
-
-    /**
-     * @var TranslatableListener $realListener
-     */
-    protected $realListener;
+    protected $listener;
 
     public function setUp()
     {
@@ -36,19 +30,17 @@ class TranslatableListenerProxyTest extends \PHPUnit_Framework_TestCase
             ->with('MyI18n\Service\LocaleService')
             ->will($this->returnValue($localeService));
 
-        $this->realListener = new TranslatableListener;
-
-        $this->listenerProxy = new TranslatableListenerProxy($this->realListener, $serviceLocator);
+        $this->listener = new TranslatableListener($serviceLocator);
     }
 
     public function testDoesNotInitializeOnAttachment()
     {
-        $this->assertAttributeEquals(false, 'initialized', $this->listenerProxy);
+        $this->assertAttributeEquals(false, 'initialized', $this->listener);
 
         $eventManager = new EventManager();
-        $eventManager->addEventSubscriber($this->listenerProxy);
+        $eventManager->addEventSubscriber($this->listener);
 
-        $this->assertAttributeEquals(false, 'initialized', $this->listenerProxy);
+        $this->assertAttributeEquals(false, 'initialized', $this->listener);
     }
 
     /**
@@ -59,19 +51,20 @@ class TranslatableListenerProxyTest extends \PHPUnit_Framework_TestCase
      */
     public function testInitializationBeforeGetter($method, $args)
     {
-        $this->assertAttributeEquals(false, 'initialized', $this->listenerProxy);
+        $this->assertAttributeEquals(false, 'initialized', $this->listener);
 
         $defaultLocale = new Locale('en');
 
-        $this->listenerProxy->getLocaleService()
+        $this->listener->getLocaleService()
             ->expects($this->once())
             ->method('getDefaultLocale')
             ->will($this->returnValue($defaultLocale));
 
-        $listenerLocale = call_user_func_array([$this->listenerProxy, $method], $args);
+        call_user_func_array([$this->listener, $method], $args);
 
-        $this->assertAttributeEquals(true, 'initialized', $this->listenerProxy);
-        $this->assertSame($defaultLocale->getCode(), $listenerLocale);
+        $this->assertAttributeEquals(true, 'initialized', $this->listener);
+        $this->assertSame($defaultLocale->getCode(), $this->listener->getDefaultLocale());
+        $this->assertSame(\Locale::getDefault(), $this->listener->getListenerLocale());
     }
 
     public function dataInitializedMethods()

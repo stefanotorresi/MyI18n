@@ -3,15 +3,15 @@
 namespace MyI18n;
 
 use Doctrine\ORM\EntityManager;
-use Gedmo\Translatable\TranslatableListener;
-use MyI18n\Listener\TranslatableListenerProxy;
+use MyI18n\Listener\TranslatableListener;
 use Zend\Mvc\Router\Http\TreeRouteStack;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Session\Container as Session;
 
 return [
     'factories' => [
-        'MyI18n\Listener\LocaleAggregateListener' => function (ServiceLocatorInterface $serviceLocator) {
+        'MyI18n\Listener\LocaleAggregateListener' =>
+            function (ServiceLocatorInterface $serviceLocator) {
                 /** @var Options\ModuleOptions $options */
                 $options = $serviceLocator->get('MyI18n\Options\ModuleOptions');
 
@@ -22,15 +22,16 @@ return [
 
                 return $localeStrategy;
             },
-        'MyI18n\Service\LocaleService' => function (ServiceLocatorInterface $serviceLocator) {
+        'MyI18n\Service\LocaleService' =>
+            function (ServiceLocatorInterface $serviceLocator) {
                 /** @var EntityManager $entityManager */
                 $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');
                 $localeService = new Service\LocaleService($entityManager);
 
                 return $localeService;
             },
-        'MyI18n\Form\LocaleForm' => function (ServiceLocatorInterface $serviceLocator) {
-
+        'MyI18n\Form\LocaleForm' =>
+            function (ServiceLocatorInterface $serviceLocator) {
                 $router = $serviceLocator->get('router');
                 $hydrator = $serviceLocator->get('HydratorManager')->get('DoctrineModule\Stdlib\Hydrator\DoctrineObject');
 
@@ -44,26 +45,20 @@ return [
 
                 return $form;
             },
-        'MyI18n\Options\ModuleOptions' => function (ServiceLocatorInterface $serviceLocator) {
+        'MyI18n\Options\ModuleOptions' =>
+            function (ServiceLocatorInterface $serviceLocator) {
                 $moduleConfig = $serviceLocator->get('config')[__NAMESPACE__];
                 $moduleOptions = new Options\ModuleOptions($moduleConfig);
 
                 return $moduleOptions;
             },
-        'MyI18n\Navigation' => 'MyI18n\Navigation\NavigationFactory',
-    ],
-
-    'delegators' => [
-        'Gedmo\Translatable\TranslatableListener' => [
-            function (ServiceLocatorInterface $serviceLocator, $name, $requestedName, $callback) {
-                /** @var TranslatableListener $translatableListener */
-                $translatableListener = call_user_func($callback);
-
-                $translatableListener = new TranslatableListenerProxy($translatableListener, $serviceLocator);
+        'MyI18n\Listener\TranslatableListener' =>
+            function (ServiceLocatorInterface $serviceLocator) {
+                $translatableListener = new TranslatableListener($serviceLocator);
 
                 return $translatableListener;
-            }
-        ],
+            },
+        'MyI18n\Navigation' => 'MyI18n\Navigation\NavigationFactory',
     ],
 
     'services' => [
@@ -72,10 +67,6 @@ return [
 
     'abstract_factories' => [
         'MyI18n\Detector\AbstractDetectorFactory',
-    ],
-
-    'invokables' => [
-        'Gedmo\Translatable\TranslatableListener' => 'Gedmo\Translatable\TranslatableListener',
     ],
 
     'aliases' => [
