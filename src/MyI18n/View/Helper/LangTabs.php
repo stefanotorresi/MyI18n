@@ -9,10 +9,10 @@ namespace MyI18n\View\Helper;
 
 use Locale;
 use MyI18n\Service;
-use Zend\I18n\View\Helper\AbstractTranslatorHelper;
+use Zend\View\Helper\AbstractHelper;
 use Zend\Stdlib\ArrayUtils;
 
-class LangTabs extends AbstractTranslatorHelper implements Service\LocaleServiceAwareInterface
+class LangTabs extends AbstractHelper implements Service\LocaleServiceAwareInterface
 {
     use Service\LocaleServiceAwareTrait;
 

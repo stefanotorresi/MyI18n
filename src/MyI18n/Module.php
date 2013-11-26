@@ -14,12 +14,24 @@ use Zend\Mvc\MvcEvent;
 use Zend\ModuleManager\Feature;
 
 class Module extends AbstractModule implements
+    Feature\ControllerPluginProviderInterface,
     Feature\ServiceProviderInterface,
     Feature\ViewHelperProviderInterface
 {
+    /**
+     * {@inheritdoc}
+     */
     public function getConfigGlob()
     {
         return '{module,router,doctrine}.config.php';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getControllerPluginConfig()
+    {
+        return include $this->getDir() . '/config/controller-plugins.config.php';
     }
 
     /**
