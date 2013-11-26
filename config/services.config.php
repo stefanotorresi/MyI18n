@@ -59,10 +59,7 @@ return [
                 /** @var TranslatableListener $translatableListener */
                 $translatableListener = call_user_func($callback);
 
-                /** @var Service\LocaleService $localeService */
-                $localeService = $serviceLocator->get('MyI18n\Service\LocaleService');
-
-                $translatableListener = new TranslatableListenerProxy($translatableListener, $localeService);
+                $translatableListener = new TranslatableListenerProxy($translatableListener, $serviceLocator);
 
                 return $translatableListener;
             }

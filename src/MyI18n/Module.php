@@ -8,8 +8,6 @@
 
 namespace MyI18n;
 
-use Doctrine\ORM\EntityManager;
-use Gedmo\Translatable\TranslatableListener;
 use MyBase\AbstractModule;
 use Zend\Console\Console;
 use Zend\Mvc\MvcEvent;
@@ -49,13 +47,5 @@ class Module extends AbstractModule implements
         $localeStrategy = $serviceManager->get('MyI18n\Listener\LocaleAggregateListener');
 
         $eventManager->attach($localeStrategy);
-
-        /** @var EntityManager $entityManager */
-        $entityManager = $serviceManager->get('Doctrine\ORM\EntityManager');
-
-        /** @var TranslatableListener $translatableSubscriber */
-        $translatableSubscriber = $serviceManager->get('Gedmo\Translatable\TranslatableListener');
-
-        $entityManager->getEventManager()->addEventSubscriber($translatableSubscriber);
     }
 }

@@ -8,12 +8,16 @@
 namespace MyI18n\Listener;
 
 use Gedmo\Translatable\TranslatableListener;
-use MyI18n\Service\LocaleService;
-use MyI18n\Service\LocaleServiceAwareTrait;
+use MyI18n\Entity\Locale;
+use MyI18n\Service;
+use Zend\ServiceManager;
 
-class TranslatableListenerProxy extends TranslatableListener
+class TranslatableListenerProxy extends TranslatableListener implements
+    ServiceManager\ServiceLocatorAwareInterface,
+    Service\LocaleServiceAwareInterface
 {
-    use LocaleServiceAwareTrait;
+    use Service\LocaleServiceAwareTrait;
+    use ServiceManager\ServiceLocatorAwareTrait;
 
     /**
      * @var TranslatableListener $listener
@@ -26,15 +30,30 @@ class TranslatableListenerProxy extends TranslatableListener
     protected $initialized = false;
 
     /**
-     * @param TranslatableListener $listener
-     * @param LocaleService        $localeService
+     * @param TranslatableListener                   $listener
+     * @param ServiceManager\ServiceLocatorInterface $serviceLocator
      */
-    public function __construct(TranslatableListener $listener, LocaleService $localeService)
+    public function __construct(TranslatableListener $listener, ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $this->realListener = $listener;
-        $this->localeService = $localeService;
+        $this->serviceLocator = $serviceLocator;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getLocaleService()
+    {
+        if (! $this->localeService) {
+            $this->localeService = $this->getServiceLocator()->get('MyI18n\Service\LocaleService');
+        }
+
+        return $this->localeService;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getDefaultLocale()
     {
         if (! $this->initialized) {
@@ -44,6 +63,9 @@ class TranslatableListenerProxy extends TranslatableListener
         return $this->realListener->getDefaultLocale();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getListenerLocale()
     {
         if (! $this->initialized) {
@@ -53,6 +75,9 @@ class TranslatableListenerProxy extends TranslatableListener
         return $this->realListener->getListenerLocale();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getTranslatableLocale($object, $meta)
     {
         if (! $this->initialized) {
@@ -62,12 +87,19 @@ class TranslatableListenerProxy extends TranslatableListener
         return $this->realListener->getTranslatableLocale($object, $meta);
     }
 
+    /**
+     *
+     */
     private function initialize()
     {
-        $defaultLocale = $this->getLocaleService()->getDefaultLocale()->getCode();
+        $defaultLocale = $this->getLocaleService()->getDefaultLocale();
 
-        $this->realListener->setDefaultLocale($defaultLocale);
-        $this->realListener->setTranslatableLocale($defaultLocale);
+        if ($defaultLocale instanceof Locale) {
+            $defaultLocaleCode = $defaultLocale->getCode();
+
+            $this->realListener->setDefaultLocale($defaultLocaleCode);
+            $this->realListener->setTranslatableLocale($defaultLocaleCode);
+        }
 
         $this->initialized = true;
     }

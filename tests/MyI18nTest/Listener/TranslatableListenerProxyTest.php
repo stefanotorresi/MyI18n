@@ -7,6 +7,7 @@
 
 namespace MyI18nTest\Listener;
 
+use Doctrine\Common\EventManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Gedmo\Translatable\TranslatableListener;
 use MyI18n\Entity\Locale;
@@ -29,16 +30,23 @@ class TranslatableListenerProxyTest extends \PHPUnit_Framework_TestCase
         $localeService = $this->getMockBuilder('MyI18n\Service\LocaleService')
             ->disableOriginalConstructor()->getMock();
 
+        $serviceLocator = $this->getMock('Zend\ServiceManager\ServiceManager');
+        $serviceLocator->expects($this->any())
+            ->method('get')
+            ->with('MyI18n\Service\LocaleService')
+            ->will($this->returnValue($localeService));
+
         $this->realListener = new TranslatableListener;
 
-        $this->listenerProxy = new TranslatableListenerProxy($this->realListener, $localeService);
+        $this->listenerProxy = new TranslatableListenerProxy($this->realListener, $serviceLocator);
     }
 
     public function testDoesNotInitializeOnAttachment()
     {
         $this->assertAttributeEquals(false, 'initialized', $this->listenerProxy);
 
-        $events = $this->listenerProxy->getSubscribedEvents();
+        $eventManager = new EventManager();
+        $eventManager->addEventSubscriber($this->listenerProxy);
 
         $this->assertAttributeEquals(false, 'initialized', $this->listenerProxy);
     }
