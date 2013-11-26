@@ -22,7 +22,7 @@ trait LocaleServiceAwareTrait
         return $this->localeService;
     }
 
-    public function setLocaleService(LocaleService $localeService)
+    public function setLocaleService(LocaleService $localeService = null)
     {
         $this->localeService = $localeService;
     }

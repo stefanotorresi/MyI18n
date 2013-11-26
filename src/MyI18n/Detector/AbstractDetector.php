@@ -29,7 +29,7 @@ abstract class AbstractDetector implements
      * @param  Service\LocaleService       $localeService
      * @throws ExtensionNotLoadedException
      */
-    public function __construct(DetectorOptionsInterface $options = null, Service\LocaleService $localeService = null)
+    public function __construct(DetectorOptionsInterface $options, Service\LocaleService $localeService = null)
     {
         if (! extension_loaded('intl')) {
             throw new ExtensionNotLoadedException(sprintf(
