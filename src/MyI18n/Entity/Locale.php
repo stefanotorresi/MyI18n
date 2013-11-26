@@ -30,10 +30,12 @@ class Locale extends Entity
 
     /**
      * @param string|null $code
+     * @param bool|null   $defaultLocale
      */
-    public function __construct($code = null)
+    public function __construct($code = null, $defaultLocale = null)
     {
-        $this->code = $code;
+        $this->setCode($code);
+        $this->setDefaultLocale($defaultLocale);
     }
 
     /**
@@ -45,12 +47,12 @@ class Locale extends Entity
     }
 
     /**
-     * @param mixed $locale
+     * @param mixed $code
      * @return $this
      */
-    public function setCode($locale)
+    public function setCode($code)
     {
-        $this->code = $locale;
+        $this->code = $code;
 
         return $this;
     }
@@ -70,6 +72,7 @@ class Locale extends Entity
 
     /**
      * @param boolean $flag
+     * @return $this
      */
     public function setDefaultLocale($flag = true)
     {
@@ -81,5 +84,7 @@ class Locale extends Entity
         }
 
         $this->defaultLocale = $flag;
+
+        return $this;
     }
 }

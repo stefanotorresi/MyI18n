@@ -14,7 +14,8 @@ use Zend\Mvc\MvcEvent;
 use Zend\ModuleManager\Feature;
 
 class Module extends AbstractModule implements
-    Feature\ServiceProviderInterface
+    Feature\ServiceProviderInterface,
+    Feature\ViewHelperProviderInterface
 {
     public function getConfigGlob()
     {
@@ -27,6 +28,14 @@ class Module extends AbstractModule implements
     public function getServiceConfig()
     {
         return include $this->getDir() . '/config/services.config.php';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getViewHelperConfig()
+    {
+        return include $this->getDir() . '/config/view-helpers.config.php';
     }
 
     /**

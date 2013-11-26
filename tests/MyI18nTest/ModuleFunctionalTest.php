@@ -46,6 +46,7 @@ class ModuleFunctionalTest extends PHPUnit_Framework_TestCase
             array('ServiceManager', 'MyI18n\Navigation', 'Zend\Navigation\Navigation'),
             array('ControllerLoader', 'MyI18n\Controller\LocaleController', 'MyI18n\Controller\LocaleController'),
             array('ControllerLoader', 'MyI18n\Controller\Locale', 'MyI18n\Controller\LocaleController'),
+            array('ViewHelperManager', 'langTabs', 'MyI18n\View\Helper\LangTabs'),
         );
     }
 
