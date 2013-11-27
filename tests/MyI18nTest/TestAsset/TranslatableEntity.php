@@ -9,26 +9,24 @@ namespace MyI18nTest\TestAsset;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\Translatable\Translatable;
 use MyBase\Entity\Entity;
+use MyI18n\Entity\TranslatableInterface;
+use MyI18n\Entity\TranslatableTrait;
 
 /**
  * @ORM\Table(name="translatable")
  * @ORM\Entity
  * @Gedmo\TranslationEntity(class="MyI18n\Entity\Translation")
  */
-class TranslatableEntity extends Entity implements Translatable
+class TranslatableEntity extends Entity implements TranslatableInterface
 {
+    use TranslatableTrait;
+
     /**
      * @Gedmo\Translatable
      * @ORM\Column(type="text")
      */
     protected $text;
-
-    /**
-     * @Gedmo\Locale
-     */
-    protected $locale;
 
     /**
      * @return mixed
@@ -44,21 +42,5 @@ class TranslatableEntity extends Entity implements Translatable
     public function setText($text)
     {
         $this->text = $text;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLocale()
-    {
-        return $this->locale;
-    }
-
-    /**
-     * @param mixed $locale
-     */
-    public function setLocale($locale)
-    {
-        $this->locale = $locale;
     }
 }
