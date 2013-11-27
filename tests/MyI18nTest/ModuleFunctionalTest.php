@@ -38,14 +38,16 @@ class ModuleFunctionalTest extends PHPUnit_Framework_TestCase
     {
         return array(
             array('ServiceManager', 'MyI18n\Service\LocaleService', 'MyI18n\Service\LocaleService'),
-            array('ServiceManager', 'MyI18n\Service\Locale', 'MyI18n\Service\LocaleService'),
             array('ServiceManager', 'MyI18n\Form\LocaleForm', 'MyI18n\Form\LocaleForm'),
-            array('ServiceManager', 'MyI18n\Form\Locale', 'MyI18n\Form\LocaleForm'),
+            array('ServiceManager', 'MyI18n\Listener\LocaleAggregateListener', 'MyI18n\Listener\LocaleAggregateListener'),
             array('ServiceManager', 'Gedmo\Translatable\TranslatableListener', 'Gedmo\Translatable\TranslatableListener'),
             array('ServiceManager', 'MyI18n\Navigation', 'Zend\Navigation\Navigation'),
+            array('ServiceManager', 'MyI18n\Options\ModuleOptions', 'MyI18n\Options\ModuleOptions'),
+            array('ServiceManager', 'MyI18n\Session', 'Zend\Session\Container'),
             array('ControllerLoader', 'MyI18n\Controller\LocaleController', 'MyI18n\Controller\LocaleController'),
-            array('ControllerLoader', 'MyI18n\Controller\Locale', 'MyI18n\Controller\LocaleController'),
             array('ViewHelperManager', 'langTabs', 'MyI18n\View\Helper\LangTabs'),
+            array('ViewHelperManager', 'locale', 'MyI18n\View\Helper\Locale'),
+            array('ControllerPluginManager', 'locale', 'MyI18n\Controller\Plugin\Locale'),
         );
     }
 

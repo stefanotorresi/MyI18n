@@ -41,9 +41,6 @@ return [
         'invokables' => [
             'MyI18n\Controller\LocaleController' => 'MyI18n\Controller\LocaleController',
         ],
-        'aliases' => [
-            'MyI18n\Controller\Locale' => 'MyI18n\Controller\LocaleController',
-        ],
     ],
 
     'translator' => [

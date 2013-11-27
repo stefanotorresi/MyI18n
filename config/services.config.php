@@ -80,7 +80,5 @@ return [
     'aliases' => [
         'nav-lang' => 'MyI18n\Navigation',
         'translator' => 'MvcTranslator',
-        'MyI18n\Service\Locale' => 'MyI18n\Service\LocaleService',
-        'MyI18n\Form\Locale' => 'MyI18n\Form\LocaleForm',
     ],
 ];

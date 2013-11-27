@@ -31,7 +31,7 @@ return array(
                         'options' => array(
                             'route' => '/i18n',
                             'defaults' => array(
-                                'controller' => 'MyI18n\Controller\Locale',
+                                'controller' => 'MyI18n\Controller\LocaleController',
                                 'action' => 'index',
                             ),
                         ),
@@ -42,7 +42,7 @@ return array(
                                 'options' => array(
                                     'route' => '/locales',
                                     'defaults' => array(
-                                        'controller' => 'MyI18n\Controller\Locale',
+                                        'controller' => 'MyI18n\Controller\LocaleController',
                                         'action' => 'index',
                                     ),
                                 ),
