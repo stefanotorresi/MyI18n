@@ -12,7 +12,7 @@ return [
         'eventmanager' => [
             'orm_default' => [
                 'subscribers' => [
-                    'MyI18n\Listener\TranslatableListener',
+                    'Gedmo\Translatable\TranslatableListener',
                 ],
             ],
         ],

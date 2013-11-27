@@ -3,7 +3,8 @@
 namespace MyI18n;
 
 use Doctrine\ORM\EntityManager;
-use MyI18n\Listener\TranslatableListener;
+use Gedmo\Translatable\TranslatableListener;
+use Zend\Mvc\I18n\Translator;
 use Zend\Mvc\Router\Http\TreeRouteStack;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Session\Container as Session;
@@ -18,7 +19,16 @@ return [
                 /** @var Service\LocaleService $localeService */
                 $localeService = $serviceLocator->get('MyI18n\Service\LocaleService');
 
-                $localeStrategy = new Listener\LocaleAggregateListener($options, $localeService);
+                /** @var Translator $translator */
+                $translator         = $serviceLocator->get('translator');
+
+                /** @var TranslatableListener $doctrineListener */
+                $doctrineListener = $serviceLocator->get('Gedmo\Translatable\TranslatableListener');
+
+                $localeStrategy = new Listener\LocaleAggregateListener($options);
+                $localeStrategy->setLocaleService($localeService);
+                $localeStrategy->setTranslator($translator);
+                $localeStrategy->setDoctrineListener($doctrineListener);
 
                 return $localeStrategy;
             },
@@ -52,12 +62,6 @@ return [
 
                 return $moduleOptions;
             },
-        'MyI18n\Listener\TranslatableListener' =>
-            function (ServiceLocatorInterface $serviceLocator) {
-                $translatableListener = new TranslatableListener($serviceLocator);
-
-                return $translatableListener;
-            },
         'MyI18n\Navigation' => 'MyI18n\Navigation\NavigationFactory',
     ],
 
@@ -67,6 +71,10 @@ return [
 
     'abstract_factories' => [
         'MyI18n\Detector\AbstractDetectorFactory',
+    ],
+
+    'invokables' => [
+        'Gedmo\Translatable\TranslatableListener' => 'Gedmo\Translatable\TranslatableListener',
     ],
 
     'aliases' => [

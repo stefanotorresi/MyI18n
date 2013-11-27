@@ -7,12 +7,14 @@
 
 namespace MyI18n\Listener;
 
+use Gedmo\Translatable\TranslatableListener;
 use Locale;
 use MyI18n\Detector;
 use MyI18n\Options;
 use MyI18n\Service;
 use Zend\EventManager\AbstractListenerAggregate;
 use Zend\EventManager\EventManagerInterface;
+use Zend\I18n\Translator\TranslatorAwareTrait;
 use Zend\Mvc\MvcEvent;
 use Zend\Stdlib\Exception\ExtensionNotLoadedException;
 
@@ -20,6 +22,7 @@ class LocaleAggregateListener extends AbstractListenerAggregate
     implements Service\LocaleServiceAwareInterface
 {
     use Service\LocaleServiceAwareTrait;
+    use TranslatorAwareTrait;
 
     /**
      * @var boolean
@@ -32,11 +35,15 @@ class LocaleAggregateListener extends AbstractListenerAggregate
     protected $moduleOptions;
 
     /**
+     * @var TranslatableListener $doctrineListener
+     */
+    protected $doctrineListener;
+
+    /**
      * @param  Options\ModuleOptions       $options
-     * @param  Service\LocaleService       $localeService
      * @throws ExtensionNotLoadedException
      */
-    public function __construct(Options\ModuleOptions $options, Service\LocaleService $localeService)
+    public function __construct(Options\ModuleOptions $options)
     {
         if (! extension_loaded('intl')) {
             throw new ExtensionNotLoadedException(sprintf(
@@ -46,7 +53,6 @@ class LocaleAggregateListener extends AbstractListenerAggregate
         }
 
         $this->setModuleOptions($options);
-        $this->setLocaleService($localeService);
     }
 
     /**
@@ -66,11 +72,26 @@ class LocaleAggregateListener extends AbstractListenerAggregate
     }
 
     /**
+     * @return TranslatableListener
+     */
+    public function getDoctrineListener()
+    {
+        return $this->doctrineListener;
+    }
+
+    /**
+     * @param TranslatableListener $doctrineListener
+     */
+    public function setDoctrineListener($doctrineListener)
+    {
+        $this->doctrineListener = $doctrineListener;
+    }
+
+    /**
      * @param EventManagerInterface $events
      */
     public function attach(EventManagerInterface $events)
     {
-
         $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE,
                 array($this, 'detectLocale'), -1);
 
@@ -92,7 +113,7 @@ class LocaleAggregateListener extends AbstractListenerAggregate
 
         $app                = $e->getApplication();
         $serviceManager     = $app->getServiceManager();
-        $translator         = $serviceManager->get('translator');
+
         $detectors          = $this->getModuleOptions()->getDetectors();
 
         foreach ($detectors as $detectorServiceName) {
@@ -105,12 +126,17 @@ class LocaleAggregateListener extends AbstractListenerAggregate
             }
         }
 
+        $defaultLocale      = $this->getLocaleService()->getDefaultLocale()->getCode();
+        $this->getDoctrineListener()->setDefaultLocale($defaultLocale);
+        $this->getDoctrineListener()->setTranslationFallback(true);
+
         if (!isset($locale)) {
-            $locale = $this->getLocaleService()->getDefaultLocale()->getCode();
+            $locale = $defaultLocale;
         }
 
         Locale::setDefault($locale);
-        $translator->setLocale($locale);
+        $this->getTranslator()->setLocale($locale);
+        $this->getDoctrineListener()->setTranslatableLocale($locale);
         $this->localeDetected = true;
     }
 

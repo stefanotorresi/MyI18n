@@ -41,8 +41,7 @@ class ModuleFunctionalTest extends PHPUnit_Framework_TestCase
             array('ServiceManager', 'MyI18n\Service\Locale', 'MyI18n\Service\LocaleService'),
             array('ServiceManager', 'MyI18n\Form\LocaleForm', 'MyI18n\Form\LocaleForm'),
             array('ServiceManager', 'MyI18n\Form\Locale', 'MyI18n\Form\LocaleForm'),
-            array('ServiceManager', 'MyI18n\Listener\TranslatableListener', 'MyI18n\Listener\TranslatableListener'),
-            array('ServiceManager', 'MyI18n\Listener\LocaleAggregateListener', 'MyI18n\Listener\LocaleAggregateListener'),
+            array('ServiceManager', 'Gedmo\Translatable\TranslatableListener', 'Gedmo\Translatable\TranslatableListener'),
             array('ServiceManager', 'MyI18n\Navigation', 'Zend\Navigation\Navigation'),
             array('ControllerLoader', 'MyI18n\Controller\LocaleController', 'MyI18n\Controller\LocaleController'),
             array('ControllerLoader', 'MyI18n\Controller\Locale', 'MyI18n\Controller\LocaleController'),
@@ -55,15 +54,15 @@ class ModuleFunctionalTest extends PHPUnit_Framework_TestCase
         $sm = Bootstrap::getServiceManager();
         $em = Bootstrap::initEntityManager($sm);
 
-        /** @var \MyI18n\Listener\TranslatableListener $listener */
-        $listener = $sm->get('MyI18n\Listener\TranslatableListener');
-
-        TestAsset\Locales::populateService($listener->getLocaleService());
+        /** @var \Gedmo\Translatable\TranslatableListener $listener */
+        $listener = $sm->get('Gedmo\Translatable\TranslatableListener');
+        $listener->setTranslationFallback(true);
+        $listener->setDefaultLocale('it');
+        $listener->setTranslatableLocale('it');
 
         $translatable = new TestAsset\TranslatableEntity();
         $translatable->setId(1);
         $translatable->setText('testo');
-        $translatable->setLocale('it');
         $em->persist($translatable);
         $em->flush();
 
