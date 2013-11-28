@@ -21,7 +21,8 @@ return [
                 /** @var Service\LocaleService $localeService */
                 $localeService = $serviceManager->get('MyI18n\Service\LocaleService');
 
-                $helper = new Plugin\Locale($localeService);
+                $helper = new Plugin\Locale();
+                $helper->setLocaleService($localeService);
 
                 return $helper;
             },

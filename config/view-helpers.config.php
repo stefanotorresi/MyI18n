@@ -32,7 +32,8 @@ return [
                 /** @var Service\LocaleService $localeService */
                 $localeService = $serviceManager->get('MyI18n\Service\LocaleService');
 
-                $helper = new Helper\Locale($localeService);
+                $helper = new Helper\Locale();
+                $helper->setLocaleService($localeService);
 
                 return $helper;
             },

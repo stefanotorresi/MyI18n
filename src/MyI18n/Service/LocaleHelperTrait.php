@@ -7,19 +7,12 @@
 
 namespace MyI18n\Service;
 
-use Locale;
+use Locale as IntlLocale;
+use MyI18n\Entity\Locale;
 
 trait LocaleHelperTrait
 {
     use LocaleServiceAwareTrait;
-
-    /**
-     * @param LocaleService $localeService
-     */
-    public function __construct(LocaleService $localeService)
-    {
-        $this->setLocaleService($localeService);
-    }
 
     public function __invoke()
     {
@@ -28,17 +21,23 @@ trait LocaleHelperTrait
 
     public function getCurrent()
     {
-        return Locale::getDefault();
+        return IntlLocale::getDefault();
     }
 
-    public function getDefault($asString = true)
+    /**
+     * proxy to LocaleService->getDefault()
+     *
+     * @param  bool               $returnObject
+     * @return string|Locale|null
+     */
+    public function getDefault($returnObject = true)
     {
         $locale = $this->getLocaleService()->getDefaultLocale();
 
-        if ($asString && $locale instanceof \MyI18n\Entity\Locale) {
-            return $locale->getCode();
+        if ($returnObject || ! $locale instanceof Locale) {
+            return $locale;
         }
 
-        return $locale;
+        return $locale->getCode();
     }
 }
