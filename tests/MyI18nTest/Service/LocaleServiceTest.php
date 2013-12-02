@@ -64,6 +64,24 @@ class LocaleServiceTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($oldDefault->isDefaultLocale());
     }
 
+    public function testDefaultLocaleSwitcherListenerWhenNoDefaultIsYetAvailable()
+    {
+        $newLocale = new Locale('it');
+
+        $this->localeRepository
+            ->expects($this->atLeastOnce())
+            ->method('findOneBy')
+            ->with(['defaultLocale' => true])
+            ->will($this->returnValue(null));
+
+        $event = new Event();
+        $event->setParam('entity', $newLocale);
+
+        $this->localeService->defaultLocaleSwitcherListener($event);
+
+        $this->assertTrue($newLocale->isDefaultLocale());
+    }
+
     public function testEnsureDefaultLocaleListener()
     {
         $removedLocale = new Locale('it', true);

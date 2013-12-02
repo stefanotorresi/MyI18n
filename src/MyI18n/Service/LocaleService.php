@@ -94,10 +94,16 @@ class LocaleService extends AbstractEntityService
         /** @var Locale $locale */
         $locale = $event->getParam('entity');
 
-        if ($locale->isDefaultLocale() && $oldDefault = $this->getDefaultLocale()) {
-            $oldDefault->setDefaultLocale(false);
-            $this->getEntityManager()->flush($oldDefault);
-        };
+        $default = $this->getDefaultLocale();
+
+        if ($locale->isDefaultLocale() && $default) {
+            $default->setDefaultLocale(false);
+            $this->getEntityManager()->flush($default);
+        }
+
+        if (! $default) {
+            $locale->setDefaultLocale();
+        }
     }
 
     /**
