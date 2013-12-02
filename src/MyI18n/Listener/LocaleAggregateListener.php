@@ -126,7 +126,10 @@ class LocaleAggregateListener extends AbstractListenerAggregate
             }
         }
 
-        $defaultLocale      = $this->getLocaleService()->getDefaultLocale()->getCode();
+        $defaultLocaleEntity = $this->getLocaleService()->getDefaultLocale();
+        $defaultLocale = $defaultLocaleEntity instanceof \MyI18n\Entity\Locale ?
+            $defaultLocaleEntity->getCode() : Locale::getDefault();
+
         $this->getDoctrineListener()->setDefaultLocale($defaultLocale);
         $this->getDoctrineListener()->setTranslationFallback(true);
 
