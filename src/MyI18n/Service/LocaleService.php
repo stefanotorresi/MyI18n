@@ -103,7 +103,8 @@ class LocaleService extends AbstractEntityService
     /**
      * remove.post event listener
      *
-     * @param Event $event
+     * @param  Event       $event
+     * @return Locale|null
      */
     public function ensureDefaultLocaleListener(Event $event)
     {
@@ -114,9 +115,15 @@ class LocaleService extends AbstractEntityService
             return;
         }
 
-        $newDefault = $this->getLastById();
-        $newDefault->setDefaultLocale();
-        $this->save($newDefault);
+        $lastById = $this->getLastById();
+
+        if (! $lastById) {
+            return;
+        }
+
+        $lastById->setDefaultLocale();
+
+        $this->save($lastById);
     }
 
     /**

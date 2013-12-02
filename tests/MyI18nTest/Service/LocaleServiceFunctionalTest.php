@@ -86,7 +86,7 @@ class LocaleServiceFunctionalTest extends TestCase
 
         $this->localeService->save($locale);
 
-        $this->assertNull($default->isDefaultLocale());
+        $this->assertFalse($default->isDefaultLocale());
     }
 
     public function testGetAllCodesAsArray()

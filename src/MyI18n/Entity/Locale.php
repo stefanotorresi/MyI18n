@@ -67,7 +67,7 @@ class Locale extends Entity
      */
     public function isDefaultLocale()
     {
-        return $this->defaultLocale;
+        return (bool) $this->defaultLocale;
     }
 
     /**
