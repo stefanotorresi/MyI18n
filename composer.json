@@ -24,8 +24,7 @@
         "gedmo/doctrine-extensions": "~2.3",
         "doctrine/doctrine-module": "~0.8@dev",
         "doctrine/doctrine-orm-module": "~0.8@dev",
-        "stefanotorresi/my-base": "1.x-dev",
-        "soflomo/purifier": "0.*"
+        "stefanotorresi/my-base": "1.x-dev"
     },
     "extra": {
         "branch-alias": {
