@@ -1,0 +1,35 @@
+<?php
+/**
+ * @var \Zend\View\Renderer\PhpRenderer $this
+ *
+ * @author Stefano Torresi (http://stefanotorresi.it)
+ * @license See the file LICENSE.txt for copying permission.
+ * ************************************************
+ */
+
+/** @var \MyI18n\Form\LocaleForm $form */
+$form = $this->localeForm;
+
+$form->setAttribute('class', 'span6 form-inline');
+
+$form->get('defaultLocale')->setAttribute('class', 'checkbox');
+$form->get('defaultLocale')->setLabelAttributes(['class' => 'checkbox']);
+
+?>
+
+<?= $this->form()->openTag($form); ?>
+
+    <?= $this->formLabel($form->get('code')); ?>
+
+    <br />
+
+    <?= $this->formSelect($form->get('code')); ?>
+
+    <?= $this->formButton()->openTag($form->get('submit')->setAttribute('class', 'btn btn-small btn-primary margin-left-10 margin-right-10')) ?>
+        <i class="icon-plus-sign icon-white"></i>
+        <?= $this->escapeHtml($this->translate($form->get('submit')->getLabel())) ?>
+    <?= $this->formButton()->closeTag() ?>
+
+    <?= $this->formRow($form->get('defaultLocale')); ?>
+
+<?= $this->form()->closeTag() ?>

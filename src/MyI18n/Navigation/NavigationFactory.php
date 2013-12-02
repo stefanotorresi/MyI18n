@@ -5,10 +5,11 @@
  * @author Stefano Torresi <webdeveloper@stefanotorresi.it>
  */
 
-namespace MyI18n;
+namespace MyI18n\Navigation;
 
 use Locale;
-use Traversable;
+use MyI18n\Options;
+use MyI18n\Service\LocaleService;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\Mvc\Router\RouteMatch;
 use Zend\Mvc\Router\Http\TreeRouteStack;
@@ -20,37 +21,38 @@ use Zend\Stdlib\ArrayUtils;
 
 class NavigationFactory implements FactoryInterface
 {
-    public function createService(ServiceLocatorInterface $services)
+    public function createService(ServiceLocatorInterface $serviceLocator)
     {
         /* @var $router TreeRouteStack  */
-        $router = $services->get('router');
+        $router = $serviceLocator->get('router');
 
         /* @var $request Request */
-        $request = $services->get('request');
+        $request = $serviceLocator->get('request');
 
         /* @var $routeMatch RouteMatch */
         $routeMatch = $router->match($request);
 
-        $globalConfig  = $services->get('config');
-        if ($globalConfig instanceof Traversable) {
-            $globalConfig = ArrayUtils::iteratorToArray($globalConfig);
-        }
+        /** @var Options\ModuleOptions $options */
+        $options = $serviceLocator->get('MyI18n\Options\ModuleOptions');
 
-        $config = $globalConfig[__NAMESPACE__];
+        /** @var LocaleService $localeService */
+        $localeService = $serviceLocator->get('MyI18n\ServiceLocaleService');
+        $locales = $localeService->getAll();
+
         $currentLocale = Locale::getDefault();
 
         $pages = array();
 
-        foreach ($config['supported'] as $localeEntry) {
+        foreach ($locales as $localeEntry) {
 
             $fullLangName = ucfirst(Locale::getDisplayLanguage($localeEntry, $localeEntry));
-            $pageConfig = $config['navigation']['query_uri'] ?
+            $pageConfig = $options->getNavigationOptions()->getQueryString() ?
                 array(
                     'type'  => 'uri',
-                    'uri'   => '?'.$config['key_name'].'='.$localeEntry
+                    'uri'   => '?'.$options->getKeyName().'='.$localeEntry
                 ) :
                 array(
-                    'params'        => array( $config['key_name'] => $localeEntry ),
+                    'params'        => array( $options->getKeyName() => $localeEntry ),
                     'type'          => 'mvc',
                     'route'         => 'lang-switch',
                     'router'        => $router,
@@ -68,12 +70,20 @@ class NavigationFactory implements FactoryInterface
                 $page->setOrder(-1);
             }
 
-            if ($config['navigation']['full_lang_as_label'] === true
-                    || ($config['navigation']['full_lang_as_label'] === 'only_active' && $page->isActive())
-            ) {
-                $label = $fullLangName;
-            } else {
-                $label = strtoupper(Locale::getPrimaryLanguage($localeEntry));
+            switch ($options->getNavigationOptions()->getLabelDisplay()) {
+                case Options\NavigationOptions::LABEL_DISPLAY_FULL :
+                    $label = $fullLangName;
+                    break;
+
+                case Options\NavigationOptions::LABEL_DISPLAY_ACTIVE_FULL :
+                    if ($page->isActive()) {
+                        $label = $fullLangName;
+                        break;
+                    }
+
+                case Options\NavigationOptions::LABEL_DISPLAY_SHORT :
+                default :
+                    $label = strtoupper(Locale::getPrimaryLanguage($localeEntry));
             }
 
             $page->setLabel($label);

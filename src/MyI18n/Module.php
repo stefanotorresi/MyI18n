@@ -1,71 +1,72 @@
 <?php
 /**
  *
- * @author Stefano Torresi <webdeveloper@stefanotorresi.it>
+ * @author Stefano Torresi (http://stefanotorresi.it)
+ * @license See the file LICENSE.txt for copying permission.
+ * ************************************************
  */
 
 namespace MyI18n;
 
+use MyBase\AbstractModule;
+use Zend\Console\Console;
 use Zend\Mvc\MvcEvent;
-use Zend\Session\Container as Session;
+use Zend\ModuleManager\Feature;
 
-class Module
+class Module extends AbstractModule implements
+    Feature\ControllerPluginProviderInterface,
+    Feature\ServiceProviderInterface,
+    Feature\ViewHelperProviderInterface
 {
-    const VERSION = '0.1.2';
-
-    public function onBootstrap(MvcEvent $e)
+    /**
+     * {@inheritdoc}
+     */
+    public function getConfigGlob()
     {
-        $app = $e->getApplication();
-        $events = $app->getEventManager();
-        $services = $app->getServiceManager();
-
-        /* @var $strategy LocaleStrategy */
-        $strategy = $services->get("MyI18n\\LocaleStrategy");
-
-        $strategy->attach($events);
+        return '{module,router,doctrine}.config.php';
     }
 
-    public function getAutoloaderConfig()
+    /**
+     * {@inheritdoc}
+     */
+    public function getControllerPluginConfig()
     {
-        return array(
-            'Zend\Loader\ClassMapAutoloader' => array(
-                __DIR__ . '/../../autoload_classmap.php'
-            ),
-            'Zend\Loader\StandardAutoloader' => array(
-                'namespaces' => array(
-                    __NAMESPACE__  => __DIR__
-                ),
-            ),
-        );
+        return include $this->getDir() . '/config/controller-plugins.config.php';
     }
 
-    public function getConfig()
-    {
-        return include __DIR__ . '/../../config/module.config.php';
-    }
-
+    /**
+     * {@inheritdoc}
+     */
     public function getServiceConfig()
     {
-        return array(
-            'factories' => array(
-                'MyI18n\LocaleStrategy' => function ($services) {
-                    $config = $services->get('config');
-                    $instance = new LocaleStrategy($config[__NAMESPACE__]);
+        return include $this->getDir() . '/config/services.config.php';
+    }
 
-                    return $instance;
-                },
-            ),
-            'initializers' => array(
-                function ($instance, $services) {
-                    if ($instance instanceof Detector\AbstractDetector) {
-                        $config = $services->get('MyI18n\LocaleStrategy')->getConfig();
-                        $instance->setConfig($config);
-                    }
-                }
-            ),
-            'services' => array(
-                'MyI18n\Session' => new Session(__NAMESPACE__),
-            ),
-        );
+    /**
+     * {@inheritdoc}
+     */
+    public function getViewHelperConfig()
+    {
+        return include $this->getDir() . '/config/view-helpers.config.php';
+    }
+
+    /**
+     * @param MvcEvent $e
+     */
+    public function onBootstrap(MvcEvent $e)
+    {
+        // nothing to do if in console environment
+        if (Console::isConsole()) {
+            return;
+        }
+
+        $app = $e->getApplication();
+        $eventManager = $app->getEventManager();
+        $serviceManager = $app->getServiceManager();
+
+        /* @var $localeStrategy Listener\LocaleAggregateListener */
+        $localeStrategy = $serviceManager->get('MyI18n\Listener\LocaleAggregateListener');
+
+        $eventManager->attach($localeStrategy);
     }
 }

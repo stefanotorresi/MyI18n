@@ -15,11 +15,11 @@ class Query extends AbstractDetector
     {
         $request = $e->getRequest();
 
-        if ( ! $request instanceof Request) {
+        if (! $request instanceof Request) {
             return;
         }
 
-        $query = $request->getQuery($this->config['key_name']);
+        $query = $request->getQuery($this->getOptions()->getKeyName());
 
         if ($query) {
             return $this->lookup($query);

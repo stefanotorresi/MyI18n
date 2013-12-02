@@ -1,60 +1,56 @@
 <?php
+/**
+ * @author Stefano Torresi (http://stefanotorresi.it)
+ * @license See the file LICENSE.txt for copying permission.
+ * ************************************************
+ */
 
 namespace MyI18n;
 
-return array(
-    __NAMESPACE__ => array(
-        'default'   => 'en',
-        'supported' => array(),
-        'fallback'  => '',
-        'handlers' => array(
-            'MyI18n\Detector\Query',
-            'MyI18n\Detector\Route',
-            'MyI18n\Detector\Session',
-            'MyI18n\Detector\Headers',
-        ),
-        'key_name'  => 'lang',
-        'navigation' => array(
-            // possible values: true, false, 'only_active'
-            'full_lang_as_label' => true,
-            'query_uri' => false,
-        )
-    ),
+return [
+    __NAMESPACE__ => [
+//        'detectors' => [
+//            'MyI18n\Detector\Query',
+//            'MyI18n\Detector\Route',
+//            'MyI18n\Detector\Session',
+//            'MyI18n\Detector\Headers',
+//        ],
+//        'key_name'  => 'lang',
+//        'navigation_options' => [
+//            'label_display' => Options\NavigationOptions::LABEL_DISPLAY_FULL,
+//            'queryString' => false,
+//        ],
+    ],
 
-    'router' => array(
-        'routes' => array(
-            'lang-switch' => array(
-                'type'    => 'segment',
-                'options' => array(
-                    'route'    => '/:lang',
-                    'defaults' => array(
-                        'controller' => 'index',
-                        'action'     => 'index'
-                    ),
-                    'constraints' => array(
-                        'lang' => '[a-z]{2}',
-                    ),
-                ),
-                'may_terminate' => true,
-            ),
-        ),
-    ),
+    'navigation' => [
+        'backend' => [
+            'my-i18n' => [
+                'label' => 'Languages',
+                'route' => 'admin/i18n',
+            ],
+        ],
+    ],
 
-    'service_manager' => array(
-        'factories' => array(
-            'MvcTranslator' => 'Zend\Mvc\Service\TranslatorServiceFactory',
-            'MyI18n\Navigation' => 'MyI18n\NavigationFactory',
-        ),
-        'invokables' => array (
-            'MyI18n\Detector\Query'   => 'MyI18n\Detector\Query',
-            'MyI18n\Detector\Session'   => 'MyI18n\Detector\Session',
-            'MyI18n\Detector\Route'   => 'MyI18n\Detector\Route',
-            'MyI18n\Detector\Headers'   => 'MyI18n\Detector\Headers',
-        ),
-        'aliases' => array(
-            'nav-lang' => 'MyI18n\Navigation',
-            'MyI18n\Translator' => 'MvcTranslator',
-            'translator' => 'MvcTranslator',
-        ),
-    ),
-);
+    'view_manager' => [
+        'template_path_stack' => [
+            __DIR__ . '/../view',
+        ],
+    ],
+
+    'controllers' => [
+        'invokables' => [
+            'MyI18n\Controller\LocaleController' => 'MyI18n\Controller\LocaleController',
+        ],
+    ],
+
+    'translator' => [
+        'translation_file_patterns' => [
+            [
+                'type' => 'phpArray',
+                'base_dir'      => __DIR__ . '/../language',
+                'pattern'       => '%s/'.__NAMESPACE__.'.php',
+                'text_domain'   => 'MyBackend',
+            ],
+        ],
+    ],
+];
