@@ -18,7 +18,7 @@ return [
                     : $serviceLocator;
 
                 /** @var DataMapper\LocaleMapper $localeMapper */
-                $localeMapper = $serviceManager->get('MyI18n\Mapper\LocaleMapper');
+                $localeMapper = $serviceManager->get('MyI18n\DataMapper\LocaleMapper');
 
                 $helper = new Helper\LangTabs($localeMapper);
 
@@ -30,7 +30,7 @@ return [
                     : $serviceLocator;
 
                 /** @var DataMapper\LocaleMapper $localeMapper */
-                $localeMapper = $serviceManager->get('MyI18n\Mapper\LocaleMapper');
+                $localeMapper = $serviceManager->get('MyI18n\DataMapper\LocaleMapper');
 
                 $helper = new Helper\Locale();
                 $helper->setLocaleMapper($localeMapper);

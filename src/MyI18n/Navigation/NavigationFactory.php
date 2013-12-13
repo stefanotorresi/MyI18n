@@ -36,8 +36,8 @@ class NavigationFactory implements FactoryInterface
         $options = $serviceLocator->get('MyI18n\Options\ModuleOptions');
 
         /** @var LocaleMapper $localeMapper */
-        $localeMapper = $serviceLocator->get('MyI18n\ServiceLocaleService');
-        $locales = $localeMapper->getAll();
+        $localeMapper = $serviceLocator->get('MyI18n\DataMapper\LocaleMapper');
+        $locales = $localeMapper->findAll();
 
         $currentLocale = Locale::getDefault();
 

@@ -17,7 +17,7 @@ return [
                 $options = $serviceLocator->get('MyI18n\Options\ModuleOptions');
 
                 /** @var DataMapper\LocaleMapper $localeMapper */
-                $localeMapper = $serviceLocator->get('MyI18n\Mapper\LocaleMapper');
+                $localeMapper = $serviceLocator->get('MyI18n\DataMapper\LocaleMapper');
 
                 /** @var Translator $translator */
                 $translator         = $serviceLocator->get('translator');
@@ -32,7 +32,7 @@ return [
 
                 return $localeStrategy;
             },
-        'MyI18n\Mapper\LocaleMapper' =>
+        'MyI18n\DataMapper\LocaleMapper' =>
             function (ServiceLocatorInterface $serviceLocator) {
                 /** @var EntityManager $entityManager */
                 $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');

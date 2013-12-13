@@ -50,7 +50,7 @@ class LocaleControllerTest extends \PHPUnit_Framework_TestCase
         $serviceLocator
             ->expects($this->once())
             ->method('get')
-            ->with('MyI18n\Mapper\LocaleMapper')
+            ->with('MyI18n\DataMapper\LocaleMapper')
             ->will($this->returnValue($this->controller->getLocaleMapper()));
 
         $this->controller->setServiceLocator($serviceLocator);

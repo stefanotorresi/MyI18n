@@ -19,7 +19,7 @@ return [
                     : $serviceLocator;
 
                 /** @var DataMapper\LocaleMapper $localeMapper */
-                $localeMapper = $serviceManager->get('MyI18n\Mapper\LocaleMapper');
+                $localeMapper = $serviceManager->get('MyI18n\DataMapper\LocaleMapper');
 
                 $helper = new Plugin\Locale();
                 $helper->setLocaleMapper($localeMapper);

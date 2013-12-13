@@ -23,7 +23,7 @@ class LocaleMapperAwareInitializer implements InitializerInterface
     {
         if ($instance instanceof LocaleMapperAwareInterface) {
             /** @var LocaleMapper $localeMapper */
-            $localeMapper = $serviceLocator->get('MyI18n\Mapper\LocaleMapper');
+            $localeMapper = $serviceLocator->get('MyI18n\DataMapper\LocaleMapper');
             $instance->setLocaleMapper($localeMapper);
         }
 

@@ -68,7 +68,7 @@ class AbstractDetectorFactory implements AbstractFactoryInterface
 
         if ($detector instanceof DataMapper\LocaleMapperAwareInterface) {
             /** @var DataMapper\LocaleMapper $localeMapper */
-            $localeMapper = $serviceLocator->get('MyI18n\Mapper\LocaleMapper');
+            $localeMapper = $serviceLocator->get('MyI18n\DataMapper\LocaleMapper');
             $detector->setLocaleMapper($localeMapper);
         }
 

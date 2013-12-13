@@ -17,12 +17,12 @@ class LocaleMapperAwareInitializerTest extends \PHPUnit_Framework_TestCase
         $instance = new TestAsset\LocaleMapperAwareInstance;
 
         $serviceLocator = $this->getMock('Zend\ServiceManager\ServiceManager');
-        $localeMapper = $this->getMockBuilder('MyI18n\Mapper\LocaleMapper')
+        $localeMapper = $this->getMockBuilder('MyI18n\DataMapper\LocaleMapper')
             ->disableOriginalConstructor()->getMock();
 
         $serviceLocator->expects($this->atLeastOnce())
             ->method('get')
-            ->with('MyI18n\Mapper\LocaleMapper')
+            ->with('MyI18n\DataMapper\LocaleMapper')
             ->will($this->returnValue($localeMapper));
 
         $initializer = new LocaleMapperAwareInitializer();

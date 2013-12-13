@@ -37,7 +37,7 @@ class ModuleFunctionalTest extends PHPUnit_Framework_TestCase
     public function servicesProvider()
     {
         return array(
-            array('ServiceManager', 'MyI18n\Mapper\LocaleMapper', 'MyI18n\Mapper\LocaleMapper'),
+            array('ServiceManager', 'MyI18n\DataMapper\LocaleMapper', 'MyI18n\DataMapper\LocaleMapper'),
             array('ServiceManager', 'MyI18n\Form\LocaleForm', 'MyI18n\Form\LocaleForm'),
             array('ServiceManager', 'MyI18n\Listener\LocaleAggregateListener', 'MyI18n\Listener\LocaleAggregateListener'),
             array('ServiceManager', 'Gedmo\Translatable\TranslatableListener', 'Gedmo\Translatable\TranslatableListener'),

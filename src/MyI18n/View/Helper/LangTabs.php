@@ -42,7 +42,7 @@ class LangTabs extends AbstractHelper implements DataMapper\LocaleMapperAwareInt
 
         $locales = $options['default_first'] ?
             $this->getLocaleMapper()->findAllWithDefaultFirst()
-            : $this->getLocaleMapper()->getAll();
+            : $this->getLocaleMapper()->findAll();
 
         if (! $locales) {
             return;

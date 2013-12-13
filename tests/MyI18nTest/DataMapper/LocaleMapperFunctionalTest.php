@@ -7,6 +7,7 @@
 
 namespace MyI18nTest\DataMapper;
 
+use MyBase\DataMapper\MapperEvent;
 use MyI18n\Entity\Locale;
 use MyI18n\DataMapper\LocaleMapper;
 use MyI18nTest\Bootstrap;
@@ -45,12 +46,12 @@ class LocaleMapperFunctionalTest extends TestCase
         };
     }
 
-    public function testGetAll()
+    public function testFindAll()
     {
-        $this->assertEquals(TestAsset\Locales::getLocales(), $this->localeMapper->getAll());
+        $this->assertEquals(TestAsset\Locales::getLocales(), $this->localeMapper->findAll());
     }
 
-    public function testGetDefaultLocale()
+    public function testFindDefaultLocale()
     {
         $default = array_filter(TestAsset\Locales::getLocales(), function (Locale $locale) {
             return $locale->isDefaultLocale();
@@ -94,7 +95,7 @@ class LocaleMapperFunctionalTest extends TestCase
         $this->assertSame(['de', 'en', 'it'], $this->localeMapper->getAllCodesAsArray());
     }
 
-    public function testGetAllWithDefaultFirst()
+    public function testFindAllWithDefaultFirst()
     {
         $locales = $this->localeMapper->findAllWithDefaultFirst();
         $default = $this->localeMapper->findDefaultLocale();
@@ -113,7 +114,7 @@ class LocaleMapperFunctionalTest extends TestCase
         $this->assertSame($locale, $this->localeMapper->findDefaultLocale());
     }
 
-    public function testGetLastById()
+    public function testFindLastById()
     {
         $locale = $this->localeMapper->findLastById();
         $locales = TestAsset\Locales::getLocales();
@@ -134,8 +135,8 @@ class LocaleMapperFunctionalTest extends TestCase
         $default = $this->localeMapper->findDefaultLocale();
         $this->assertNotNull($default);
 
-        $event = new Event();
-        $event->setParam('entity', new Locale('ru'));
+        $event = new MapperEvent();
+        $event->setEntity(new Locale('ru'));
         $this->localeMapper->ensureDefaultLocaleListener($event);
 
         $this->assertSame($default, $this->localeMapper->findDefaultLocale());

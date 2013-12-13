@@ -117,7 +117,7 @@ class LocaleController extends AbstractActionController
     public function getLocaleMapper()
     {
         if (! $this->localeMapper) {
-            $this->localeMapper = $this->getServiceLocator()->get('MyI18n\Mapper\LocaleMapper');
+            $this->localeMapper = $this->getServiceLocator()->get('MyI18n\DataMapper\LocaleMapper');
         }
 
         return $this->localeMapper;

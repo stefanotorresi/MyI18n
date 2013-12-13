@@ -30,7 +30,7 @@ class LangTabsTest extends PHPUnit_Framework_TestCase
            new Locale('it', true),
         ];
 
-        $localeMapper = $this->getMockBuilder('MyI18n\Mapper\LocaleMapper')->disableOriginalConstructor()->getMock();
+        $localeMapper = $this->getMockBuilder('MyI18n\DataMapper\LocaleMapper')->disableOriginalConstructor()->getMock();
 
         $this->helper = new LangTabs($localeMapper);
     }
@@ -41,7 +41,7 @@ class LangTabsTest extends PHPUnit_Framework_TestCase
 
         $this->helper->getLocaleMapper()
             ->expects($this->once())
-            ->method('getAllWithDefaultFirst')
+            ->method('findAllWithDefaultFirst')
             ->will($this->returnValue(array_reverse($this->locales)));
 
         $markup = $this->helper->__invoke();
@@ -56,7 +56,7 @@ class LangTabsTest extends PHPUnit_Framework_TestCase
     {
         $this->helper->getLocaleMapper()
             ->expects($this->once())
-            ->method('getAllWithDefaultFirst')
+            ->method('findAllWithDefaultFirst')
             ->will($this->returnValue([]));
 
         $markup = $this->helper->__invoke();
@@ -68,7 +68,7 @@ class LangTabsTest extends PHPUnit_Framework_TestCase
     {
         $this->helper->getLocaleMapper()
             ->expects($this->once())
-            ->method('getAll')
+            ->method('findAll')
             ->will($this->returnValue($this->locales));
 
         $this->helper->__invoke(['default_first' => false]);

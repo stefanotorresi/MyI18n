@@ -25,7 +25,7 @@ class LocaleMapperPluginTraitTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->traitExhibitingObject = $this->getObjectForTrait('MyI18n\Service\LocaleHelperTrait');
+        $this->traitExhibitingObject = $this->getObjectForTrait('MyI18n\DataMapper\LocaleMapperPluginTrait');
     }
 
     public function testInvokeReturnsSelf()
@@ -46,12 +46,12 @@ class LocaleMapperPluginTraitTest extends PHPUnit_Framework_TestCase
     {
         $locale = new Locale('en', true);
 
-        $localeMapper = $this->getMockBuilder('MyI18n\Mapper\LocaleMapper')->disableOriginalConstructor()->getMock();
+        $localeMapper = $this->getMockBuilder('MyI18n\DataMapper\LocaleMapper')->disableOriginalConstructor()->getMock();
         $localeMapper->expects($this->atLeastOnce())
-            ->method('getDefaultLocale')
+            ->method('findDefaultLocale')
             ->will($this->returnValue($locale));
 
-        $this->traitExhibitingObject->setLocaleService($localeMapper);
+        $this->traitExhibitingObject->setLocaleMapper($localeMapper);
 
         $this->assertSame($locale, $this->traitExhibitingObject->__invoke()->getDefault());
         $this->assertSame($locale->getCode(), $this->traitExhibitingObject->__invoke()->getDefault(false));

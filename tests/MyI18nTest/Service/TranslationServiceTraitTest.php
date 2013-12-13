@@ -31,7 +31,7 @@ class TranslationServiceTraitTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $translationMapper = $this->getMock('MyI18n\Mapper\TranslationMapperInterface');
+        $translationMapper = $this->getMock('MyI18n\DataMapper\TranslationMapperInterface');
 
         $this->translationService = new TestAsset\TranslationService();
         $this->translationService->setTranslationMapper($translationMapper);
@@ -102,7 +102,7 @@ class TranslationServiceTraitTest extends PHPUnit_Framework_TestCase
             ->method('setLocale')
             ->with($locale);
 
-        $this->translationService->getEntityManager()
+        $this->translationService->getTranslationMapper()
             ->expects($this->once())
             ->method('refresh')
             ->with($entity);
