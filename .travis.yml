@@ -5,7 +5,6 @@ php:
 
 before_install:
  - composer self-update
- - composer require --dev satooshi/php-coveralls:~0.6
  - composer install --dev
  - wget http://cs.sensiolabs.org/get/php-cs-fixer.phar
 
@@ -16,4 +15,5 @@ script:
  - phpunit -c tests --coverage-clover ./tests/coverage/clover.xml
 
 after_script:
+ - composer require --dev satooshi/php-coveralls:~0.6
  - ./vendor/bin/coveralls -v
