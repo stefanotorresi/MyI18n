@@ -5,18 +5,18 @@
  * ************************************************
  */
 
-namespace MyI18nTest\Service;
+namespace MyI18nTest\DataMapper;
 
 use MyI18n\Entity\Locale;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class LocaleHelperTraitTest
- * @package MyI18nTest\Service
+ * Class LocaleMapperPluginTraitTest
+ * @package MyI18nTest\DataMapper
  *
- * @covers \MyI18n\Service\LocaleHelperTrait
+ * @covers \MyI18n\DataMapper\LocaleMapperPluginTrait
  */
-class LocaleHelperTraitTest extends PHPUnit_Framework_TestCase
+class LocaleMapperPluginTraitTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @var object $traitExhibitingObject
@@ -25,7 +25,7 @@ class LocaleHelperTraitTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->traitExhibitingObject = $this->getObjectForTrait('MyI18n\Service\LocaleHelperTrait');
+        $this->traitExhibitingObject = $this->getObjectForTrait('MyI18n\DataMapper\LocaleMapperPluginTrait');
     }
 
     public function testInvokeReturnsSelf()
@@ -46,12 +46,12 @@ class LocaleHelperTraitTest extends PHPUnit_Framework_TestCase
     {
         $locale = new Locale('en', true);
 
-        $localeService = $this->getMockBuilder('MyI18n\Service\LocaleService')->disableOriginalConstructor()->getMock();
-        $localeService->expects($this->atLeastOnce())
-            ->method('getDefaultLocale')
+        $localeMapper = $this->getMockBuilder('MyI18n\DataMapper\LocaleMapper')->disableOriginalConstructor()->getMock();
+        $localeMapper->expects($this->atLeastOnce())
+            ->method('findDefaultLocale')
             ->will($this->returnValue($locale));
 
-        $this->traitExhibitingObject->setLocaleService($localeService);
+        $this->traitExhibitingObject->setLocaleMapper($localeMapper);
 
         $this->assertSame($locale, $this->traitExhibitingObject->__invoke()->getDefault());
         $this->assertSame($locale->getCode(), $this->traitExhibitingObject->__invoke()->getDefault(false));

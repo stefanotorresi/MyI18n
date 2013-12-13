@@ -30,18 +30,18 @@ class LangTabsTest extends PHPUnit_Framework_TestCase
            new Locale('it', true),
         ];
 
-        $localeService = $this->getMockBuilder('MyI18n\Service\LocaleService')->disableOriginalConstructor()->getMock();
+        $localeMapper = $this->getMockBuilder('MyI18n\DataMapper\LocaleMapper')->disableOriginalConstructor()->getMock();
 
-        $this->helper = new LangTabs($localeService);
+        $this->helper = new LangTabs($localeMapper);
     }
 
     public function testHelper()
     {
         $tabPrefix = $this->helper->getDefaultOptions()['tab_id_prefix'];
 
-        $this->helper->getLocaleService()
+        $this->helper->getLocaleMapper()
             ->expects($this->once())
-            ->method('getAllWithDefaultFirst')
+            ->method('findAllWithDefaultFirst')
             ->will($this->returnValue(array_reverse($this->locales)));
 
         $markup = $this->helper->__invoke();
@@ -54,9 +54,9 @@ class LangTabsTest extends PHPUnit_Framework_TestCase
 
     public function testReturnNullWhenNoLocalesAreFound()
     {
-        $this->helper->getLocaleService()
+        $this->helper->getLocaleMapper()
             ->expects($this->once())
-            ->method('getAllWithDefaultFirst')
+            ->method('findAllWithDefaultFirst')
             ->will($this->returnValue([]));
 
         $markup = $this->helper->__invoke();
@@ -66,9 +66,9 @@ class LangTabsTest extends PHPUnit_Framework_TestCase
 
     public function testDefaultFirstOptionOverride()
     {
-        $this->helper->getLocaleService()
+        $this->helper->getLocaleMapper()
             ->expects($this->once())
-            ->method('getAll')
+            ->method('findAll')
             ->will($this->returnValue($this->locales));
 
         $this->helper->__invoke(['default_first' => false]);

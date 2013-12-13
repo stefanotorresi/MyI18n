@@ -5,14 +5,14 @@
  * ************************************************
  */
 
-namespace MyI18n\Service;
+namespace MyI18n\DataMapper;
 
 use Locale as IntlLocale;
 use MyI18n\Entity\Locale;
 
-trait LocaleHelperTrait
+trait LocaleMapperPluginTrait
 {
-    use LocaleServiceAwareTrait;
+    use LocaleMapperAwareTrait;
 
     public function __invoke()
     {
@@ -25,14 +25,14 @@ trait LocaleHelperTrait
     }
 
     /**
-     * proxy to LocaleService->getDefault()
+     * proxy to LocaleMapper->getDefault()
      *
      * @param  bool               $returnObject
      * @return string|Locale|null
      */
     public function getDefault($returnObject = true)
     {
-        $locale = $this->getLocaleService()->getDefaultLocale();
+        $locale = $this->getLocaleMapper()->findDefaultLocale();
 
         if ($returnObject || ! $locale instanceof Locale) {
             return $locale;

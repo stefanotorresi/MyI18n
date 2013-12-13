@@ -11,7 +11,7 @@ use MyBase\Entity\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="MyI18n\DataMapper\LocaleMapper")
  * @ORM\Table(name="m18n_locales")
  */
 class Locale extends Entity

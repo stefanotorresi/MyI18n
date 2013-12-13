@@ -7,10 +7,10 @@
 
 namespace MyI18n\Controller\Plugin;
 
-use MyI18n\Service;
+use MyI18n\DataMapper;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 
-class Locale extends AbstractPlugin implements Service\LocaleServiceAwareInterface
+class Locale extends AbstractPlugin implements DataMapper\LocaleMapperAwareInterface
 {
-    use Service\LocaleHelperTrait;
+    use DataMapper\LocaleMapperPluginTrait;
 }

@@ -7,14 +7,19 @@
 
 namespace MyI18nTest\TestAsset;
 
-use MyBase\Service\EntityManagerAwareTrait;
+use MyI18n\DataMapper\TranslationMapperAwareInterface;
+use MyI18n\DataMapper\TranslationMapperAwareTrait;
 use MyI18n\Service\TranslationServiceTrait;
+use MyI18n\Service\TranslationServiceInterface;
 use Zend\EventManager\EventManagerAwareInterface;
 use Zend\EventManager\EventManagerAwareTrait;
 
-class TranslationService implements EventManagerAwareInterface
+class TranslationService implements
+    TranslationServiceInterface,
+    TranslationMapperAwareInterface,
+    EventManagerAwareInterface
 {
     use TranslationServiceTrait;
+    use TranslationMapperAwareTrait;
     use EventManagerAwareTrait;
-    use EntityManagerAwareTrait;
 }

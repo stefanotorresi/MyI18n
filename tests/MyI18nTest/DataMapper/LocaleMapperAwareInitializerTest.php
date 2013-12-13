@@ -5,31 +5,31 @@
  * ************************************************
  */
 
-namespace MyI18nTest\Service;
+namespace MyI18nTest\DataMapper;
 
-use MyI18n\Service\LocaleServiceAwareInitializer;
+use MyI18n\DataMapper\LocaleMapperAwareInitializer;
 use MyI18nTest\TestAsset;
 
-class LocaleServiceAwareInitializerTest extends \PHPUnit_Framework_TestCase
+class LocaleMapperAwareInitializerTest extends \PHPUnit_Framework_TestCase
 {
     public function testInitialize()
     {
-        $instance = new TestAsset\LocaleServiceAwareInstance;
+        $instance = new TestAsset\LocaleMapperAwareInstance;
 
         $serviceLocator = $this->getMock('Zend\ServiceManager\ServiceManager');
-        $localeService = $this->getMockBuilder('MyI18n\Service\LocaleService')
+        $localeMapper = $this->getMockBuilder('MyI18n\DataMapper\LocaleMapper')
             ->disableOriginalConstructor()->getMock();
 
         $serviceLocator->expects($this->atLeastOnce())
             ->method('get')
-            ->with('MyI18n\Service\LocaleService')
-            ->will($this->returnValue($localeService));
+            ->with('MyI18n\DataMapper\LocaleMapper')
+            ->will($this->returnValue($localeMapper));
 
-        $initializer = new LocaleServiceAwareInitializer();
+        $initializer = new LocaleMapperAwareInitializer();
         $initializedInstance = $initializer->initialize($instance, $serviceLocator);
 
         $this->assertSame($instance, $initializedInstance);
-        $this->assertSame($localeService, $instance->getLocaleService());
+        $this->assertSame($localeMapper, $instance->getLocaleMapper());
     }
 
     public function testDoNothingWithNonAwareClasses()
@@ -41,7 +41,7 @@ class LocaleServiceAwareInitializerTest extends \PHPUnit_Framework_TestCase
         $serviceLocator->expects($this->never())
             ->method('get');
 
-        $initializer = new LocaleServiceAwareInitializer();
+        $initializer = new LocaleMapperAwareInitializer();
         $initializedInstance = $initializer->initialize($instance, $serviceLocator);
         $this->assertSame($instance, $initializedInstance);
     }

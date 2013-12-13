@@ -16,8 +16,8 @@ return [
                 /** @var Options\ModuleOptions $options */
                 $options = $serviceLocator->get('MyI18n\Options\ModuleOptions');
 
-                /** @var Service\LocaleService $localeService */
-                $localeService = $serviceLocator->get('MyI18n\Service\LocaleService');
+                /** @var DataMapper\LocaleMapper $localeMapper */
+                $localeMapper = $serviceLocator->get('MyI18n\DataMapper\LocaleMapper');
 
                 /** @var Translator $translator */
                 $translator         = $serviceLocator->get('translator');
@@ -26,19 +26,18 @@ return [
                 $doctrineListener = $serviceLocator->get('Gedmo\Translatable\TranslatableListener');
 
                 $localeStrategy = new Listener\LocaleAggregateListener($options);
-                $localeStrategy->setLocaleService($localeService);
+                $localeStrategy->setLocaleMapper($localeMapper);
                 $localeStrategy->setTranslator($translator);
                 $localeStrategy->setDoctrineListener($doctrineListener);
 
                 return $localeStrategy;
             },
-        'MyI18n\Service\LocaleService' =>
+        'MyI18n\DataMapper\LocaleMapper' =>
             function (ServiceLocatorInterface $serviceLocator) {
                 /** @var EntityManager $entityManager */
                 $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');
-                $localeService = new Service\LocaleService($entityManager);
 
-                return $localeService;
+                return $entityManager->getRepository(Entity\Locale::fqcn());
             },
         'MyI18n\Form\LocaleForm' =>
             function (ServiceLocatorInterface $serviceLocator) {

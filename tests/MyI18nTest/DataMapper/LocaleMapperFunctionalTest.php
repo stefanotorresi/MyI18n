@@ -5,34 +5,35 @@
  * ************************************************
  */
 
-namespace MyI18nTest\Service;
+namespace MyI18nTest\DataMapper;
 
+use MyBase\DataMapper\MapperEvent;
 use MyI18n\Entity\Locale;
-use MyI18n\Service\LocaleService;
+use MyI18n\DataMapper\LocaleMapper;
 use MyI18nTest\Bootstrap;
 use MyI18nTest\TestAsset;
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\EventManager\Event;
 
-class LocaleServiceFunctionalTest extends TestCase
+class LocaleMapperFunctionalTest extends TestCase
 {
     /**
-     * @var LocaleService;
+     * @var LocaleMapper;
      */
-    protected $localeService;
+    protected $localeMapper;
 
     public function setUp()
     {
         $sm = Bootstrap::getServiceManager();
         $em = Bootstrap::getEntityManager($sm);
-        $this->localeService = new LocaleService($em);
-        TestAsset\Locales::populateService($this->localeService);
+        $this->localeMapper = $em->getRepository(Locale::fqcn());
+        TestAsset\Locales::populateMapper($this->localeMapper);
     }
 
     public function testFind()
     {
         foreach (TestAsset\Locales::getLocales() as $locale) {
-            $found = $this->localeService->find($locale->getId());
+            $found = $this->localeMapper->find($locale->getId());
             $this->assertEquals($locale, $found);
         };
     }
@@ -40,24 +41,24 @@ class LocaleServiceFunctionalTest extends TestCase
     public function testFindOneByCode()
     {
         foreach (TestAsset\Locales::getLocales() as $locale) {
-            $found = $this->localeService->findOneByCode($locale->getCode());
+            $found = $this->localeMapper->findOneByCode($locale->getCode());
             $this->assertEquals($locale, $found);
         };
     }
 
-    public function testGetAll()
+    public function testFindAll()
     {
-        $this->assertEquals(TestAsset\Locales::getLocales(), $this->localeService->getAll());
+        $this->assertEquals(TestAsset\Locales::getLocales(), $this->localeMapper->findAll());
     }
 
-    public function testGetDefaultLocale()
+    public function testFindDefaultLocale()
     {
         $default = array_filter(TestAsset\Locales::getLocales(), function (Locale $locale) {
             return $locale->isDefaultLocale();
         });
         $default = array_pop($default);
 
-        $this->assertEquals($default, $this->localeService->getDefaultLocale());
+        $this->assertEquals($default, $this->localeMapper->findDefaultLocale());
     }
 
     public function testCodeUniqueConstraint()
@@ -65,7 +66,7 @@ class LocaleServiceFunctionalTest extends TestCase
         $nonUniqueCode = 'it';
         $locale = new Locale($nonUniqueCode);
         try {
-            $this->localeService->save($locale);
+            $this->localeMapper->save($locale);
             $this->fail(sprintf(
                 'A Locale with non unique field \'code=%s\' was successfully saved',
                 $nonUniqueCode
@@ -80,24 +81,24 @@ class LocaleServiceFunctionalTest extends TestCase
         $locale = new Locale('ru');
         $locale->setDefaultLocale();
 
-        $default = $this->localeService->getDefaultLocale();
+        $default = $this->localeMapper->findDefaultLocale();
 
         $this->assertTrue($default->isDefaultLocale());
 
-        $this->localeService->save($locale);
+        $this->localeMapper->save($locale);
 
         $this->assertFalse($default->isDefaultLocale());
     }
 
     public function testGetAllCodesAsArray()
     {
-        $this->assertSame(['de', 'en', 'it'], $this->localeService->getAllCodesAsArray());
+        $this->assertSame(['de', 'en', 'it'], $this->localeMapper->getAllCodesAsArray());
     }
 
-    public function testGetAllWithDefaultFirst()
+    public function testFindAllWithDefaultFirst()
     {
-        $locales = $this->localeService->getAllWithDefaultFirst();
-        $default = $this->localeService->getDefaultLocale();
+        $locales = $this->localeMapper->findAllWithDefaultFirst();
+        $default = $this->localeMapper->findDefaultLocale();
         $first = $locales[0];
         $this->assertTrue($first->isDefaultLocale());
         $this->assertSame($default, $first);
@@ -107,15 +108,15 @@ class LocaleServiceFunctionalTest extends TestCase
     {
         $locale = new Locale('ru');
 
-        $this->localeService->makeDefault($locale);
+        $this->localeMapper->makeDefault($locale);
 
         $this->assertTrue($locale->isDefaultLocale());
-        $this->assertSame($locale, $this->localeService->getDefaultLocale());
+        $this->assertSame($locale, $this->localeMapper->findDefaultLocale());
     }
 
-    public function testGetLastById()
+    public function testFindLastById()
     {
-        $locale = $this->localeService->getLastById();
+        $locale = $this->localeMapper->findLastById();
         $locales = TestAsset\Locales::getLocales();
 
         $this->assertEquals(end($locales), $locale);
@@ -123,21 +124,21 @@ class LocaleServiceFunctionalTest extends TestCase
 
     public function testEnsureDefaultLocaleListener()
     {
-        $defaultLocale = $this->localeService->getDefaultLocale();
-        $this->localeService->remove($defaultLocale);
+        $defaultLocale = $this->localeMapper->findDefaultLocale();
+        $this->localeMapper->remove($defaultLocale);
 
-        $this->assertNotNull($this->localeService->getDefaultLocale());
+        $this->assertNotNull($this->localeMapper->findDefaultLocale());
     }
 
     public function testEnsureDefaultLocaleListenerDoesNothingWhenRemovingNonDefaultLocale()
     {
-        $default = $this->localeService->getDefaultLocale();
+        $default = $this->localeMapper->findDefaultLocale();
         $this->assertNotNull($default);
 
-        $event = new Event();
-        $event->setParam('entity', new Locale('ru'));
-        $this->localeService->ensureDefaultLocaleListener($event);
+        $event = new MapperEvent();
+        $event->setEntity(new Locale('ru'));
+        $this->localeMapper->ensureDefaultLocaleListener($event);
 
-        $this->assertSame($default, $this->localeService->getDefaultLocale());
+        $this->assertSame($default, $this->localeMapper->findDefaultLocale());
     }
 }
