@@ -14,7 +14,7 @@ use PHPUnit_Framework_TestCase;
  * Class LocaleMapperPluginTraitTest
  * @package MyI18nTest\DataMapper
  *
- * @covers \MyI18n\DataMapper\LocaleHelperTrait
+ * @covers \MyI18n\DataMapper\LocaleMapperPluginTrait
  */
 class LocaleMapperPluginTraitTest extends PHPUnit_Framework_TestCase
 {
