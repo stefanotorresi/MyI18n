@@ -26,7 +26,7 @@ class LocaleControllerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $localeMapper = $this->getMock('MyI18n\Mapper\LocaleMapper', [], [], '', false);
+        $localeMapper = $this->getMock('MyI18n\DataMapper\LocaleMapper', [], [], '', false);
         $localeForm =  $this->getMock('MyI18n\Form\LocaleForm', [], [], '', false);
         $baseRoute = 'someroute';
 
@@ -56,7 +56,7 @@ class LocaleControllerTest extends \PHPUnit_Framework_TestCase
         $this->controller->setServiceLocator($serviceLocator);
         $this->controller->setLocaleMapper(null);
 
-        $this->assertInstanceOf('MyI18n\Mapper\LocaleMapper', $this->controller->getLocaleMapper());
+        $this->assertInstanceOf('MyI18n\DataMapper\LocaleMapper', $this->controller->getLocaleMapper());
     }
 
     public function testLocaleFormLazyGetter()
@@ -94,7 +94,7 @@ class LocaleControllerTest extends \PHPUnit_Framework_TestCase
     {
         $this->controller->getLocaleMapper()
             ->expects($this->once())
-            ->method('getAll');
+            ->method('findAll');
 
         $this->controller->getEvent()->setRouteMatch(new RouteMatch(['action' => 'index']));
         $result = $this->controller->dispatch(new Request());

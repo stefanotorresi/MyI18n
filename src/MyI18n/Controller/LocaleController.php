@@ -106,7 +106,7 @@ class LocaleController extends AbstractActionController
     /**
      * @param mixed $localeForm
      */
-    public function setLocaleForm($localeForm)
+    public function setLocaleForm(LocaleForm $localeForm = null)
     {
         $this->localeForm = $localeForm;
     }
@@ -126,7 +126,7 @@ class LocaleController extends AbstractActionController
     /**
      * @param LocaleMapperInterface $localeMapper
      */
-    public function setLocaleMapper(LocaleMapperInterface $localeMapper)
+    public function setLocaleMapper(LocaleMapperInterface $localeMapper = null)
     {
         $this->localeMapper = $localeMapper;
     }
