@@ -127,7 +127,7 @@ class LocaleControllerTest extends \PHPUnit_Framework_TestCase
     public function testEnableAction()
     {
         $sm = Bootstrap::getServiceManager();
-        $em = Bootstrap::initEntityManager($sm);
+        $em = Bootstrap::getEntityManager($sm);
 
         $form = new LocaleForm();
         $hydrator = new DoctrineObject($em);

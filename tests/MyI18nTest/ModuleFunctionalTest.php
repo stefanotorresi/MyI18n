@@ -28,7 +28,7 @@ class ModuleFunctionalTest extends PHPUnit_Framework_TestCase
             Bootstrap::getServiceManager() :
             Bootstrap::getServiceManager()->get($locatorInstance);
 
-        Bootstrap::initEntityManager($serviceLocator);
+        Bootstrap::getEntityManager($serviceLocator);
 
         $this->assertTrue($serviceLocator->has($name));
         $this->assertInstanceOf($class, $serviceLocator->get($name));
@@ -54,7 +54,7 @@ class ModuleFunctionalTest extends PHPUnit_Framework_TestCase
     public function testGedmoTranslatableExtensionIntegration()
     {
         $sm = Bootstrap::getServiceManager();
-        $em = Bootstrap::initEntityManager($sm);
+        $em = Bootstrap::getEntityManager($sm);
 
         /** @var \Gedmo\Translatable\TranslatableListener $listener */
         $listener = $sm->get('Gedmo\Translatable\TranslatableListener');

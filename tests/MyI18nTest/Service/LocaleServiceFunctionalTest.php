@@ -24,7 +24,7 @@ class LocaleServiceFunctionalTest extends TestCase
     public function setUp()
     {
         $sm = Bootstrap::getServiceManager();
-        $em = Bootstrap::initEntityManager($sm);
+        $em = Bootstrap::getEntityManager($sm);
         $this->localeService = new LocaleService($em);
         TestAsset\Locales::populateService($this->localeService);
     }

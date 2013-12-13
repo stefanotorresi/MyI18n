@@ -81,7 +81,7 @@ class Bootstrap
         return $serviceManager;
     }
 
-    public static function initEntityManager(ServiceLocatorInterface $serviceLocator)
+    public static function getEntityManager(ServiceLocatorInterface $serviceLocator)
     {
         $serviceManager = $serviceLocator instanceof AbstractPluginManager ?
             $serviceLocator->getServiceLocator()
