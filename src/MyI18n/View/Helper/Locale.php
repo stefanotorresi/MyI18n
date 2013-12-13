@@ -7,10 +7,10 @@
 
 namespace MyI18n\View\Helper;
 
-use MyI18n\Service;
+use MyI18n\DataMapper;
 use Zend\View\Helper\AbstractHelper;
 
-class Locale extends AbstractHelper implements Service\LocaleServiceAwareInterface
+class Locale extends AbstractHelper implements DataMapper\LocaleMapperAwareInterface
 {
-    use Service\LocaleHelperTrait;
+    use DataMapper\LocaleMapperPluginTrait;
 }

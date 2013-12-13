@@ -8,13 +8,13 @@
 namespace MyI18n\View\Helper;
 
 use Locale;
-use MyI18n\Service;
+use MyI18n\DataMapper;
 use Zend\View\Helper\AbstractHelper;
 use Zend\Stdlib\ArrayUtils;
 
-class LangTabs extends AbstractHelper implements Service\LocaleServiceAwareInterface
+class LangTabs extends AbstractHelper implements DataMapper\LocaleMapperAwareInterface
 {
-    use Service\LocaleServiceAwareTrait;
+    use DataMapper\LocaleMapperAwareTrait;
 
     /**
      * @var array $defaultOptions
@@ -25,11 +25,11 @@ class LangTabs extends AbstractHelper implements Service\LocaleServiceAwareInter
     ];
 
     /**
-     * @param Service\LocaleService $localeService
+     * @param DataMapper\LocaleMapper $localeMapper
      */
-    public function __construct(Service\LocaleService $localeService)
+    public function __construct(DataMapper\LocaleMapper $localeMapper)
     {
-        $this->setLocaleService($localeService);
+        $this->setLocaleMapper($localeMapper);
     }
 
     /**
@@ -41,8 +41,8 @@ class LangTabs extends AbstractHelper implements Service\LocaleServiceAwareInter
         $options = ArrayUtils::merge($this->defaultOptions, $options);
 
         $locales = $options['default_first'] ?
-            $this->getLocaleService()->getAllWithDefaultFirst()
-            : $this->getLocaleService()->getAll();
+            $this->getLocaleMapper()->findAllWithDefaultFirst()
+            : $this->getLocaleMapper()->getAll();
 
         if (! $locales) {
             return;

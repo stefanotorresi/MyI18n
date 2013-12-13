@@ -7,12 +7,15 @@
 
 namespace MyI18n\Controller;
 
+use MyI18n\DataMapper\LocaleMapperAwareInterface;
+use MyI18n\DataMapper\LocaleMapperInterface;
 use MyI18n\Entity\Locale;
 use MyI18n\Form\LocaleForm;
-use MyI18n\Service\LocaleService;
+use MyI18n\DataMapper\LocaleMapper;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class LocaleController extends AbstractActionController
+    implements LocaleMapperAwareInterface
 {
     const MODE_ENABLE = 'enable';
     const MODE_DISABLE = 'disable';
@@ -23,9 +26,9 @@ class LocaleController extends AbstractActionController
     protected $localeForm;
 
     /**
-     * @var LocaleService
+     * @var LocaleMapperInterface
      */
-    protected $localeService;
+    protected $localeMapper;
 
     /**
      * @var string
@@ -34,7 +37,7 @@ class LocaleController extends AbstractActionController
 
     public function indexAction()
     {
-        $locales = $this->getLocaleService()->getAll();
+        $locales = $this->getLocaleMapper()->findAll();
 
         return [
             'localeForm' => $this->getLocaleForm(),
@@ -45,7 +48,7 @@ class LocaleController extends AbstractActionController
     public function enableAction()
     {
         $form           = $this->getLocaleForm();
-        $localeService  = $this->getLocaleService();
+        $localeMapper  = $this->getLocaleMapper();
         $data           = $this->params()->fromPost();
 
         $locale = new Locale;
@@ -54,8 +57,8 @@ class LocaleController extends AbstractActionController
 
         if ($form->isValid()) {
 
-            if (! $localeService->findOneByCode($locale->getCode())) {
-                $localeService->save($locale);
+            if (! $localeMapper->findOneByCode($locale->getCode())) {
+                $localeMapper->save($locale);
             }
         }
 
@@ -66,10 +69,10 @@ class LocaleController extends AbstractActionController
     {
         $code = $this->params()->fromRoute('code');
 
-        $locale = $this->getLocaleService()->findOneByCode($code);
+        $locale = $this->getLocaleMapper()->findOneByCode($code);
 
         if ($locale instanceof Locale) {
-            $this->getLocaleService()->remove($locale);
+            $this->getLocaleMapper()->remove($locale);
         }
 
         return $this->redirect()->toRoute($this->getBaseRoute());
@@ -79,10 +82,10 @@ class LocaleController extends AbstractActionController
     {
         $code = $this->params()->fromRoute('code');
 
-        $locale = $this->getLocaleService()->findOneByCode($code);
+        $locale = $this->getLocaleMapper()->findOneByCode($code);
 
         if ($locale instanceof Locale) {
-            $this->getLocaleService()->makeDefault($locale);
+            $this->getLocaleMapper()->makeDefault($locale);
         }
 
         return $this->redirect()->toRoute($this->getBaseRoute());
@@ -109,25 +112,28 @@ class LocaleController extends AbstractActionController
     }
 
     /**
-     * @return LocaleService
+     * @return LocaleMapperInterface
      */
-    public function getLocaleService()
+    public function getLocaleMapper()
     {
-        if (! $this->localeService) {
-            $this->localeService = $this->getServiceLocator()->get('MyI18n\Service\LocaleService');
+        if (! $this->localeMapper) {
+            $this->localeMapper = $this->getServiceLocator()->get('MyI18n\Mapper\LocaleMapper');
         }
 
-        return $this->localeService;
+        return $this->localeMapper;
     }
 
     /**
-     * @param LocaleService $localeService
+     * @param LocaleMapperInterface $localeMapper
      */
-    public function setLocaleService($localeService)
+    public function setLocaleMapper(LocaleMapperInterface $localeMapper)
     {
-        $this->localeService = $localeService;
+        $this->localeMapper = $localeMapper;
     }
 
+    /**
+     * @return string
+     */
     public function getBaseRoute()
     {
         if (! $this->baseRoute) {

@@ -7,10 +7,9 @@
 
 namespace MyI18n\Service;
 
-use Doctrine\ORM\EntityManager;
-use Gedmo\Translatable\Entity\Repository\TranslationRepository;
 use MyI18n\Entity\TranslatableInterface;
 use MyI18n\Event\TranslationEvent;
+use MyI18n\DataMapper\TranslationMapperInterface;
 use Zend\EventManager\EventManagerAwareInterface;
 
 trait TranslationServiceTrait
@@ -32,15 +31,14 @@ trait TranslationServiceTrait
             $this->getEventManager()->trigger($event);
         }
 
-        /** @var TranslationRepository $translationRepo */
-        $translationRepo = $this->getEntityManager()->getRepository('MyI18n\Entity\Translation');
+        $translationMapper = $this->getTranslationMapper();
 
         foreach ($translations as $locale => $translation) {
             foreach ($translation as $field => $value) {
                 if (empty($value)) {
                     continue;
                 }
-                $translationRepo->translate($entity, $field, $locale, $value);
+                $translationMapper->translate($entity, $field, $locale, $value);
             }
         }
 
@@ -60,13 +58,13 @@ trait TranslationServiceTrait
     public function changeLocale(TranslatableInterface $entity, $locale)
     {
         $entity->setLocale($locale);
-        $this->getEntityManager()->refresh($entity);
+        $this->getTranslationMapper()->refresh($entity);
 
         return $entity;
     }
 
     /**
-     * @return EntityManager
+     * @return TranslationMapperInterface
      */
-    abstract public function getEntityManager();
+    abstract public function getTranslationMapper();
 }

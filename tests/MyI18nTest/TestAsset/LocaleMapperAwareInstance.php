@@ -7,10 +7,10 @@
 
 namespace MyI18nTest\TestAsset;
 
-use MyI18n\Service\LocaleServiceAwareInterface;
-use MyI18n\Service\LocaleServiceAwareTrait;
+use MyI18n\DataMapper\LocaleMapperAwareInterface;
+use MyI18n\DataMapper\LocaleMapperAwareTrait;
 
-class LocaleServiceAwareInstance implements LocaleServiceAwareInterface
+class LocaleMapperAwareInstance implements LocaleMapperAwareInterface
 {
-    use LocaleServiceAwareTrait;
+    use LocaleMapperAwareTrait;
 }

@@ -8,7 +8,7 @@
 namespace MyI18nTest\TestAsset;
 
 use MyI18n\Entity\Locale;
-use MyI18n\Service\LocaleService;
+use MyI18n\DataMapper\LocaleMapperInterface;
 
 class Locales
 {
@@ -19,13 +19,13 @@ class Locales
         return static::$locales;
     }
 
-    public static function populateService(LocaleService $service)
+    public static function populateMapper(LocaleMapperInterface $mapper)
     {
         static::initLocales();
 
         $locales = static::getLocales();
         foreach ($locales as $key => $locale) {
-            $service->save($locale);
+            $mapper->save($locale);
             $locales[$key]->setId($key+1);
         }
     }

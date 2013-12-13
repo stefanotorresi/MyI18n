@@ -26,7 +26,7 @@ class LocaleControllerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $localeService = $this->getMock('MyI18n\Service\LocaleService', [], [], '', false);
+        $localeMapper = $this->getMock('MyI18n\Mapper\LocaleMapper', [], [], '', false);
         $localeForm =  $this->getMock('MyI18n\Form\LocaleForm', [], [], '', false);
         $baseRoute = 'someroute';
 
@@ -37,7 +37,7 @@ class LocaleControllerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue('someurl'));
 
         $this->controller = new LocaleController();
-        $this->controller->setLocaleService($localeService);
+        $this->controller->setLocaleMapper($localeMapper);
         $this->controller->setLocaleForm($localeForm);
         $this->controller->setBaseRoute($baseRoute);
         $this->controller->getEventManager()->attach(new CreateViewModelListener());
@@ -50,13 +50,13 @@ class LocaleControllerTest extends \PHPUnit_Framework_TestCase
         $serviceLocator
             ->expects($this->once())
             ->method('get')
-            ->with('MyI18n\Service\LocaleService')
-            ->will($this->returnValue($this->controller->getLocaleService()));
+            ->with('MyI18n\Mapper\LocaleMapper')
+            ->will($this->returnValue($this->controller->getLocaleMapper()));
 
         $this->controller->setServiceLocator($serviceLocator);
-        $this->controller->setLocaleService(null);
+        $this->controller->setLocaleMapper(null);
 
-        $this->assertInstanceOf('MyI18n\Service\LocaleService', $this->controller->getLocaleService());
+        $this->assertInstanceOf('MyI18n\Mapper\LocaleMapper', $this->controller->getLocaleMapper());
     }
 
     public function testLocaleFormLazyGetter()
@@ -92,7 +92,7 @@ class LocaleControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testIndexAction()
     {
-        $this->controller->getLocaleService()
+        $this->controller->getLocaleMapper()
             ->expects($this->once())
             ->method('getAll');
 
@@ -110,7 +110,7 @@ class LocaleControllerTest extends \PHPUnit_Framework_TestCase
             ->method('isValid')
             ->will($this->returnValue(false));
 
-        $this->controller->getLocaleService()
+        $this->controller->getLocaleMapper()
             ->expects($this->never())
             ->method('save');
 
@@ -135,7 +135,7 @@ class LocaleControllerTest extends \PHPUnit_Framework_TestCase
         $form->setHydrator($hydrator);
         $this->controller->setLocaleForm($form);
 
-        $this->controller->getLocaleService()
+        $this->controller->getLocaleMapper()
             ->expects($this->once())
             ->method('save')
             ->with($this->equalTo(new Locale('en')));
@@ -156,13 +156,13 @@ class LocaleControllerTest extends \PHPUnit_Framework_TestCase
     {
         $locale = new Locale('en');
 
-        $this->controller->getLocaleService()
+        $this->controller->getLocaleMapper()
             ->expects($this->once())
             ->method('findOneByCode')
             ->with('en')
             ->will($this->returnValue($locale));
 
-        $this->controller->getLocaleService()
+        $this->controller->getLocaleMapper()
             ->expects($this->once())
             ->method('remove')
             ->with($locale);
@@ -179,13 +179,13 @@ class LocaleControllerTest extends \PHPUnit_Framework_TestCase
     {
         $locale = new Locale('en');
 
-        $this->controller->getLocaleService()
+        $this->controller->getLocaleMapper()
             ->expects($this->once())
             ->method('findOneByCode')
             ->with('en')
             ->will($this->returnValue($locale));
 
-        $this->controller->getLocaleService()
+        $this->controller->getLocaleMapper()
             ->expects($this->once())
             ->method('makeDefault')
             ->with($locale);

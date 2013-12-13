@@ -7,13 +7,13 @@
 
 namespace MyI18nTest\Service;
 
-use Gedmo\Translatable\Entity\Repository\TranslationRepository;
+use MyI18n\DataMapper\TranslationMapperInterface;
 use MyI18nTest\TestAsset;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class LocaleHelperTraitTest
- * @package MyI18nTest\Service
+ * Class LocaleMapperPluginTraitTest
+ * @package MyI18nTest\DataMapper
  *
  * @covers \MyI18n\Service\TranslationServiceTrait
  */
@@ -25,27 +25,18 @@ class TranslationServiceTraitTest extends PHPUnit_Framework_TestCase
     protected $translationService;
 
     /**
-     * @var TranslationRepository $translationRepository
+     * @var TranslationMapperInterface $translationRepository
      */
-    protected $translationRepository;
+    protected $translationMapper;
 
     public function setUp()
     {
-        $this->translationService = new TestAsset\TranslationService;
+        $translationMapper = $this->getMock('MyI18n\Mapper\TranslationMapperInterface');
 
-        $entityManager = $this->getMockBuilder('\Doctrine\ORM\EntityManager')->disableOriginalConstructor()->getMock();
+        $this->translationService = new TestAsset\TranslationService();
+        $this->translationService->setTranslationMapper($translationMapper);
 
-        $translationRepository = $this->getMockBuilder('Gedmo\Translatable\Entity\Repository\TranslationRepository')
-            ->disableOriginalConstructor()->getMock();
-
-        $entityManager->expects($this->any())
-            ->method('getRepository')
-            ->with('MyI18n\Entity\Translation')
-            ->will($this->returnValue($translationRepository));
-
-        $this->translationRepository = $translationRepository;
-
-        $this->translationService->setEntityManager($entityManager);
+        $this->translationMapper = $translationMapper;
     }
 
     public function testTranslate()
@@ -59,11 +50,11 @@ class TranslationServiceTraitTest extends PHPUnit_Framework_TestCase
 
         $entity = new TestAsset\TranslatableEntity();
 
-        $this->translationRepository->expects($this->at(0))
+        $this->translationMapper->expects($this->at(0))
             ->method('translate')
             ->with($entity, 'field', 'en', 'value');
 
-        $this->translationRepository->expects($this->at(1))
+        $this->translationMapper->expects($this->at(1))
             ->method('translate')
             ->with($entity, 'field2', 'en', 'value2');
 
@@ -81,7 +72,7 @@ class TranslationServiceTraitTest extends PHPUnit_Framework_TestCase
 
         $entity = $this->getMock('MyI18n\Entity\TranslatableInterface');
 
-        $this->translationRepository->expects($this->once())
+        $this->translationMapper->expects($this->once())
             ->method('translate')
             ->with($entity, 'field', 'en', 'value');
 

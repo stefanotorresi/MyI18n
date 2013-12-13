@@ -11,7 +11,7 @@ use Gedmo\Translatable\TranslatableListener;
 use Locale;
 use MyI18n\Detector;
 use MyI18n\Options;
-use MyI18n\Service;
+use MyI18n\DataMapper;
 use Zend\EventManager\AbstractListenerAggregate;
 use Zend\EventManager\EventManagerInterface;
 use Zend\I18n\Translator\TranslatorAwareTrait;
@@ -19,9 +19,9 @@ use Zend\Mvc\MvcEvent;
 use Zend\Stdlib\Exception\ExtensionNotLoadedException;
 
 class LocaleAggregateListener extends AbstractListenerAggregate
-    implements Service\LocaleServiceAwareInterface
+    implements DataMapper\LocaleMapperAwareInterface
 {
-    use Service\LocaleServiceAwareTrait;
+    use DataMapper\LocaleMapperAwareTrait;
     use TranslatorAwareTrait;
 
     /**
@@ -126,7 +126,7 @@ class LocaleAggregateListener extends AbstractListenerAggregate
             }
         }
 
-        $defaultLocaleEntity = $this->getLocaleService()->getDefaultLocale();
+        $defaultLocaleEntity = $this->getLocaleMapper()->findDefaultLocale();
         $defaultLocale = $defaultLocaleEntity instanceof \MyI18n\Entity\Locale ?
             $defaultLocaleEntity->getCode() : Locale::getDefault();
 

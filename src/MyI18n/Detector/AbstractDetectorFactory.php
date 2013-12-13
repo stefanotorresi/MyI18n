@@ -7,7 +7,7 @@
 
 namespace MyI18n\Detector;
 
-use MyI18n\Service;
+use MyI18n\DataMapper;
 use Zend\ServiceManager\AbstractFactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -66,10 +66,10 @@ class AbstractDetectorFactory implements AbstractFactoryInterface
             $detector->setSession($session);
         }
 
-        if ($detector instanceof Service\LocaleServiceAwareInterface) {
-            /** @var Service\LocaleService $localeService */
-            $localeService = $serviceLocator->get('MyI18n\Service\LocaleService');
-            $detector->setLocaleService($localeService);
+        if ($detector instanceof DataMapper\LocaleMapperAwareInterface) {
+            /** @var DataMapper\LocaleMapper $localeMapper */
+            $localeMapper = $serviceLocator->get('MyI18n\Mapper\LocaleMapper');
+            $detector->setLocaleMapper($localeMapper);
         }
 
         return $detector;

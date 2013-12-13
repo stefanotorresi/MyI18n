@@ -5,12 +5,12 @@
  * ************************************************
  */
 
-namespace MyI18n\Service;
+namespace MyI18n\DataMapper;
 
 use Zend\ServiceManager\InitializerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class LocaleServiceAwareInitializer implements InitializerInterface
+class LocaleMapperAwareInitializer implements InitializerInterface
 {
     /**
      * Initialize
@@ -21,10 +21,10 @@ class LocaleServiceAwareInitializer implements InitializerInterface
      */
     public function initialize($instance, ServiceLocatorInterface $serviceLocator)
     {
-        if ($instance instanceof LocaleServiceAwareInterface) {
-            /** @var LocaleService $localeService */
-            $localeService = $serviceLocator->get('MyI18n\Service\LocaleService');
-            $instance->setLocaleService($localeService);
+        if ($instance instanceof LocaleMapperAwareInterface) {
+            /** @var LocaleMapper $localeMapper */
+            $localeMapper = $serviceLocator->get('MyI18n\Mapper\LocaleMapper');
+            $instance->setLocaleMapper($localeMapper);
         }
 
         return $instance;

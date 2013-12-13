@@ -5,7 +5,7 @@
  * ************************************************
  */
 
-use MyI18n\Service;
+use MyI18n\DataMapper;
 use MyI18n\View\Helper;
 use Zend\ServiceManager\AbstractPluginManager;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -17,10 +17,10 @@ return [
                     $serviceLocator->getServiceLocator()
                     : $serviceLocator;
 
-                /** @var Service\LocaleService $localeService */
-                $localeService = $serviceManager->get('MyI18n\Service\LocaleService');
+                /** @var DataMapper\LocaleMapper $localeMapper */
+                $localeMapper = $serviceManager->get('MyI18n\Mapper\LocaleMapper');
 
-                $helper = new Helper\LangTabs($localeService);
+                $helper = new Helper\LangTabs($localeMapper);
 
                 return $helper;
             },
@@ -29,11 +29,11 @@ return [
                     $serviceLocator->getServiceLocator()
                     : $serviceLocator;
 
-                /** @var Service\LocaleService $localeService */
-                $localeService = $serviceManager->get('MyI18n\Service\LocaleService');
+                /** @var DataMapper\LocaleMapper $localeMapper */
+                $localeMapper = $serviceManager->get('MyI18n\Mapper\LocaleMapper');
 
                 $helper = new Helper\Locale();
-                $helper->setLocaleService($localeService);
+                $helper->setLocaleMapper($localeMapper);
 
                 return $helper;
             },

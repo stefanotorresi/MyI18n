@@ -9,14 +9,14 @@ namespace MyI18n\Detector;
 
 use Locale;
 use MyI18n\Options\DetectorOptionsInterface;
-use MyI18n\Service;
+use MyI18n\DataMapper;
 use Zend\Stdlib\Exception\ExtensionNotLoadedException;
 
 abstract class AbstractDetector implements
     DetectorInterface,
-    Service\LocaleServiceAwareInterface
+    DataMapper\LocaleMapperAwareInterface
 {
-    use Service\LocaleServiceAwareTrait;
+    use DataMapper\LocaleMapperAwareTrait;
 
     /**
      *
@@ -26,10 +26,10 @@ abstract class AbstractDetector implements
 
     /**
      * @param  DetectorOptionsInterface    $options
-     * @param  Service\LocaleService       $localeService
+     * @param  DataMapper\LocaleMapper       $localeMapper
      * @throws ExtensionNotLoadedException
      */
-    public function __construct(DetectorOptionsInterface $options, Service\LocaleService $localeService = null)
+    public function __construct(DetectorOptionsInterface $options, DataMapper\LocaleMapper $localeMapper = null)
     {
         if (! extension_loaded('intl')) {
             throw new ExtensionNotLoadedException(sprintf(
@@ -39,7 +39,7 @@ abstract class AbstractDetector implements
         }
 
         $this->setOptions($options);
-        $this->setLocaleService($localeService);
+        $this->setLocaleMapper($localeMapper);
     }
 
     /**
@@ -65,6 +65,6 @@ abstract class AbstractDetector implements
      */
     public function lookup($locale)
     {
-        return Locale::lookup($this->getLocaleService()->getAllCodesAsArray(), $locale);
+        return Locale::lookup($this->getLocaleMapper()->getAllCodesAsArray(), $locale);
     }
 }

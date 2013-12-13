@@ -9,7 +9,7 @@ namespace MyI18n\Navigation;
 
 use Locale;
 use MyI18n\Options;
-use MyI18n\Service\LocaleService;
+use MyI18n\DataMapper\LocaleMapper;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\Mvc\Router\RouteMatch;
 use Zend\Mvc\Router\Http\TreeRouteStack;
@@ -35,9 +35,9 @@ class NavigationFactory implements FactoryInterface
         /** @var Options\ModuleOptions $options */
         $options = $serviceLocator->get('MyI18n\Options\ModuleOptions');
 
-        /** @var LocaleService $localeService */
-        $localeService = $serviceLocator->get('MyI18n\ServiceLocaleService');
-        $locales = $localeService->getAll();
+        /** @var LocaleMapper $localeMapper */
+        $localeMapper = $serviceLocator->get('MyI18n\ServiceLocaleService');
+        $locales = $localeMapper->getAll();
 
         $currentLocale = Locale::getDefault();
 
