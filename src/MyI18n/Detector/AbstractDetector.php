@@ -26,7 +26,7 @@ abstract class AbstractDetector implements
 
     /**
      * @param  DetectorOptionsInterface    $options
-     * @param  DataMapper\LocaleMapper       $localeMapper
+     * @param  DataMapper\LocaleMapper     $localeMapper
      * @throws ExtensionNotLoadedException
      */
     public function __construct(DetectorOptionsInterface $options, DataMapper\LocaleMapper $localeMapper = null)
