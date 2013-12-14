@@ -66,6 +66,26 @@ class LocaleMapperTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($oldDefault->isDefaultLocale());
     }
 
+    public function testDefaultLocaleSwitcherListenerDoesNothingWhenSavingDefaultLocale()
+    {
+        $newDefault = $oldDefault = new Locale('en', true);
+
+        $this->entityPersister->expects($this->once())
+            ->method('load')
+            ->will($this->returnValue($oldDefault));
+
+        $this->localeMapper->getEntityManager()
+            ->expects($this->never())
+            ->method('flush');
+
+        $event = new MapperEvent();
+        $event->setEntity($newDefault);
+
+        $this->localeMapper->defaultLocaleSwitcherListener($event);
+
+        $this->assertTrue($oldDefault->isDefaultLocale());
+    }
+
     public function testDefaultLocaleSwitcherListenerWhenNoDefaultIsYetAvailable()
     {
         $newLocale = new Locale('it');

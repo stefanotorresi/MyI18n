@@ -109,6 +109,10 @@ class LocaleMapper extends EntityMapper implements LocaleMapperInterface
 
         $default = $this->findDefaultLocale();
 
+        if ($locale === $default) {
+            return;
+        }
+
         if ($locale->isDefaultLocale() && $default) {
             $default->setDefaultLocale(false);
             $this->getEntityManager()->flush($default);
