@@ -13,7 +13,6 @@ use MyI18n\DataMapper\LocaleMapper;
 use MyI18nTest\Bootstrap;
 use MyI18nTest\TestAsset;
 use PHPUnit_Framework_TestCase as TestCase;
-use Zend\EventManager\Event;
 
 class LocaleMapperFunctionalTest extends TestCase
 {
