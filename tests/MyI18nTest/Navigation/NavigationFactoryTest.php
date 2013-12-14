@@ -18,6 +18,7 @@ use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
 use Zend\Navigation\Page\Mvc as MvcPage;
 use Zend\ServiceManager\ServiceManager;
+use Zend\Stdlib\Request;
 
 class NavigationFactoryTest extends TestCase
 {
@@ -37,11 +38,6 @@ class NavigationFactoryTest extends TestCase
     protected $localeMapper;
 
     /**
-     * @var MvcEvent
-     */
-    protected $mvcEvent;
-
-    /**
      * @var ModuleOptions
      */
     protected $options;
@@ -52,28 +48,20 @@ class NavigationFactoryTest extends TestCase
             $this->markTestSkipped('Intl extension not available');
         }
 
-        $application    = $this->getMock('Zend\Mvc\Application', [], [], '', false);
-        $router         = $this->getMock('Zend\Mvc\Router\RouteStackInterface', [], [], '', false);
         $localeMapper   = $this->getMock('MyI18n\DataMapper\LocaleMapperInterface', [], [], '', false);
+        $router         = $this->getMock('Zend\Mvc\Router\RouteStackInterface', [], [], '', false);
         $serviceManager = new ServiceManager();
-        $mvcEvent       = new MvcEvent();
         $options        = new ModuleOptions();
+        $request        = new Request();
 
-        $application->expects($this->any())
-            ->method('getMvcEvent')
-            ->will($this->returnValue($mvcEvent));
-
-        $mvcEvent->setRouter($router);
-        $mvcEvent->setRouteMatch(new RouteMatch([]));
-
-        $serviceManager->setService('application', $application);
         $serviceManager->setService('MyI18n\DataMapper\LocaleMapper', $localeMapper);
         $serviceManager->setService('MyI18n\Options\ModuleOptions', $options);
+        $serviceManager->setService('router', $router);
+        $serviceManager->setService('request', $request);
 
         $this->navigationFactory = new NavigationFactory();
         $this->serviceManager   = $serviceManager;
         $this->localeMapper     = $localeMapper;
-        $this->mvcEvent         = $mvcEvent;
         $this->options          = $options;
     }
 
@@ -204,5 +192,28 @@ class NavigationFactoryTest extends TestCase
             ),
             $page->getUri()
         );
+    }
+
+    public function testRouteMatchIsInjectedWhenPresent()
+    {
+        $locale = new Locale('it');
+        $routeMatch = new RouteMatch([]);
+
+        $this->localeMapper->expects($this->once())
+            ->method('findAll')
+            ->will($this->returnValue([
+                $locale,
+            ]));
+
+        $this->serviceManager->get('router')
+            ->expects($this->once())
+            ->method('match')
+            ->with($this->serviceManager->get('request'))
+            ->will($this->returnValue($routeMatch));
+
+        $navigation = $this->navigationFactory->createService($this->serviceManager);
+
+        $page = $navigation->findOneBy('label', ucfirst(IntlLocale::getDisplayLanguage($locale, $locale)));
+        $this->assertSame($routeMatch, $page->getRouteMatch());
     }
 }
