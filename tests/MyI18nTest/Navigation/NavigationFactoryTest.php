@@ -14,7 +14,6 @@ use MyI18n\Navigation\NavigationFactory;
 use MyI18n\Options\ModuleOptions;
 use MyI18n\Options\NavigationOptions;
 use PHPUnit_Framework_TestCase as TestCase;
-use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
 use Zend\Navigation\Page\Mvc as MvcPage;
 use Zend\ServiceManager\ServiceManager;

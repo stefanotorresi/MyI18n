@@ -16,7 +16,6 @@ use Zend\Navigation\Navigation;
 use Zend\Navigation\Page\AbstractPage;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Stdlib\ArrayUtils;
 use Zend\Stdlib\Request;
 
 class NavigationFactory implements FactoryInterface
