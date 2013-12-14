@@ -69,11 +69,15 @@ class ModuleOptions extends AbstractOptions implements
      */
     public function getNavigationOptions()
     {
+        if (! $this->navigationOptions) {
+            $this->navigationOptions = new NavigationOptions();
+        }
+
         return $this->navigationOptions;
     }
 
     /**
-     * @param NavigationOptions $navigationOptions
+     * @param NavigationOptions|array|\Traversable $navigationOptions
      */
     public function setNavigationOptions($navigationOptions)
     {

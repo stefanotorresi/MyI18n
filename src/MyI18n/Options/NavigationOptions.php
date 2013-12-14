@@ -15,15 +15,39 @@ class NavigationOptions extends AbstractOptions
     const LABEL_DISPLAY_SHORT = 'short';
     const LABEL_DISPLAY_ACTIVE_FULL = 'active';
 
+    /**
+     * @var array
+     */
     private $validLabelDisplayModes = [
         self::LABEL_DISPLAY_FULL,
         self::LABEL_DISPLAY_SHORT,
         self::LABEL_DISPLAY_ACTIVE_FULL,
     ];
 
+    /**
+     * @var string
+     */
     protected $labelDisplay = self::LABEL_DISPLAY_FULL;
 
+    /**
+     * @var bool
+     */
     protected $queryString = false;
+
+    /**
+     * @var string
+     */
+    protected $switchRoute = 'lang-switch';
+
+    /**
+     * @var string
+     */
+    protected $classFormat = 'lang-%s';
+
+    /**
+     * @var string
+     */
+    protected $uriFormat = '?$s=%s';
 
     /**
      * @param  string                    $labelDisplay
@@ -64,5 +88,53 @@ class NavigationOptions extends AbstractOptions
     public function getQueryString()
     {
         return $this->queryString;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSwitchRoute()
+    {
+        return $this->switchRoute;
+    }
+
+    /**
+     * @param string $switchRoute
+     */
+    public function setSwitchRoute($switchRoute)
+    {
+        $this->switchRoute = $switchRoute;
+    }
+
+    /**
+     * @return string
+     */
+    public function getClassFormat()
+    {
+        return $this->classFormat;
+    }
+
+    /**
+     * @param string $classFormat
+     */
+    public function setClassFormat($classFormat)
+    {
+        $this->classFormat = $classFormat;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUriFormat()
+    {
+        return $this->uriFormat;
+    }
+
+    /**
+     * @param string $uriFormat
+     */
+    public function setUriFormat($uriFormat)
+    {
+        $this->uriFormat = $uriFormat;
     }
 }

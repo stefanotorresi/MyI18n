@@ -7,12 +7,11 @@
 
 namespace MyI18n\Navigation;
 
-use Locale;
+use Locale as IntlLocale;
+use MyI18n\Entity\Locale;
 use MyI18n\Options;
 use MyI18n\DataMapper\LocaleMapper;
-use Zend\Http\PhpEnvironment\Request;
-use Zend\Mvc\Router\RouteMatch;
-use Zend\Mvc\Router\Http\TreeRouteStack;
+use Zend\Mvc\Application;
 use Zend\Navigation\Navigation;
 use Zend\Navigation\Page\AbstractPage;
 use Zend\ServiceManager\FactoryInterface;
@@ -23,67 +22,65 @@ class NavigationFactory implements FactoryInterface
 {
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        /* @var $router TreeRouteStack  */
-        $router = $serviceLocator->get('router');
-
-        /* @var $request Request */
-        $request = $serviceLocator->get('request');
-
-        /* @var $routeMatch RouteMatch */
-        $routeMatch = $router->match($request);
+        /* @var $application Application  */
+        $application = $serviceLocator->get('Application');
 
         /** @var Options\ModuleOptions $options */
         $options = $serviceLocator->get('MyI18n\Options\ModuleOptions');
 
         /** @var LocaleMapper $localeMapper */
         $localeMapper = $serviceLocator->get('MyI18n\DataMapper\LocaleMapper');
-        $locales = $localeMapper->findAll();
 
-        $currentLocale = Locale::getDefault();
+        $mvcEvent       = $application->getMvcEvent();
+        $router         = $mvcEvent->getRouter();
+        $routeMatch     = $mvcEvent->getRouteMatch();
+        $locales        = $localeMapper->findAll();
+        $currentLocale  = IntlLocale::getDefault();
+        $navOptions     = $options->getNavigationOptions();
 
         $pages = array();
 
-        foreach ($locales as $localeEntry) {
+        foreach ($locales as $locale) /** @var Locale $locale */ {
 
-            $fullLangName = ucfirst(Locale::getDisplayLanguage($localeEntry, $localeEntry));
-            $pageConfig = $options->getNavigationOptions()->getQueryString() ?
+            $fullLangName = ucfirst(IntlLocale::getDisplayLanguage($locale, $locale));
+            $pageConfig = $navOptions->getQueryString() ?
                 array(
                     'type'  => 'uri',
-                    'uri'   => '?'.$options->getKeyName().'='.$localeEntry
+                    'uri'   => sprintf($navOptions->getUriFormat(), $options->getKeyName(), $locale),
                 ) :
                 array(
-                    'params'        => array( $options->getKeyName() => $localeEntry ),
+                    'params'        => array( $options->getKeyName() => $locale->getCode() ),
                     'type'          => 'mvc',
-                    'route'         => 'lang-switch',
+                    'route'         => $navOptions->getSwitchRoute(),
                     'router'        => $router,
                     'route_match'   => $routeMatch
                 );
 
             $page = AbstractPage::factory(ArrayUtils::merge($pageConfig, array(
-                'class' => 'lang-'.$localeEntry,
+                'class' => sprintf($navOptions->getClassFormat(), $locale),
                 'title' => $fullLangName,
                 'rel'   => array('alternate' => 'alternate'),
             )));
 
-            if ($localeEntry == $currentLocale) {
+            if ($locale == $currentLocale) {
                 $page->setActive(true);
                 $page->setOrder(-1);
             }
 
-            switch ($options->getNavigationOptions()->getLabelDisplay()) {
-                case Options\NavigationOptions::LABEL_DISPLAY_FULL :
-                    $label = $fullLangName;
+            switch ($navOptions->getLabelDisplay()) {
+                case Options\NavigationOptions::LABEL_DISPLAY_SHORT :
+                    $label = strtoupper(IntlLocale::getPrimaryLanguage($locale));
                     break;
 
                 case Options\NavigationOptions::LABEL_DISPLAY_ACTIVE_FULL :
-                    if ($page->isActive()) {
-                        $label = $fullLangName;
-                        break;
-                    }
+                    $label = $page->isActive() ?
+                        $fullLangName :
+                        strtoupper(IntlLocale::getPrimaryLanguage($locale));
+                    break;
 
-                case Options\NavigationOptions::LABEL_DISPLAY_SHORT :
+                case Options\NavigationOptions::LABEL_DISPLAY_FULL :
                 default :
-                    $label = strtoupper(Locale::getPrimaryLanguage($localeEntry));
+                    $label = $fullLangName;
             }
 
             $page->setLabel($label);
