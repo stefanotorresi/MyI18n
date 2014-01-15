@@ -9,6 +9,7 @@ namespace MyI18n\DataMapper;
 
 interface TranslationMapperInterface
 {
+    public function findTranslations($entity);
     public function translate($entity, $field, $locale, $value);
     public function refresh($entity);
 }

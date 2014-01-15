@@ -14,7 +14,7 @@ use Gedmo\Translatable\Entity\MappedSuperclass\AbstractTranslation;
  * @ORM\Table(name="mi18n_translations", indexes={
  *      @ORM\Index(name="mi18n_translation_idx", columns={"locale", "object_class", "field", "foreign_key"})
  * })
- * @ORM\Entity(repositoryClass="Gedmo\Translatable\Entity\Repository\TranslationRepository")
+ * @ORM\Entity(repositoryClass="MyI18n\DataMapper\TranslationMapper")
  */
 class Translation extends AbstractTranslation
 {
