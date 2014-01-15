@@ -17,6 +17,8 @@
             "homepage": "http://stefanotorresi.it"
         }
     ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "require": {
         "php": ">=5.4.1",
         "ext-intl": "*",
