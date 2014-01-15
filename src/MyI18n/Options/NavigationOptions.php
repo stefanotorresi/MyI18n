@@ -47,7 +47,7 @@ class NavigationOptions extends AbstractOptions
     /**
      * @var string
      */
-    protected $uriFormat = '?$s=%s';
+    protected $uriFormat = '?%s=%s';
 
     /**
      * @param  string                    $labelDisplay
