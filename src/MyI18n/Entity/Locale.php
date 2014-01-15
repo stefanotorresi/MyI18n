@@ -48,7 +48,7 @@ class Locale extends Entity
 
     /**
      * @param mixed $code
-     * @return $this
+     *                    @return $this
      */
     public function setCode($code)
     {
@@ -72,7 +72,7 @@ class Locale extends Entity
 
     /**
      * @param boolean $flag
-     * @return $this
+     *                      @return $this
      */
     public function setDefaultLocale($flag = true)
     {
