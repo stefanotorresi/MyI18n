@@ -34,8 +34,8 @@ class TranslationEvent extends Event
     }
 
     /**
-     * @param TranslatableInterface $entity
-     *                                      @return $this
+     * @param  TranslatableInterface $entity
+     * @return $this
      */
     public function setEntity(TranslatableInterface $entity)
     {
@@ -57,8 +57,8 @@ class TranslationEvent extends Event
     /**
      * Translations array is passed thru by reference to allow modification in listeners
      *
-     * @param array $translations
-     *                            @return $this
+     * @param  array $translations
+     * @return $this
      */
     public function setTranslations(array &$translations)
     {

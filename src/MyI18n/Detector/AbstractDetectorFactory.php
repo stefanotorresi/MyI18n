@@ -24,8 +24,8 @@ class AbstractDetectorFactory implements AbstractFactoryInterface
      * Determine if we can create a service with name
      *
      * @param  ServiceLocatorInterface $serviceLocator
-     *                                                 @param $name
-     *                                                 @param $requestedName
+     * @param $name
+     * @param $requestedName
      * @return bool
      */
     public function canCreateServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
@@ -41,8 +41,8 @@ class AbstractDetectorFactory implements AbstractFactoryInterface
      * Create service with name
      *
      * @param  ServiceLocatorInterface $serviceLocator
-     *                                                 @param $name
-     *                                                 @param $requestedName
+     * @param $name
+     * @param $requestedName
      * @throws \DomainException
      * @return DetectorInterface
      */
