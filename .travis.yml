@@ -15,5 +15,5 @@ script:
  - phpunit -c tests --coverage-clover ./tests/coverage/clover.xml
 
 after_script:
- - composer require --dev satooshi/php-coveralls:~0.6
- - ./vendor/bin/coveralls -v
+ - wget https://scrutinizer-ci.com/ocular.phar
+ - php ocular.phar code-coverage:upload --format=php-clover ./tests/coverage/clover.xml
