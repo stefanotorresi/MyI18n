@@ -6,7 +6,7 @@ return [
     __NAMESPACE__ => [
     ],
 
-    'doctrine' => array(
+    'doctrine' => [
         'driver' => [
             __NAMESPACE__ => [
                 'cache' => 'array',
@@ -21,22 +21,22 @@ return [
                 ],
             ],
         ],
-        'connection' => array(
-            'orm_default' => array(
+        'connection' => [
+            'orm_default' => [
                 'driverClass' => 'Doctrine\DBAL\Driver\PDOSqlite\Driver',
-                'params' => array(
+                'params' => [
                     'memory' => true,
-                ),
-            ),
-        ),
-        'configuration' => array(
-            'orm_default' => array(
+                ],
+            ],
+        ],
+        'configuration' => [
+            'orm_default' => [
                 'generate_proxies'  => true,
                 'metadata_cache'    => 'array',
                 'query_cache'       => 'array',
                 'result_cache'      => 'array',
-            ),
-        ),
-    ),
+            ],
+        ],
+    ],
 
 ];

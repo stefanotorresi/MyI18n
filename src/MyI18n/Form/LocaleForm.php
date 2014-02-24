@@ -20,7 +20,7 @@ class LocaleForm extends Form implements InputFilterProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function __construct($name = 'locale-form', $options = array())
+    public function __construct($name = 'locale-form', $options = [])
     {
         parent::__construct($name, $options);
 

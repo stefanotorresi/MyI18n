@@ -36,19 +36,19 @@ class ModuleFunctionalTest extends PHPUnit_Framework_TestCase
 
     public function servicesProvider()
     {
-        return array(
-            array('ServiceManager', 'MyI18n\DataMapper\LocaleMapper', 'MyI18n\DataMapper\LocaleMapper'),
-            array('ServiceManager', 'MyI18n\Form\LocaleForm', 'MyI18n\Form\LocaleForm'),
-            array('ServiceManager', 'MyI18n\Listener\LocaleAggregateListener', 'MyI18n\Listener\LocaleAggregateListener'),
-            array('ServiceManager', 'Gedmo\Translatable\TranslatableListener', 'Gedmo\Translatable\TranslatableListener'),
-            array('ServiceManager', 'MyI18n\Navigation', 'Zend\Navigation\Navigation'),
-            array('ServiceManager', 'MyI18n\Options\ModuleOptions', 'MyI18n\Options\ModuleOptions'),
-            array('ServiceManager', 'MyI18n\Session', 'Zend\Session\Container'),
-            array('ControllerLoader', 'MyI18n\Controller\LocaleController', 'MyI18n\Controller\LocaleController'),
-            array('ViewHelperManager', 'langTabs', 'MyI18n\View\Helper\LangTabs'),
-            array('ViewHelperManager', 'locale', 'MyI18n\View\Helper\Locale'),
-            array('ControllerPluginManager', 'locale', 'MyI18n\Controller\Plugin\Locale'),
-        );
+        return [
+            ['ServiceManager', 'MyI18n\DataMapper\LocaleMapper', 'MyI18n\DataMapper\LocaleMapper'],
+            ['ServiceManager', 'MyI18n\Form\LocaleForm', 'MyI18n\Form\LocaleForm'],
+            ['ServiceManager', 'MyI18n\Listener\LocaleAggregateListener', 'MyI18n\Listener\LocaleAggregateListener'],
+            ['ServiceManager', 'Gedmo\Translatable\TranslatableListener', 'Gedmo\Translatable\TranslatableListener'],
+            ['ServiceManager', 'MyI18n\Navigation', 'Zend\Navigation\Navigation'],
+            ['ServiceManager', 'MyI18n\Options\ModuleOptions', 'MyI18n\Options\ModuleOptions'],
+            ['ServiceManager', 'MyI18n\Session', 'Zend\Session\Container'],
+            ['ControllerLoader', 'MyI18n\Controller\LocaleController', 'MyI18n\Controller\LocaleController'],
+            ['ViewHelperManager', 'langTabs', 'MyI18n\View\Helper\LangTabs'],
+            ['ViewHelperManager', 'locale', 'MyI18n\View\Helper\Locale'],
+            ['ControllerPluginManager', 'locale', 'MyI18n\Controller\Plugin\Locale'],
+        ];
     }
 
     public function testGedmoTranslatableExtensionIntegration()

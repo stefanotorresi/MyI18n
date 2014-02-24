@@ -11,7 +11,7 @@ use Zend\Form\Element\Select;
 
 class LanguageSelect extends Select
 {
-    public static $codes = array(
+    public static $codes = [
         'aa',
         'ab',
         'ae',
@@ -196,9 +196,9 @@ class LanguageSelect extends Select
         'za',
         'zh',
         'zu',
-    );
+    ];
 
-    public function __construct($name = null, $options = array())
+    public function __construct($name = null, $options = [])
     {
         if (! extension_loaded('intl')) {
             throw new \Zend\Form\Exception\ExtensionNotLoadedException(sprintf(

@@ -93,13 +93,13 @@ class LocaleAggregateListener extends AbstractListenerAggregate
     public function attach(EventManagerInterface $events)
     {
         $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE,
-                array($this, 'detectLocale'), -1);
+                [$this, 'detectLocale'], -1);
 
         $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH_ERROR,
-                array($this, 'detectLocale'), 100);
+                [$this, 'detectLocale'], 100);
 
         $this->listeners[] = $events->attach(MvcEvent::EVENT_FINISH,
-                array($this, 'persistLocale'), -1);
+                [$this, 'persistLocale'], -1);
     }
 
     /**

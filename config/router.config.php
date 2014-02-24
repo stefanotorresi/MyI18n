@@ -5,9 +5,9 @@
  * ************************************************
  */
 
-return array(
-    'router' => array(
-        'routes' => array(
+return [
+    'router' => [
+        'routes' => [
 
             'lang-switch' => [
                 'type'    => 'segment',
@@ -24,69 +24,69 @@ return array(
                 'may_terminate' => true,
             ],
 
-            'admin' => array(
-                'child_routes' => array(
-                    'i18n' => array(
+            'admin' => [
+                'child_routes' => [
+                    'i18n' => [
                         'type' => 'Literal',
-                        'options' => array(
+                        'options' => [
                             'route' => '/i18n',
-                            'defaults' => array(
+                            'defaults' => [
                                 'controller' => 'MyI18n\Controller\LocaleController',
                                 'action' => 'index',
-                            ),
-                        ),
+                            ],
+                        ],
                         'may_terminate' => true,
-                        'child_routes' => array(
-                            'locales' => array(
+                        'child_routes' => [
+                            'locales' => [
                                 'type' => 'Literal',
-                                'options' => array(
+                                'options' => [
                                     'route' => '/locales',
-                                    'defaults' => array(
+                                    'defaults' => [
                                         'controller' => 'MyI18n\Controller\LocaleController',
                                         'action' => 'index',
-                                    ),
-                                ),
+                                    ],
+                                ],
                                 'may_terminate' => true,
-                                'child_routes' => array(
-                                    'enable' => array(
+                                'child_routes' => [
+                                    'enable' => [
                                         'type' => 'Literal',
-                                        'options' => array(
+                                        'options' => [
                                             'route' => '/enable',
-                                            'defaults' => array(
+                                            'defaults' => [
                                                 'action' => 'enable',
-                                            ),
-                                        ),
-                                    ),
-                                    'disable' => array(
+                                            ],
+                                        ],
+                                    ],
+                                    'disable' => [
                                         'type' => 'Segment',
-                                        'options' => array(
+                                        'options' => [
                                             'route' => '/disable/:code',
-                                            'defaults' => array(
+                                            'defaults' => [
                                                 'action' => 'disable',
-                                            ),
-                                            'constraints' => array(
+                                            ],
+                                            'constraints' => [
                                                 'code' => '[a-zA-Z]{2}',
-                                            ),
-                                        ),
-                                    ),
-                                    'make-default' => array(
+                                            ],
+                                        ],
+                                    ],
+                                    'make-default' => [
                                         'type' => 'Segment',
-                                        'options' => array(
+                                        'options' => [
                                             'route' => '/make-default/:code',
-                                            'defaults' => array(
+                                            'defaults' => [
                                                 'action' => 'make-default',
-                                            ),
-                                            'constraints' => array(
+                                            ],
+                                            'constraints' => [
                                                 'code' => '[a-zA-Z]{2}',
-                                            ),
-                                        ),
-                                    ),
-                                ),
-                            ),
-                        ),
-                    ),
-                ),
-            ),
-        ),
-    ),
-);
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+];
