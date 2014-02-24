@@ -19,7 +19,7 @@ use PHPUnit_Framework_TestCase;
 class LocaleMapperPluginTraitTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var object $traitExhibitingObject
+     * @var object
      */
     protected $traitExhibitingObject;
 

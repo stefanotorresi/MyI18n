@@ -20,12 +20,12 @@ use PHPUnit_Framework_TestCase;
 class TranslationServiceTraitTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var TestAsset\TranslationService $traitExhibitingObject
+     * @var TestAsset\TranslationService
      */
     protected $translationService;
 
     /**
-     * @var TranslationMapperInterface $translationRepository
+     * @var TranslationMapperInterface
      */
     protected $translationMapper;
 
