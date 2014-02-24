@@ -1,6 +1,6 @@
 {
     "name": "stefanotorresi/my-i18n",
-    "description": "A ZF2 locale detection module based on Matt Cockayne's ZucchiLocale",
+    "description": "A Zend Framework 2 module for locale detection and management.",
     "type": "library",
     "keywords": [
         "zf2",
@@ -9,6 +9,7 @@
         "i18n",
         "locale"
     ],
+    "license": "MIT",
     "homepage": "https://github.com/stefanotorresi/MyI18n",
     "authors": [
         {
@@ -26,6 +27,9 @@
         "doctrine/doctrine-module": "~0.8",
         "doctrine/doctrine-orm-module": "~0.8",
         "stefanotorresi/my-base": "1.*"
+    },
+    "suggest": {
+        "ext-intl" : "Intl extension is pretty much a requirement for this module"
     },
     "extra": {
         "branch-alias": {
